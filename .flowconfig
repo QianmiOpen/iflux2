@@ -1,0 +1,16 @@
+[ignore]
+  .*/index.d.ts
+  .*/node_modules/fbjs/lib/Deferred.js.flow
+  .*/node_modules/fbjs/lib/shallowEqual.js.flow
+
+[include]
+  ./node_modules/immutable
+  ./node_modules/immutable/contrib/cursor
+[libs]
+  ./node_modules/immutable/immutable.js.flow
+
+
+[options]
+esproposal.class_static_fields=enable
+esproposal.class_instance_fields=enable
+esproposal.decorators=ignore
