@@ -14,7 +14,9 @@ var _react2 = _interopRequireDefault(_react);
 
 var _immutable = require('immutable');
 
-var _queryLang = require('./query-lang');
+var _ql = require('./ql');
+
+var _dql = require('./dql');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -189,6 +191,7 @@ function Relax(Component) {
     }, {
       key: 'getProps',
       value: function getProps() {
+        var dql = {};
         var props = {};
         var store = this.context.store;
 
@@ -199,12 +202,24 @@ function Relax(Component) {
 
             //判断defaultProps的值是不是query的语法
             var propValue = defaultProps[propName];
-            if (propValue instanceof _queryLang.QueryLang) {
+            if (propValue instanceof _ql.QueryLang) {
               props[propName] = store.bigQuery(propValue);
               continue;
             }
 
+            //隔离出来DQL
+            if (propValue instanceof _dql.DynamicQueryLang) {
+              dql[propName] = propValue;
+            }
+
             props[propName] = this.props[propName] || store[propName] || store.state().get(propName) || propValue;
+          }
+        }
+
+        //开始计算DQL
+        for (var _propName in dql) {
+          if (dql.hasOwnProperty(_propName)) {
+            props[_propName] = store.bigQuery(dql[_propName].context(props).ql());
           }
         }
 

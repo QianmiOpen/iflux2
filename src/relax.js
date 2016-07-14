@@ -13,7 +13,8 @@
  */
 import React from 'react';
 import {fromJS} from 'immutable';
-import {QueryLang} from './query-lang';
+import {QueryLang} from './ql';
+import {DynamicQueryLang} from './dql';
 
 
 export default function Relax(Component:Function) {
@@ -158,6 +159,7 @@ export default function Relax(Component:Function) {
      * 6. 都不是就是默认值
      */
     getProps() {
+      const dql = {};
       const props = {};
       const {store} = this.context;
       const defaultProps = Component.defaultProps || {};
@@ -172,12 +174,24 @@ export default function Relax(Component:Function) {
             continue;
           }
 
+           //隔离出来DQL
+          if (propValue instanceof DynamicQueryLang) {
+            dql[propName] = propValue;
+          }
+
           props[propName] = (
             this.props[propName]
             || store[propName]
             || store.state().get(propName)
             || propValue
           );
+        }
+      }
+
+      //开始计算DQL
+      for (let propName in dql) {
+        if (dql.hasOwnProperty(propName)) {
+          props[propName] = store.bigQuery(dql[propName].context(props).ql());
         }
       }
 

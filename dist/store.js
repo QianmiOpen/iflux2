@@ -21,7 +21,7 @@ var _cursor2 = _interopRequireDefault(_cursor);
 
 var _util = require('./util');
 
-var _queryLang = require('./query-lang');
+var _ql = require('./ql');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -236,7 +236,7 @@ var Store = function () {
 
       var args = qlCopy.map(function (path, key) {
         //如果当前的参数仍然是query-lang,则直接递归计算一次query—lang的值
-        if (path instanceof _queryLang.QueryLang) {
+        if (path instanceof _ql.QueryLang) {
           var _result = _this3.bigQuery(path);
 
           //数据有变化
@@ -269,6 +269,11 @@ var Store = function () {
 
           _this3.debug(function () {
             console.log(':( deps: ' + JSON.stringify(path) + ' data had expired.');
+          });
+        } else if (typeof value === 'undefined' && typeof metaData.deps[key] === 'undefined') {
+          expired = true;
+          _this3.debug(function () {
+            console.log(':( deps: ' + JSON.stringify(path) + ' undefined. Be careful!');
           });
         }
 

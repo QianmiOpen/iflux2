@@ -1,7 +1,7 @@
-jest.unmock('../src/query-lang');
+jest.unmock('../src/ql');
 jest.unmock('../src/util');
 
-import {QL} from '../src/query-lang';
+import {QL} from '../src/ql';
 
 
 const testQL = QL([

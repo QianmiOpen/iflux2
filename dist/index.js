@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Validator = exports.StoreProvider = exports.Store = exports.Relax = exports.Util = exports.Actor = exports.Action = exports.Atom = exports.msg = exports.QL = undefined;
+exports.Validator = exports.StoreProvider = exports.Store = exports.Relax = exports.Util = exports.Actor = exports.Action = exports.Atom = exports.msg = exports.DQL = exports.QL = undefined;
 
 var _msg = require('./msg');
 
@@ -31,7 +31,9 @@ var _atom = require('./atom');
 
 var _atom2 = _interopRequireDefault(_atom);
 
-var _queryLang = require('./query-lang');
+var _ql = require('./ql');
+
+var _dql = require('./dql');
 
 var _validator = require('./validator');
 
@@ -43,7 +45,8 @@ var _util2 = _interopRequireDefault(_util);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.QL = _queryLang.QL;
+exports.QL = _ql.QL;
+exports.DQL = _dql.DQL;
 exports.msg = _msg2.default;
 exports.Atom = _atom2.default;
 exports.Action = _decorator.Action;

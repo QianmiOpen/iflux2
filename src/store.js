@@ -7,7 +7,7 @@
 import {is, fromJS, OrderedMap} from 'immutable';
 import Cursor from 'immutable/contrib/cursor';
 import {isArray} from './util';
-import {QueryLang} from './query-lang';
+import {QueryLang} from './ql';
 
 
 export default class Store {
@@ -224,7 +224,13 @@ export default class Store {
         this.debug(() => {
           console.log(`:( deps: ${JSON.stringify(path)} data had expired.`);
         });
+      } else if(typeof(value) === 'undefined' && typeof(metaData.deps[key]) === 'undefined') {
+        expired = true;
+        this.debug(() => {
+          console.log(`:( deps: ${JSON.stringify(path)} undefined. Be careful!`);
+        });
       }
+
 
       return value;
     });

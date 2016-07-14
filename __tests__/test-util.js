@@ -1,11 +1,11 @@
 jest.unmock('../src/util');
-jest.unmock('../src/query-lang.js');
+jest.unmock('../src/ql');
 import {
   isArray,
   isStr,
   isFn,
 } from '../src/util';
-import {QL} from '../src/query-lang';
+import {QL} from '../src/ql';
 
 
 describe('util test suite', () => {
