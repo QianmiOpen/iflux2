@@ -212,7 +212,16 @@ function Relax(Component) {
               dql[propName] = propValue;
             }
 
-            props[propName] = this.props[propName] || store[propName] || store.state().get(propName) || propValue;
+            props[propName] = defaultProps[propName];
+
+            //如果默认属性中匹配上
+            if (this._isNotUndefinedAndNull(this.props[propName])) {
+              props[propName] = this.props[propName];
+            } else if (this._isNotUndefinedAndNull(store[propName])) {
+              props[propName] = store[propName];
+            } else if (this._isNotUndefinedAndNull(store.state().get(propName))) {
+              props[propName] = store.state().get(propName);
+            }
           }
         }
 
@@ -228,8 +237,20 @@ function Relax(Component) {
 
       /**
        * 监听store的变化
+       * @param  {Object} state
        */
 
+    }, {
+      key: '_isNotUndefinedAndNull',
+
+
+      /**
+       * 判断当前的值是不是undefined或者null
+       * @param  {any} param
+       */
+      value: function _isNotUndefinedAndNull(param) {
+        return typeof param != 'undefined' && null != param;
+      }
     }]);
 
     return RelaxContainer;

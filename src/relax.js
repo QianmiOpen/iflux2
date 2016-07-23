@@ -174,17 +174,21 @@ export default function Relax(Component:Function) {
             continue;
           }
 
-           //隔离出来DQL
+          //隔离出来DQL
           if (propValue instanceof DynamicQueryLang) {
             dql[propName] = propValue;
           }
 
-          props[propName] = (
-            this.props[propName]
-            || store[propName]
-            || store.state().get(propName)
-            || propValue
-          );
+          props[propName] = defaultProps[propName];
+
+          //如果默认属性中匹配上
+          if (this._isNotUndefinedAndNull(this.props[propName])) {
+            props[propName] = this.props[propName];
+          } else if (this._isNotUndefinedAndNull(store[propName])) {
+            props[propName] = store[propName];
+          } else if (this._isNotUndefinedAndNull(store.state().get(propName))) {
+            props[propName] = store.state().get(propName);
+          }
         }
       }
 
@@ -201,6 +205,7 @@ export default function Relax(Component:Function) {
 
     /**
      * 监听store的变化
+     * @param  {Object} state
      */
     _handleStoreChange:Function = (state:Object) => {
       if (this._mounted) {
@@ -208,6 +213,16 @@ export default function Relax(Component:Function) {
         this.setState({storeState: state});
       }
     };
+
+
+    
+    /**
+     * 判断当前的值是不是undefined或者null
+     * @param  {any} param
+     */
+    _isNotUndefinedAndNull(param: any) {
+      return typeof (param) != 'undefined' && null != param;
+    }
   }
 
 
