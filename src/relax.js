@@ -15,6 +15,7 @@ import React from 'react';
 import {fromJS} from 'immutable';
 import {QueryLang} from './ql';
 import {DynamicQueryLang} from './dql';
+import assign from 'object-assign';
 
 
 export default function Relax(Component:Function) {
@@ -58,7 +59,7 @@ export default function Relax(Component:Function) {
       }
 
       //计算最终的props,这样写的是避免querylang的重复计算
-      this._relaxProps = Object.assign({}, this.props, this.getProps());
+      this._relaxProps = assign({}, this.props, this.getProps());
 
       //trace log
       if (this._debug) {  
@@ -114,7 +115,7 @@ export default function Relax(Component:Function) {
 
       //合并新的属性集合
       //判断是不是数据没有变化, 如果没有变化不需要render
-      const newRelaxProps = Object.assign({}, nextProps, this.getProps());
+      const newRelaxProps = assign({}, nextProps, this.getProps());
 
       for (let key in newRelaxProps) {
         if (newRelaxProps.hasOwnProperty(key)) {

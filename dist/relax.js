@@ -18,6 +18,10 @@ var _ql = require('./ql');
 
 var _dql = require('./dql');
 
+var _objectAssign = require('object-assign');
+
+var _objectAssign2 = _interopRequireDefault(_objectAssign);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -87,7 +91,7 @@ function Relax(Component) {
         }
 
         //计算最终的props,这样写的是避免querylang的重复计算
-        this._relaxProps = Object.assign({}, this.props, this.getProps());
+        this._relaxProps = (0, _objectAssign2.default)({}, this.props, this.getProps());
 
         //trace log
         if (this._debug) {
@@ -145,7 +149,7 @@ function Relax(Component) {
 
         //合并新的属性集合
         //判断是不是数据没有变化, 如果没有变化不需要render
-        var newRelaxProps = Object.assign({}, nextProps, this.getProps());
+        var newRelaxProps = (0, _objectAssign2.default)({}, nextProps, this.getProps());
 
         for (var key in newRelaxProps) {
           if (newRelaxProps.hasOwnProperty(key)) {
