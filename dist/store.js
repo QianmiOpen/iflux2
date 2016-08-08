@@ -118,16 +118,13 @@ var Store = function () {
         console.log(param.toJS ? param.toJS() : param);
       });
 
-      //dispatch => every actor
-
-      var _loop = function _loop(name) {
-        if (_this._actors.hasOwnProperty(name)) {
-          (function () {
-            var actor = _this._actors[name];
-            var state = _this._actorState.get(name);
-
-            //cursor更新最新的状态
-            _this.cursor().withMutations(function (cursor) {
+      //cursor更新最新的状态
+      this.cursor().withMutations(function (cursor) {
+        var _loop = function _loop(name) {
+          if (_this._actors.hasOwnProperty(name)) {
+            (function () {
+              var actor = _this._actors[name];
+              var state = _this._actorState.get(name);
 
               //trace log
               _this.debug(function () {
@@ -138,14 +135,15 @@ var Store = function () {
 
               var newState = actor.receive(msg, state, param);
               cursor.set(name, newState);
-            });
-          })();
-        }
-      };
+            })();
+          }
+        };
 
-      for (var name in this._actors) {
-        _loop(name);
-      }
+        //dispatch => every actor
+        for (var name in _this._actors) {
+          _loop(name);
+        }
+      });
 
       //end log
       this.debug(function () {

@@ -34,19 +34,19 @@ export default class Store {
   }
 
 
- 
+
   /**
    * 初始化store
    * 
    * @param  {Object={debug:false}} opts
    */
-  constructor(opts: Object = {debug: false}) {
+  constructor(opts: Object = { debug: false }) {
     this._debug = opts.debug;
     this._cacheQL = {};
     this._callbacks = [];
     this._actors = {};
     this._actorState = OrderedMap();
-    
+
     //聚合actor
     this.reduceActor(this.bindActor());
     //聚合状态
@@ -87,15 +87,14 @@ export default class Store {
       console.log(param.toJS ? param.toJS() : param);
     });
 
-    //dispatch => every actor
-    for (let name in this._actors) {
-      if (this._actors.hasOwnProperty(name)) {
-        const actor = this._actors[name];
-        const state = this._actorState.get(name);
-
-        //cursor更新最新的状态
-        this.cursor().withMutations((cursor) => {
-
+    //cursor更新最新的状态
+    this.cursor().withMutations(cursor => {
+      //dispatch => every actor
+      for (let name in this._actors) {
+        if (this._actors.hasOwnProperty(name)) {
+          const actor = this._actors[name];
+          const state = this._actorState.get(name);
+          
           //trace log
           this.debug(() => {
             const _route = actor._route || {};
@@ -105,9 +104,10 @@ export default class Store {
 
           const newState = actor.receive(msg, state, param);
           cursor.set(name, newState);
-        });
+        }
       }
-    }
+    });
+
 
     //end log
     this.debug(() => {
@@ -154,7 +154,7 @@ export default class Store {
     if (!ql.isValidQuery(ql)) {
       throw new Error('Invalid query lang');
     }
-  
+
     const id = ql.id();
     const name = ql.name();
     let metaData = {};
@@ -192,7 +192,7 @@ export default class Store {
       //如果当前的参数仍然是query-lang,则直接递归计算一次query—lang的值
       if (path instanceof QueryLang) {
         const result = this.bigQuery(path);
-        
+
         //数据有变化
         if (result != metaData.deps[key]) {
           metaData.deps[key] = result;
@@ -202,7 +202,7 @@ export default class Store {
           this.debug(() => {
             console.log(`:( deps:ql#${path.name()} data was expired.`);
           });
-        } 
+        }
 
         this.debug(() => {
           console.log(`:) deps:ql#${path.name()} get result from cache`);
@@ -224,7 +224,7 @@ export default class Store {
         this.debug(() => {
           console.log(`:( deps: ${JSON.stringify(path)} data had expired.`);
         });
-      } else if(typeof(value) === 'undefined' && typeof(metaData.deps[key]) === 'undefined') {
+      } else if (typeof (value) === 'undefined' && typeof (metaData.deps[key]) === 'undefined') {
         expired = true;
         this.debug(() => {
           console.log(`:( deps: ${JSON.stringify(path)} undefined. Be careful!`);
@@ -234,7 +234,7 @@ export default class Store {
 
       return value;
     });
-    
+
     //返回数据,默认缓存数据
     let result = metaData.result;
 
@@ -249,10 +249,10 @@ export default class Store {
     }
 
     //trace log
-    this.debug(() => {      
+    this.debug(() => {
       const result = (
-        metaData.result.toJS 
-          ? metaData.result.toJS() 
+        metaData.result.toJS
+          ? metaData.result.toJS()
           : metaData.result
       );
       console.log('!!result => ' + JSON.stringify(result, null, 2));
@@ -288,8 +288,8 @@ export default class Store {
    * @param callback
    */
   subscribe(callback: Function) {
-    if (!callback) {return;}
-    
+    if (!callback) { return; }
+
     //防止重复添加
     for (let i = 0, len = this._callbacks.length; i < len; i++) {
       if (this._callbacks[i] === callback) {
@@ -307,7 +307,7 @@ export default class Store {
    * @param callback
    */
   unsubscribe(callback: Function) {
-    if (!callback) {return;}
+    if (!callback) { return; }
 
     for (let i = 0, len = this._callbacks.length; i < len; i++) {
       //删除
@@ -330,9 +330,9 @@ export default class Store {
   }
 
 
-   /**
-   * 格式化当前的状态
-   */
+  /**
+  * 格式化当前的状态
+  */
   pprint() {
     this.prettyPrint(this.state());
   }
