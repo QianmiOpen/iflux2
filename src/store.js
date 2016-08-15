@@ -103,7 +103,10 @@ export default class Store {
           });
 
           const newState = actor.receive(msg, state, param);
-          cursor.set(name, newState);
+          // 更新变化的actor的状态
+          if (newState != state) {
+            cursor.set(name, newState);
+          }
         }
       }
     });
