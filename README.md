@@ -277,6 +277,7 @@ npm install iflux2 --save
 ```
 
 ### more examples
-https://github.com/hufeng/iflux2-blog
-https://github.com/hufeng/iflux2-todo
-https://github.com/hufeng/iflux2-counter
+
+* https://github.com/hufeng/iflux2-blog
+* https://github.com/hufeng/iflux2-todo
+* https://github.com/hufeng/iflux2-counter
