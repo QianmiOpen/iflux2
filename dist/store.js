@@ -48,7 +48,7 @@ var Store = function () {
 
     /**
      * 初始化store
-     * 
+     *
      * @param  {Object={debug:false}} opts
      */
 
@@ -94,6 +94,14 @@ var Store = function () {
         state[key] = actor.defaultState();
       }
       this._actorState = (0, _immutable.fromJS)(state);
+
+      //计算有没有冲突的key
+      this.debug(function () {
+        var conflictList = (0, _util.filterActorConflictKey)(actorList) || [];
+        conflictList.forEach(function (v) {
+          console.warn('actor:key ‘' + v[0] + '’ was conflicted among ‘' + v[1] + '’ ');
+        });
+      });
     }
 
     /**

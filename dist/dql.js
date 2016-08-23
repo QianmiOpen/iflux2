@@ -28,7 +28,7 @@ var DynamicQueryLang = exports.DynamicQueryLang = function () {
 
   /**
    * 分析路径中的动态元素，然后根据上下文替换
-   * 
+   *
    * @param  {Array<Object>} lang
    */
 
@@ -38,7 +38,7 @@ var DynamicQueryLang = exports.DynamicQueryLang = function () {
     value: function analyserLang(ql) {
       //校验query的合法性
       if (!ql.isValidQuery()) {
-        throw new Error('PQL invalid partial query-lang');
+        throw new Error('DQL invalid partial query-lang');
       }
 
       //获取语法结构
