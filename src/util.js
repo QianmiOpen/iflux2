@@ -44,3 +44,31 @@ export function isStr(str: any) {
 export function type(type: any) {
   return Object.prototype.toString.call(type);
 }
+
+
+export function filterActorConflictKey(actor: Array<Object> = []) {
+  //如果数组的元素只有一个不判断
+  if (actor.length <= 1) {
+    return;
+  }
+
+  //聚合数据
+  let actorKeyMap = {};
+  for (let i = 0, len = actor.length; i < len; i++) {
+    const actorName = actor[i].constructor.name;
+    Object.keys(actor[i].defaultState()).forEach(v => {
+      (actorKeyMap[v] || (actorKeyMap[v] = [])).push(actorName);
+    })
+  }
+
+  //计算冲突的可以
+  let conflictKeyList = [];
+  Object.keys(actorKeyMap).forEach(v => {
+    const value = actorKeyMap[v];
+    if (value.length > 1) {
+      conflictKeyList.push([v, value]);
+    }
+  });
+
+  return conflictKeyList;
+}

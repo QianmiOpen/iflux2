@@ -149,4 +149,46 @@ describe('app store test suite', () => {
       }
     }).toEqual(appStore.bigQuery(todoQL).toJS());
   });
+
+  it('conflict actor key', () => {
+    class User extends Actor {
+      defaultState() {
+        return {
+          id: 1,
+          name: '',
+          email: ''
+        }
+      }
+    }
+
+    class Address extends Actor {
+      defaultState() {
+        return {
+          id: 1,
+          addressName: ''
+        }
+      }
+    }
+
+    class Concat extends Actor {
+      defaultState() {
+        return {
+          id: 1,
+          addressName: ''
+        }
+      }
+    }
+
+    class MyStore extends Store {
+      bindActor() {
+        return [
+          new User,
+          new Address,
+          new Concat
+        ]
+      }
+    }
+
+    new MyStore({debug: true})
+  });
 });

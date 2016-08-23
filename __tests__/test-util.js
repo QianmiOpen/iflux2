@@ -1,11 +1,14 @@
 jest.unmock('../src/util');
 jest.unmock('../src/ql');
+jest.unmock('../src/actor');
 import {
   isArray,
   isStr,
   isFn,
+  filterActorConflictKey
 } from '../src/util';
 import {QL} from '../src/ql';
+import Actor from '../src/actor'
 
 
 describe('util test suite', () => {
@@ -37,5 +40,46 @@ describe('util test suite', () => {
     expect(false).toEqual(
       isFn(123)
     );
+  });
+
+  it('actorFilterConflict', () => {
+    class User extends Actor {
+      defaultState() {
+        return {
+          id: 1,
+          name: '',
+          email: ''
+        }
+      }
+    }
+
+    class Address extends Actor {
+      defaultState() {
+        return {
+          id: 1,
+          addressName: ''
+        }
+      }
+    }
+
+    class Concat extends Actor {
+      defaultState() {
+        return {
+          id: 1,
+          addressName: ''
+        }
+      }
+    }
+
+    const key = filterActorConflictKey([
+      new User,
+      new Address,
+      new Concat
+    ]);
+
+    expect([
+      ['id', ['User', 'Address', 'Concat']],
+      ['addressName', ['Address', 'Concat']]
+    ]).toEqual(key)
   });
 });

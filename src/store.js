@@ -6,7 +6,7 @@
  */
 import {is, fromJS, OrderedMap} from 'immutable';
 import Cursor from 'immutable/contrib/cursor';
-import {isArray} from './util';
+import {isArray, filterActorConflictKey} from './util';
 import {QueryLang} from './ql';
 
 
@@ -37,7 +37,7 @@ export default class Store {
 
   /**
    * 初始化store
-   * 
+   *
    * @param  {Object={debug:false}} opts
    */
   constructor(opts: Object = { debug: false }) {
@@ -67,6 +67,14 @@ export default class Store {
       state[key] = actor.defaultState();
     }
     this._actorState = fromJS(state);
+
+    //计算有没有冲突的key
+    this.debug(() => {
+      const conflictList = filterActorConflictKey(actorList) || [];
+      conflictList.forEach(v => {
+        console.warn(`actor:key ‘${v[0]}’ was conflicted among ‘${v[1]}’ `);
+      })
+    });
   }
 
 
@@ -94,7 +102,7 @@ export default class Store {
         if (this._actors.hasOwnProperty(name)) {
           const actor = this._actors[name];
           const state = this._actorState.get(name);
-          
+
           //trace log
           this.debug(() => {
             const _route = actor._route || {};

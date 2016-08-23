@@ -45,7 +45,7 @@ export default function Relax(Component:Function) {
 
     componentWillMount() {
       this._mounted = false;
-      
+
       //检查store是不是存在上下文
       if (!this.context.store) {
         throw new Error('Could not find @StoreProvider binds AppStore in current context');
@@ -62,7 +62,7 @@ export default function Relax(Component:Function) {
       this._relaxProps = assign({}, this.props, this.getProps());
 
       //trace log
-      if (this._debug) {  
+      if (this._debug) {
         console.timeEnd('relax calculator props');
         console.groupEnd();
       }
@@ -121,13 +121,13 @@ export default function Relax(Component:Function) {
         if (newRelaxProps.hasOwnProperty(key)) {
           if (newRelaxProps[key] != this._relaxProps[key]) {
             this._relaxProps = newRelaxProps;
-            
+
             //trace log
             if (this._debug) {
               console.timeEnd('relax calculator props ');
               console.groupEnd();
             }
-            
+
             return true;
           }
         }
@@ -216,7 +216,7 @@ export default function Relax(Component:Function) {
     };
 
 
-    
+
     /**
      * 判断当前的值是不是undefined或者null
      * @param  {any} param
