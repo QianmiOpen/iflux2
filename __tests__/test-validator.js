@@ -42,16 +42,21 @@ describe('validator rule', () => {
 
 
   it('it should be validate', () => {
+    // console.groupCollapsed = console.log;
+    // console.groupEnd = console.log;
+
     expect({
       result: false,
       errors: {
         username: ['username is required'],
-        password: ['password is required']
+        password: ['password is required'],
+        age: ['年龄必须小于18岁']
       }
     }).toEqual(
       Validator.validate({
         username: '',
-        password: ''
+        password: '',
+        age: 20
       }, {
         username: {
           required: true,
@@ -63,6 +68,12 @@ describe('validator rule', () => {
           required: true,
           message: {
             required: 'password is required'
+          }
+        },
+        age: {
+          max: 18,
+          message: {
+            max: '年龄必须小于18岁'
           }
         }
       })
@@ -98,4 +109,3 @@ describe('validator rule', () => {
   });
 
 });
-

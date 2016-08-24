@@ -11,11 +11,15 @@ export default class Validator {
    * @param rules
    * @param opts
    */
-  static validate(obj, rules, opts) {
+  static validate(obj, rules, options) {
+    //保存错误信息
     let result = {result: true, errors: {}};
-    const options = Object.assign({}, {
-      oneError: false
-    }, opts);
+    //获取配置参数
+    const opts = Object.assign({}, {
+      oneError: false,
+      debug: false,
+    }, options);
+
 
     for (let field in rules) {
       if (rules.hasOwnProperty(field)) {
@@ -39,32 +43,68 @@ export default class Validator {
         //错误集合
         let errors = [];
 
+        if (opts.debug) {
+          console.groupCollapsed(`validate '${field}'`)
+        }
+
         for (let rule in ruleMap) {
           if (ruleMap.hasOwnProperty(rule) && rule != 'message') {
+            //获取当前的校验规则
             const ruleValue = ruleMap[rule];
-            //如果规则的值为false,跳过校验
+            //封装传递给校验函数的参数
+            const args = [];
+
+            //如果规则的值为布尔类型且为false,跳过校验
             if (typeof(ruleValue) === 'boolean' && ruleValue === false) {
               continue;
+            } else if (typeof(ruleValue) === 'boolean') {
+              args.push(value)
+            } else {
+              args.push(ruleValue);
+              args.push(value);
             }
+
             const validateMethod = Validator[rule];
+            //如果validateMethod不存在，给出警告
+            if (!validateMethod) {
+              console.warn && console.warn(`can not find '${rule}' rule in '${field}'`);
+              continue;
+            }
+
+            if (opts.debug) {
+              console.log && console.log(
+                `validator rule => '${rule}, ruleValue => '${ruleValue}'`
+              )
+            }
+
             //没有通过校验
-            if (!validateMethod(value)) {
+            if (!validateMethod.apply(null, args)) {
+              if (opts.debug) {
+                console.log('result: failed')
+              }
               errors.push(message[rule]);
               //如果开启一个错误
-              if (options.oneError) {
+              if (opts.oneError) {
                 break;
+              }
+            } else {
+              if (opts.debug) {
+                console.log('result: ok')
               }
             }
           }
         }
 
+        if (opts.debug) {
+          console.groupEnd && console.groupEnd();
+        }
 
         if (errors.length != 0) {
           result.result = false;
           result.errors[field] = errors;
 
           //如果开启oneError，立刻返回错误
-          if (options.oneError) {
+          if (opts.oneError) {
             return result;
           }
         }
