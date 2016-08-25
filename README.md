@@ -8,6 +8,8 @@
 
 ### iflux2
 
+[![NPM](https://nodei.co/npm/iflux2.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iflux2)
+
 Reactive and Predictable state container  for React or ReactNative.
 
 * Thanks Immutable.js
