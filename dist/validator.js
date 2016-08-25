@@ -35,10 +35,27 @@ var Validator = function () {
       //获取配置参数
       var opts = Object.assign({}, {
         oneError: false,
-        debug: false
+        debug: false,
+        validateFields: []
       }, options);
 
-      for (var field in rules) {
+      var validateFields = opts.validateFields;
+      var validateRules = {};
+
+      //如果有自定义校验的字段，只校验自定义的字段
+      //如果没有，则全部校验
+      if (validateFields.length) {
+        validateFields.reduce(function (init, field) {
+          if (rules[field]) {
+            init[field] = rules[field];
+          }
+          return init;
+        }, validateRules);
+      } else {
+        validateRules = rules;
+      }
+
+      for (var field in validateRules) {
         if (rules.hasOwnProperty(field)) {
           /**
            * 获取规则对象, 例如:
@@ -138,6 +155,7 @@ var Validator = function () {
   }, {
     key: 'email',
     value: function email(value) {
+
       return (/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(value)
       );
     }
