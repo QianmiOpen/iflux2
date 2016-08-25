@@ -108,4 +108,36 @@ describe('validator rule', () => {
     )
   });
 
+
+  it('custom validate filed', () => {
+    expect({
+      result: false,
+      errors: {
+        username: [
+          'username is required.'
+        ]
+      }
+    }).toEqual(
+      Validator.validate({
+        username: '',
+        password: ''
+      }, {
+        username: {
+          required: true,
+          message: {
+            required: 'username is required.'
+          }
+        },
+        password: {
+          required: true,
+          message: {
+            required: 'password is reqired.'
+          }
+        }
+      }, {
+        validateFields: ['username']
+      })
+    )
+  });
+
 });

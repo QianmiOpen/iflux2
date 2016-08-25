@@ -18,10 +18,26 @@ export default class Validator {
     const opts = Object.assign({}, {
       oneError: false,
       debug: false,
+      validateFields: []
     }, options);
 
+    let validateFields = opts.validateFields;
+    let validateRules = {};
 
-    for (let field in rules) {
+    //如果有自定义校验的字段，只校验自定义的字段
+    //如果没有，则全部校验
+    if (validateFields.length) {
+      validateFields.reduce((init, field) => {
+        if (rules[field]) {
+          init[field] = rules[field];
+        }
+        return init;
+      }, validateRules);
+    } else {
+      validateRules = rules;
+    }
+
+    for (let field in validateRules) {
       if (rules.hasOwnProperty(field)) {
         /**
          * 获取规则对象, 例如:
@@ -120,6 +136,7 @@ export default class Validator {
    * @returns {boolean}
    */
   static email(value) {
+
     return /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(value);
   }
 
