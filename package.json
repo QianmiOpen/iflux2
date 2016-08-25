@@ -1,6 +1,6 @@
 {
   "name": "iflux2",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Reactive state container (based on immutable) for React or ReactNative, inspired by mapreduce.",
   "main": "dist/index.js",
   "scripts": {
