@@ -69,9 +69,13 @@ export default class Validator {
             const ruleValue = ruleMap[rule];
             //封装传递给校验函数的参数
             const args = [];
+            //是不是boolean类型且为false的规则
+            const isRuleValueFalse = typeof(ruleValue) === 'boolean' && ruleValue === false;
+            //当前的字段不是必填项,切值为空
+            const isNotRequired = !ruleMap['required'] && !value;
 
             //如果规则的值为布尔类型且为false,跳过校验
-            if (typeof(ruleValue) === 'boolean' && ruleValue === false) {
+            if (isRuleValueFalse || isNotRequired) {
               continue;
             } else if (typeof(ruleValue) === 'boolean') {
               args.push(value)

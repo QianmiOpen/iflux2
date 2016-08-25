@@ -114,18 +114,20 @@ describe('validator rule', () => {
       result: false,
       errors: {
         username: [
-          'username is required.'
+          'username is email.'
         ]
       }
     }).toEqual(
       Validator.validate({
-        username: '',
+        username: 'ff',
         password: ''
       }, {
         username: {
-          required: true,
+          // required: true,
+          email: true,
           message: {
-            required: 'username is required.'
+            required: 'username is required.',
+            email: 'username is email.'
           }
         },
         password: {
