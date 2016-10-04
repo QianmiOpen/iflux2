@@ -1,0 +1,44 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "iflux2 react-router",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --verbose",
+    "start": "./node_modules/.bin/webpack-dev-server --port 3000 --color true --progress true"
+  },
+  "keywords": [
+    "iflux2",
+    "react-router"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hufeng/iflux2-blog.git"
+  },
+  "author": "hufeng",
+  "license": "ISC",
+  "dependencies": {
+    "iflux2": "^1.0.0",
+    "qm-pure-render": "^1.0.0",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "react-router": "^2.6.1",
+    "whatwg-fetch": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-jest": "^13.0.0",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-class-properties": "^6.10.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.10.3",
+    "babel-plugin-transform-flow-strip-types": "^6.8.0",
+    "babel-plugin-transform-runtime": "^6.9.0",
+    "babel-polyfill": "^6.9.1",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-3": "^6.11.0",
+    "html-webpack-plugin": "^2.21.0",
+    "webpack": "^2.1.0-beta.15",
+    "webpack-dev-server": "^1.14.1"
+  }
+}
