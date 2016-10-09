@@ -17,15 +17,20 @@ import {QueryLang} from './ql';
 import {DynamicQueryLang} from './dql';
 import assign from 'object-assign';
 
+type State = {
+  storeState: Object;
+};
 
-export default function Relax(Component:Function) {
-  class RelaxContainer extends React.Component {
+export default function Relax(
+  Component: ReactClass<{}>
+): ReactClass<{}> {
+   return class RelaxContainer extends React.Component {
     //当前的状态
-    state:Object;
+    state: State;
     //当前的组件状态
-    _mounted:boolean;
+    _mounted: boolean;
     //当前的所有的子组件的props
-    _relaxProps:Object;
+    _relaxProps: Object;
     //debug状态
     _debug: boolean;
 
@@ -225,7 +230,4 @@ export default function Relax(Component:Function) {
       return typeof (param) != 'undefined' && null != param;
     }
   }
-
-
-  return RelaxContainer;
 }

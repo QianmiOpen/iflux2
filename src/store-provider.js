@@ -6,18 +6,20 @@
  */
 import React from 'react';
 
-
 /**
  * WrapperComponent
  * @param AppStore
  * @returns {Function}
  */
-export default function connectToStore(AppStore: Function, opts: Object = {}) {
-  return function(Component: Function) {
+export default function connectToStore(
+  AppStore: Function,
+  opts: Object = {}
+) {
+  return function(Component: ReactClass<{}>) {
     return class StoreContainer extends React.Component {
       _store: Object;
 
-      
+
       static childContextTypes = {
         store: React.PropTypes.object
       };
