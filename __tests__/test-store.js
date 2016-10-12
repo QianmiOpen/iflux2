@@ -91,8 +91,26 @@ const todoDQL = DQL('todoDQL', [
 ]);
 
 
+function mockSubscribeCallback() {
+}
+
+
 //;;;;;;;;;;;;;;;;;;;;;;test suite;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 describe('app store test suite', () => {
+  it('store subscribe', () => {
+    //重复添加
+    appStore.subscribe(mockSubscribeCallback);
+    appStore.subscribe(mockSubscribeCallback);
+
+    expect(1).toEqual(appStore._callbacks.length);
+  });
+
+  it('store unsubscribe', () => {
+    appStore.unsubscribe(mockSubscribeCallback);
+    expect(0).toEqual(appStore._callbacks.length);
+  });
+
+
   it('state should be equal', () => {
     expect({
       id: 1,

@@ -301,15 +301,9 @@ export default class Store {
   subscribe(callback: Function) {
     if (!callback) { return; }
 
-    //防止重复添加
-    for (let i = 0, len = this._callbacks.length; i < len; i++) {
-      if (this._callbacks[i] === callback) {
-        return;
-      }
+    if (this._callbacks.indexOf(callback) == -1) {
+      this._callbacks.push(callback);
     }
-
-    //push
-    this._callbacks.push(callback);
   }
 
 
@@ -320,12 +314,9 @@ export default class Store {
   unsubscribe(callback: Function) {
     if (!callback) { return; }
 
-    for (let i = 0, len = this._callbacks.length; i < len; i++) {
-      //删除
-      if (callback === this._callbacks[i]) {
-        this._callbacks.splice(i, 1);
-        break;
-      }
+    const index = this._callbacks.indexOf(callback);
+    if (index != -1) {
+      this._callbacks.splice(index, 1);
     }
   }
 
