@@ -1,6 +1,3 @@
-jest.unmock('../src/util');
-jest.unmock('../src/ql');
-jest.unmock('../src/actor');
 import {
   isArray,
   isStr,

@@ -1,6 +1,3 @@
-jest.unmock('../src/ql');
-jest.unmock('../src/util');
-
 import {QL} from '../src/ql';
 
 

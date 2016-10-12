@@ -1,6 +1,3 @@
-jest.unmock('../src/dql');
-jest.unmock('../src/ql');
-jest.unmock('../src/util');
 import {DQL} from '../src/dql'
 import {QL} from '../src/ql';
 

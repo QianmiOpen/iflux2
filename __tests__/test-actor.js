@@ -1,9 +1,9 @@
-jest.unmock('../src/decorator');
 import Actor from '../src/actor';
 import {Action} from '../src/decorator';
-import {fromJS} from 'immutable';
+import {fromJS, is} from 'immutable';
 
 
+//;;;;;;;;;;;;;;;UserActor;;;;;;;;;;;;;;;;;;;;;;
 class UserActor extends Actor {
   defaultState() {
     return {
@@ -18,10 +18,18 @@ class UserActor extends Actor {
   init(state) {
     return state;
   }
+
+  @Action('_change:age')
+  changeAge(state, age) {
+    return state.set('age', age);
+  }
 }
 
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 const user = new UserActor();
 
+
+//;;;;;;;;;;;;;;;test;;;;;;;;;;;;;;;;;;;;;
 describe('actor test suite', () => {
   it('default state test', () => {
     expect({
@@ -33,7 +41,7 @@ describe('actor test suite', () => {
   });
 
   it('decorator test', () => {
-    expect(true).toEqual(user._route['init'] != null);
+    expect(user.init).toEqual(user._route['init']);
   });
 
   it('receive test', () => {
@@ -43,7 +51,11 @@ describe('actor test suite', () => {
       age: 1,
       email: 'iflux@qianmi.com'
     });
-    const newState = user.receive(state, 'init');
+    
+    const newState = user.receive('init', state);
     expect(true).toEqual(state === newState);
+
+    //change age test
+    expect(10).toEqual(user.receive('_change:age', state, 10).get('age'));
   });
 });

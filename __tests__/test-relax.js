@@ -1,4 +1,3 @@
-jest.unmock('immutable')
 import {fromJS} from 'immutable'
 
 class Store {

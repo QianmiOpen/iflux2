@@ -1,8 +1,3 @@
-jest.unmock('../src/atom');
-jest.unmock('../src/util');
-jest.unmock('immutable');
-jest.unmock('immutable/contrib/cursor');
-
 import Atom from '../src/atom';
 
 

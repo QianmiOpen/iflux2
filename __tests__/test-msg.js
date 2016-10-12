@@ -1,4 +1,3 @@
-jest.unmock('../src/msg');
 import msg from '../src/msg';
 
 

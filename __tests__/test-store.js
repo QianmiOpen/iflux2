@@ -1,14 +1,3 @@
-
-jest.unmock('immutable');
-jest.unmock('immutable/contrib/cursor');
-jest.unmock('../src/util');
-jest.unmock('../src/ql');
-jest.unmock('../src/actor');
-jest.unmock('../src/store');
-jest.unmock('../src/ql');
-jest.unmock('../src/decorator');
-jest.unmock('../src/dql');
-
 import Store from '../src/store';
 import Actor from '../src/actor';
 import {QL} from '../src/ql';

@@ -1,4 +1,3 @@
-jest.unmock('../src/Validator');
 import Validator from '../src/Validator';
 
 
