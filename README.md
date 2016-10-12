@@ -254,7 +254,7 @@ npm install iflux2 --save
 {
   "presets": ["es2015", "react", "stage-3"],
   "plugins": [
-    "transform-decorators-legacy", //required
+    "transform-decorators-legacy", //required, 必须在class-properties之前！
     "transform-class-properties",
     "transform-es2015-modules-commonjs",
     "transform-flow-strip-types",
