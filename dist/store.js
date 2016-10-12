@@ -61,7 +61,7 @@ var Store = function () {
   }]);
 
   function Store() {
-    var opts = arguments.length <= 0 || arguments[0] === undefined ? { debug: false } : arguments[0];
+    var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { debug: false };
 
     _classCallCheck(this, Store);
 
@@ -99,7 +99,7 @@ var Store = function () {
       this.debug(function () {
         var conflictList = (0, _util.filterActorConflictKey)(actorList) || [];
         conflictList.forEach(function (v) {
-          console.warn('actor:key ‘' + v[0] + '’ was conflicted among ‘' + v[1] + '’ ');
+          console.warn('actor:key \u2018' + v[0] + '\u2019 was conflicted among \u2018' + v[1] + '\u2019 ');
         });
       });
     }
@@ -115,7 +115,7 @@ var Store = function () {
     value: function dispatch(msg) {
       var _this = this;
 
-      var param = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+      var param = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
 
       //trace log
@@ -348,15 +348,9 @@ var Store = function () {
         return;
       }
 
-      //防止重复添加
-      for (var i = 0, len = this._callbacks.length; i < len; i++) {
-        if (this._callbacks[i] === callback) {
-          return;
-        }
+      if (this._callbacks.indexOf(callback) == -1) {
+        this._callbacks.push(callback);
       }
-
-      //push
-      this._callbacks.push(callback);
     }
 
     /**
@@ -371,12 +365,9 @@ var Store = function () {
         return;
       }
 
-      for (var i = 0, len = this._callbacks.length; i < len; i++) {
-        //删除
-        if (callback === this._callbacks[i]) {
-          this._callbacks.splice(i, 1);
-          break;
-        }
+      var index = this._callbacks.indexOf(callback);
+      if (index != -1) {
+        this._callbacks.splice(index, 1);
       }
     }
 

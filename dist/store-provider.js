@@ -34,7 +34,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @returns {Function}
  */
 function connectToStore(AppStore) {
-  var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   return function (Component) {
     var _class, _temp;
@@ -46,8 +46,7 @@ function connectToStore(AppStore) {
         _classCallCheck(this, StoreContainer);
 
         //如果是debug状态
-
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(StoreContainer).call(this, props));
+        var _this = _possibleConstructorReturn(this, (StoreContainer.__proto__ || Object.getPrototypeOf(StoreContainer)).call(this, props));
 
         _this.getChildContext = function () {
           return {

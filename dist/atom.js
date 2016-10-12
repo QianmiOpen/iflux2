@@ -28,13 +28,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * 原子不可变数据容器
  * 
  */
-
 var Atom = function () {
 
   /**
    * 初始化初始的数据结构
    */
-
   function Atom(record) {
     _classCallCheck(this, Atom);
 

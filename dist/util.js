@@ -55,7 +55,7 @@ function type(type) {
 }
 
 function filterActorConflictKey() {
-  var actor = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+  var actor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
   //如果数组的元素只有一个不判断
   if (actor.length <= 1) {

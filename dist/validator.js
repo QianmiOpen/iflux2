@@ -13,7 +13,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  *
  * 封装常用的校验工具方法
  */
-
 var Validator = function () {
   function Validator() {
     _classCallCheck(this, Validator);

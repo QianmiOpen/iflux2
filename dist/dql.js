@@ -17,7 +17,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * 动态的QueryLang
  * 
  */
-
 var DynamicQueryLang = exports.DynamicQueryLang = function () {
   function DynamicQueryLang(name, lang) {
     _classCallCheck(this, DynamicQueryLang);

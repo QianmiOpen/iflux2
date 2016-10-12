@@ -44,17 +44,18 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 function Relax(Component) {
-  var RelaxContainer = function (_React$Component) {
+  var _class, _temp;
+
+  return _temp = _class = function (_React$Component) {
     _inherits(RelaxContainer, _React$Component);
 
     //debug状态
 
     //当前的组件状态
-
     function RelaxContainer(props) {
       _classCallCheck(this, RelaxContainer);
 
-      var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RelaxContainer).call(this, props));
+      var _this = _possibleConstructorReturn(this, (RelaxContainer.__proto__ || Object.getPrototypeOf(RelaxContainer)).call(this, props));
 
       _this._handleStoreChange = function (state) {
         if (_this._mounted) {
@@ -258,12 +259,7 @@ function Relax(Component) {
     }]);
 
     return RelaxContainer;
-  }(_react2.default.Component);
-
-  RelaxContainer.contextTypes = {
+  }(_react2.default.Component), _class.contextTypes = {
     store: _react2.default.PropTypes.object
-  };
-
-
-  return RelaxContainer;
+  }, _temp;
 }
