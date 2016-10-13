@@ -25,5 +25,19 @@ describe('dynamic query lang test suite', () => {
     expect(1).toEqual((ql.lang()[1]).lang()[0]);
     expect(['user', 1]).toEqual(ql.lang()[2]);
   });
+
+  it('invalid dql synatax', () => {
+    const testDQL = DQL('invalid', [
+      'invalid'
+    ]);
+
+    try {
+      testDQL.ql();
+    } catch(err) {
+      expect('DQL invalid partial query-lang').toEqual(
+        err.message
+      );
+    }
+  })
 });
 

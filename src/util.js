@@ -4,7 +4,7 @@
  * @returns {boolean}
  * @flow
  */
-export function isQuery(ql: any){
+export function isQuery(ql: any): boolean {
   return isArray(ql) && isFn(ql[ql.length -1]);
 }
 
@@ -14,7 +14,7 @@ export function isQuery(ql: any){
  * @param arr
  * @returns {boolean}
  */
-export function isArray(arr: any) {
+export function isArray(arr: any): boolean {
   return type(arr) === '[object Array]';
 }
 
@@ -23,7 +23,7 @@ export function isArray(arr: any) {
  * @param fn
  * @returns {boolean}
  */
-export function isFn(fn: any) {
+export function isFn(fn: any): boolean {
   return type(fn) === '[object Function]';
 }
 
@@ -31,7 +31,7 @@ export function isFn(fn: any) {
  * 是不是字符串
  * @param str
  */
-export function isStr(str: any) {
+export function isStr(str: any): boolean {
   return type(str) === '[object String]';
 }
 
@@ -41,15 +41,23 @@ export function isStr(str: any) {
  * @param type
  * @returns {string}
  */
-export function type(type: any) {
+export function type(type: any): string {
   return Object.prototype.toString.call(type);
 }
 
 
-export function filterActorConflictKey(actor: Array<Object> = []) {
+/**
+ * 过滤出actor中重复的key
+ * @param  {Array<Object>=[]} actor
+ * @returns Array
+ */
+export function filterActorConflictKey(actor: Array<Object> = []): Array<Object> {
+  //返回冲突的key的数组
+  let conflictKeyList = [];
+
   //如果数组的元素只有一个不判断
   if (actor.length <= 1) {
-    return;
+    return conflictKeyList;
   }
 
   //聚合数据
@@ -61,8 +69,6 @@ export function filterActorConflictKey(actor: Array<Object> = []) {
     })
   }
 
-  //计算冲突的可以
-  let conflictKeyList = [];
   Object.keys(actorKeyMap).forEach(v => {
     const value = actorKeyMap[v];
     if (value.length > 1) {

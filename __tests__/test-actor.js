@@ -2,6 +2,14 @@ import Actor from '../src/actor';
 import {Action} from '../src/decorator';
 import {fromJS, is} from 'immutable';
 
+//;;;;;;;;;;;;;;;;;;default actor;;;;;;;;;;;;;
+const defaultActor = new Actor();
+describe('default actor', () => {
+  it('defaultState is equal {}', () => {
+    expect({}).toEqual(defaultActor.defaultState());
+  });
+});
+
 
 //;;;;;;;;;;;;;;;UserActor;;;;;;;;;;;;;;;;;;;;;;
 class UserActor extends Actor {

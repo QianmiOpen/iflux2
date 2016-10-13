@@ -70,7 +70,7 @@ export default class Store {
 
     //计算有没有冲突的key
     this.debug(() => {
-      const conflictList = filterActorConflictKey(actorList) || [];
+      const conflictList = filterActorConflictKey(actorList);
       conflictList.forEach(v => {
         console.warn(`actor:key ‘${v[0]}’ was conflicted among ‘${v[1]}’ `);
       })

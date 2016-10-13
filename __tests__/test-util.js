@@ -40,6 +40,11 @@ describe('util test suite', () => {
   });
 
   it('actorFilterConflict', () => {
+
+    expect([]).toEqual(
+      filterActorConflictKey([])
+    )
+
     class User extends Actor {
       defaultState() {
         return {
