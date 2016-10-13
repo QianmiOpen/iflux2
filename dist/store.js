@@ -97,7 +97,7 @@ var Store = function () {
 
       //计算有没有冲突的key
       this.debug(function () {
-        var conflictList = (0, _util.filterActorConflictKey)(actorList) || [];
+        var conflictList = (0, _util.filterActorConflictKey)(actorList);
         conflictList.forEach(function (v) {
           console.warn('actor:key \u2018' + v[0] + '\u2019 was conflicted among \u2018' + v[1] + '\u2019 ');
         });

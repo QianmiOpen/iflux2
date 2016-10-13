@@ -54,12 +54,20 @@ function type(type) {
   return Object.prototype.toString.call(type);
 }
 
+/**
+ * 过滤出actor中重复的key
+ * @param  {Array<Object>=[]} actor
+ * @returns Array
+ */
 function filterActorConflictKey() {
   var actor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
+  //返回冲突的key的数组
+  var conflictKeyList = [];
+
   //如果数组的元素只有一个不判断
   if (actor.length <= 1) {
-    return;
+    return conflictKeyList;
   }
 
   //聚合数据
@@ -76,8 +84,6 @@ function filterActorConflictKey() {
     _loop(i, len);
   }
 
-  //计算冲突的可以
-  var conflictKeyList = [];
   Object.keys(actorKeyMap).forEach(function (v) {
     var value = actorKeyMap[v];
     if (value.length > 1) {

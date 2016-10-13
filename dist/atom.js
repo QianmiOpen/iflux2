@@ -101,13 +101,9 @@ var Atom = function () {
       }
 
       //防止重复添加
-      for (var i = 0, len = this._callbacks.length; i < len; i++) {
-        if (callback === this._callbacks[i]) {
-          return;
-        }
+      if (this._callbacks.indexOf(callback) == -1) {
+        this._callbacks.push(callback);
       }
-
-      this._callbacks.push(callback);
     }
 
     /**
@@ -121,11 +117,9 @@ var Atom = function () {
         return;
       }
 
-      for (var i = 0, len = this._callbacks.length; i < len; i++) {
-        if (callback === this._callbacks[i]) {
-          this._callbacks.splice(i, 1);
-          break;
-        }
+      var index = this._callbacks.indexOf(callback);
+      if (index >= 0) {
+        this._callbacks.splice(index, 1);
       }
     }
 
