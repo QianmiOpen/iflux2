@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --verbose",
-    "start": "./node_modules/.bin/webpack-dev-server --port 3000 --color true --progress true"
+    "start": "./node_modules/.bin/webpack-dev-server --port 3000"
   },
   "keywords": [
     "iflux2",

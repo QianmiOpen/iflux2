@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --config webpack.production.js",
-    "start": "./node_modules/.bin/webpack-dev-server --port 3000 --progress --color --config webpack.config.js"
+    "start": "./node_modules/.bin/webpack-dev-server --port 3000 --config webpack.config.js"
   },
   "dependencies": {
     "iflux": "^1.2.14",
@@ -22,6 +22,7 @@
   "author": "hufeng",
   "license": "ISC",
   "devDependencies": {
+    "babel-core": "^6.17.0",
     "babel-loader": "^6.2.4",
     "babel-plugin-syntax-async-functions": "^6.8.0",
     "babel-plugin-transform-class-properties": "^6.10.2",
