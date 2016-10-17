@@ -17,5 +17,9 @@ module.exports = {
       filename: 'index.html',
       template: './index.html'
     })
-  ]
+  ],
+  devServer: {
+    host: '0.0.0.0',
+    port: 3000
+  }
 }

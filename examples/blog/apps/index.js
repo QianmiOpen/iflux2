@@ -19,15 +19,21 @@ render((
   <Router history={hashHistory}>
     <Router path="/" component={ Blog }>
       <IndexRoute getComponent={(location, cb) => {
-        require(['./list'], (List) => cb(null, List.default))
+        System
+          .import('./list')
+          .then(List => cb(null, List.default))
       }}/>
 
       <Route path="new" getComponent={(location, cb) => {
-        require(['./edit'], (Edit) => cb(null, Edit.default))
+        System
+          .import('./edit')
+          .then(Edit => cb(null, Edit.default))
       }}/>
 
       <Route path="detail/:id" getComponent={(location, cb) => {
-        require(['./detail'], (Detail) => cb(null, Detail.default))
+        System
+          .import('./detail')
+          .then(Detail => cb(null, Detail.default))
       }}/>
     </Router>
   </Router>
