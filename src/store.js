@@ -9,16 +9,31 @@ import Cursor from 'immutable/contrib/cursor';
 import {isArray, filterActorConflictKey} from './util';
 import {QueryLang} from './ql';
 
+//;;;;;;;;;define flowtype;;;;;;;;;;;;;;;;;
+type ImmutableState = mixed;
+
+type Callback = (state: ImmutableState) => void;
+
+type Actor = {
+  defaultState: () => Object;
+  receive: (msg: string, state: ImmutableState, params?: any) => Object;
+};
+
+type QL = {
+  id: () => number;
+  name: () => string;
+  lang: () => Object;
+};
 
 export default class Store {
   //状态变化的事件通知
-  _callbacks: Array<Function>;
+  _callbacks: Array<Callback>;
   //当前的actor
-  _actors: Object;
+  _actors: {[name: string]: Actor};
   //actor聚合的状态
-  _actorState: Object;
+  _actorState: {[name: string]: ImmutableState};
   //当前的对外暴露的状态
-  _state: Object;
+  _state: ImmutableState;
   //当前的状态
   _debug: boolean;
   //缓存QL的计算结果
@@ -29,7 +44,7 @@ export default class Store {
    * 绑定Actor
    * @returns {Array}
    */
-  bindActor(): Array<Object> {
+  bindActor(): Array<Actor> {
     return [];
   }
 
@@ -58,7 +73,7 @@ export default class Store {
    * 聚合actor的defaultState到一个对象中去
    * @params actorList
    */
-  reduceActor(actorList: Array<Object>) {
+  reduceActor(actorList: Array<Actor>) {
     const state = {};
     for (let i = 0, len = actorList.length; i < len; i++) {
       const actor = actorList[i];
@@ -83,7 +98,7 @@ export default class Store {
    * @param msg
    * @param param
    */
-  dispatch(msg: string, param: Object = {}) {
+  dispatch(msg: string, param: ?Object = {}) {
 
     //trace log
     this.debug(() => {
@@ -160,7 +175,7 @@ export default class Store {
    * @param opts
    * @returns {*}
    */
-  bigQuery(ql: any) {
+  bigQuery(ql: QL) {
     //校验query-lang
     if (!ql.isValidQuery(ql)) {
       throw new Error('Invalid query lang');

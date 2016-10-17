@@ -40,7 +40,7 @@ export default function Relax(
     };
 
 
-    constructor(props:mixed) {
+    constructor(props: mixed) {
       super(props);
       this.state = {
         storeState: fromJS({})
