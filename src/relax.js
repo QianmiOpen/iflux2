@@ -93,7 +93,7 @@ export default function Relax(
 
             //trace log
             if (this._debug) {
-              console.timeEnd('react time');
+              console.timeEnd('relax time');
               console.groupEnd();
             }
 
