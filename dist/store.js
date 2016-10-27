@@ -27,6 +27,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+//;;;;;;;;;define flowtype;;;;;;;;;;;;;;;;;
 var Store = function () {
   _createClass(Store, [{
     key: 'bindActor',
@@ -128,31 +129,31 @@ var Store = function () {
 
       //cursor更新最新的状态
       this.cursor().withMutations(function (cursor) {
-        var _loop = function _loop(name) {
-          if (_this._actors.hasOwnProperty(name)) {
+        var _loop = function _loop(_name) {
+          if (_this._actors.hasOwnProperty(_name)) {
             (function () {
-              var actor = _this._actors[name];
-              var state = _this._actorState.get(name);
+              var actor = _this._actors[_name];
+              var state = _this._actorState.get(_name);
 
               //trace log
               _this.debug(function () {
                 var _route = actor._route || {};
                 var handlerName = _route[msg] ? _route[msg].name : 'default handler(no match)';
-                console.log(name + ' handle => ' + handlerName);
+                console.log(_name + ' handle => ' + handlerName);
               });
 
               var newState = actor.receive(msg, state, param);
               // 更新变化的actor的状态
               if (newState != state) {
-                cursor.set(name, newState);
+                cursor.set(_name, newState);
               }
             })();
           }
         };
 
         //dispatch => every actor
-        for (var name in _this._actors) {
-          _loop(name);
+        for (var _name in _this._actors) {
+          _loop(_name);
         }
       });
 

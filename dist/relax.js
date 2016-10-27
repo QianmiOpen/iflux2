@@ -49,79 +49,39 @@ function Relax(Component) {
   return _temp = _class = function (_React$Component) {
     _inherits(RelaxContainer, _React$Component);
 
-    //debug状态
-
-    //当前的组件状态
-    function RelaxContainer(props) {
+    function RelaxContainer() {
       _classCallCheck(this, RelaxContainer);
 
-      var _this = _possibleConstructorReturn(this, (RelaxContainer.__proto__ || Object.getPrototypeOf(RelaxContainer)).call(this, props));
-
-      _this._handleStoreChange = function (state) {
-        if (_this._mounted) {
-          //re-render
-          _this.setState({ storeState: state });
-        }
-      };
-
-      _this.state = {
-        storeState: (0, _immutable.fromJS)({})
-      };
-      return _this;
+      return _possibleConstructorReturn(this, (RelaxContainer.__proto__ || Object.getPrototypeOf(RelaxContainer)).apply(this, arguments));
     }
-    //当前的所有的子组件的props
-
-    //当前的状态
-
 
     _createClass(RelaxContainer, [{
       key: 'componentWillMount',
-      value: function componentWillMount() {
-        this._mounted = false;
 
+      //debug状态
+
+      //当前的状态
+      value: function componentWillMount() {
         //检查store是不是存在上下文
         if (!this.context.store) {
-          throw new Error('Could not find @StoreProvider binds AppStore in current context');
+          throw new Error('Could not find any @StoreProvider bind AppStore in current context');
         }
 
         //设置debug级别
         this._debug = this.context.store._debug;
         if (this._debug) {
           console.time('relax calculator props');
-          console.groupCollapsed('iflux2:Relax:) ' + Component.name + ' componentWillMount');
+          console.groupCollapsed('Relax(' + Component.name + ') will mount');
         }
 
         //计算最终的props,这样写的是避免querylang的重复计算
-        this._relaxProps = (0, _objectAssign2.default)({}, this.props, this.getProps());
+        this._relaxProps = (0, _objectAssign2.default)({}, this.props, this.getProps(this.props));
 
         //trace log
         if (this._debug) {
           console.timeEnd('relax calculator props');
           console.groupEnd();
         }
-      }
-    }, {
-      key: 'componentDidMount',
-      value: function componentDidMount() {
-        this._mounted = true;
-        //绑定store数据变化的监听
-        this.context.store.subscribe(this._handleStoreChange);
-      }
-    }, {
-      key: 'componentWillUpdate',
-      value: function componentWillUpdate() {
-        this._mounted = false;
-      }
-    }, {
-      key: 'componentDidUpdate',
-      value: function componentDidUpdate() {
-        this._mounted = true;
-      }
-    }, {
-      key: 'componentWillUnmount',
-      value: function componentWillUnmount() {
-        this._mounted = false;
-        this.context.store.unsubscribe(this._handleStoreChange);
       }
 
       /**
@@ -130,12 +90,14 @@ function Relax(Component) {
        * @returns {boolean}
        */
 
+      //当前的所有的子组件的props
+
     }, {
       key: 'shouldComponentUpdate',
       value: function shouldComponentUpdate(nextProps) {
         if (this._debug) {
           console.time('relax calculator props ');
-          console.groupCollapsed('iflux2:Relax:) ' + Component.name + ' shouldComponentUpdate');
+          console.groupCollapsed('Relax(' + Component.name + ') should update');
         }
 
         //compare nextProps && this.props
@@ -150,7 +112,7 @@ function Relax(Component) {
 
         //合并新的属性集合
         //判断是不是数据没有变化, 如果没有变化不需要render
-        var newRelaxProps = (0, _objectAssign2.default)({}, nextProps, this.getProps());
+        var newRelaxProps = (0, _objectAssign2.default)({}, nextProps, this.getProps(nextProps));
 
         for (var key in newRelaxProps) {
           if (newRelaxProps.hasOwnProperty(key)) {
@@ -169,7 +131,7 @@ function Relax(Component) {
         }
 
         if (this._debug) {
-          console.log('iflux2: Relax ' + Component.name + ' avoid re-render');
+          console.log('Relax(' + Component.name + ') avoid re-render');
           console.timeEnd('relax calculator props ');
           console.groupEnd();
         }
@@ -195,7 +157,7 @@ function Relax(Component) {
 
     }, {
       key: 'getProps',
-      value: function getProps() {
+      value: function getProps(reactProps) {
         var dql = {};
         var props = {};
         var store = this.context.store;
@@ -220,8 +182,8 @@ function Relax(Component) {
             props[propName] = defaultProps[propName];
 
             //如果默认属性中匹配上
-            if (this._isNotUndefinedAndNull(this.props[propName])) {
-              props[propName] = this.props[propName];
+            if (this._isNotUndefinedAndNull(reactProps[propName])) {
+              props[propName] = reactProps[propName];
             } else if (this._isNotUndefinedAndNull(store[propName])) {
               props[propName] = store[propName];
             } else if (this._isNotUndefinedAndNull(store.state().get(propName))) {
@@ -241,18 +203,12 @@ function Relax(Component) {
       }
 
       /**
-       * 监听store的变化
-       * @param  {Object} state
+       * 判断当前的值是不是undefined或者null
+       * @param  {any} param
        */
 
     }, {
       key: '_isNotUndefinedAndNull',
-
-
-      /**
-       * 判断当前的值是不是undefined或者null
-       * @param  {any} param
-       */
       value: function _isNotUndefinedAndNull(param) {
         return typeof param != 'undefined' && null != param;
       }

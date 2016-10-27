@@ -16,6 +16,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * 
  */
 
+//;;;;;;;;flowtype;;;;;;;;;;;;;;;
 var Actor = function () {
   function Actor() {
     _classCallCheck(this, Actor);

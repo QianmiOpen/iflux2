@@ -42,6 +42,7 @@ function connectToStore(AppStore) {
     return _temp = _class = function (_React$Component) {
       _inherits(StoreContainer, _React$Component);
 
+      //关联的store
       function StoreContainer(props) {
         _classCallCheck(this, StoreContainer);
 
@@ -54,20 +55,68 @@ function connectToStore(AppStore) {
           };
         };
 
+        _this._handleStoreChange = function () {
+          if (_this._isMounted) {
+            _this.forceUpdate();
+          }
+        };
+
         if (opts.debug) {
-          console.group('StoreProvider ' + Component.name + ' debug mode');
+          console.group('StoreProvider(' + Component.name + ') in debug mode.');
         }
+
+        //初始化当前的组件状态
+        _this._isMounted = false;
         //初始化Store
         _this._store = new AppStore(opts);
         return _this;
       }
+      //当前的组件状态
+
 
       _createClass(StoreContainer, [{
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+          this._isMounted = false;
+          if (opts.debug) {
+            console.log(Component.name + ' will mount...');
+            console.time('first-render-time');
+          }
+        }
+      }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
           if (opts.debug) {
+            console.log(Component.name + ' did mount');
+            console.timeEnd('first-render-time');
             console.groupEnd();
           }
+          this._isMounted = true;
+          this._store.subscribe(this._handleStoreChange);
+        }
+      }, {
+        key: 'componentWillUpdate',
+        value: function componentWillUpdate() {
+          this._isMounted = false;
+          if (opts.debug) {
+            console.group(Component.name + ' will update');
+            console.time('update-render-time');
+          }
+        }
+      }, {
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate() {
+          this._isMounted = true;
+          if (opts.debug) {
+            console.log(Component.name + ' did update');
+            console.timeEnd('update-render-time');
+            console.groupEnd();
+          }
+        }
+      }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+          this._store.unsubscribe(this._handleStoreChange);
         }
       }, {
         key: 'render',
