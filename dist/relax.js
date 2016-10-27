@@ -70,7 +70,7 @@ function Relax(Component) {
         //设置debug级别
         this._debug = this.context.store._debug;
         if (this._debug) {
-          console.time('relax calculator props');
+          console.time('relax time');
           console.groupCollapsed('Relax(' + Component.name + ') will mount');
         }
 
@@ -79,7 +79,7 @@ function Relax(Component) {
 
         //trace log
         if (this._debug) {
-          console.timeEnd('relax calculator props');
+          console.timeEnd('relax time');
           console.groupEnd();
         }
       }
@@ -96,7 +96,7 @@ function Relax(Component) {
       key: 'shouldComponentUpdate',
       value: function shouldComponentUpdate(nextProps) {
         if (this._debug) {
-          console.time('relax calculator props ');
+          console.time('relax time');
           console.groupCollapsed('Relax(' + Component.name + ') should update');
         }
 
@@ -121,7 +121,7 @@ function Relax(Component) {
 
               //trace log
               if (this._debug) {
-                console.timeEnd('relax calculator props ');
+                console.timeEnd('react time');
                 console.groupEnd();
               }
 
@@ -132,7 +132,7 @@ function Relax(Component) {
 
         if (this._debug) {
           console.log('Relax(' + Component.name + ') avoid re-render');
-          console.timeEnd('relax calculator props ');
+          console.timeEnd('relax time');
           console.groupEnd();
         }
 
