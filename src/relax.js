@@ -27,8 +27,6 @@ export default function Relax(
    return class RelaxContainer extends React.Component {
     //当前的状态
     state: State;
-    //当前的组件状态
-    _mounted: boolean;
     //当前的所有的子组件的props
     _relaxProps: Object;
     //debug状态
@@ -39,61 +37,27 @@ export default function Relax(
       store: React.PropTypes.object
     };
 
-
-    constructor(props: mixed) {
-      super(props);
-      this.state = {
-        storeState: fromJS({})
-      };
-    }
-
-
     componentWillMount() {
-      this._mounted = false;
-
       //检查store是不是存在上下文
       if (!this.context.store) {
-        throw new Error('Could not find @StoreProvider binds AppStore in current context');
+        throw new Error('Could not find any @StoreProvider bind AppStore in current context');
       }
 
       //设置debug级别
       this._debug = this.context.store._debug;
       if (this._debug) {
         console.time('relax calculator props');
-        console.groupCollapsed(`iflux2:Relax:) ${Component.name} componentWillMount`);
+        console.groupCollapsed(`Relax(${Component.name}) will mount`);
       }
 
       //计算最终的props,这样写的是避免querylang的重复计算
-      this._relaxProps = assign({}, this.props, this.getProps());
+      this._relaxProps = assign({}, this.props, this.getProps(this.props));
 
       //trace log
       if (this._debug) {
         console.timeEnd('relax calculator props');
         console.groupEnd();
       }
-    }
-
-
-    componentDidMount() {
-      this._mounted = true;
-      //绑定store数据变化的监听
-      this.context.store.subscribe(this._handleStoreChange);
-    }
-
-
-    componentWillUpdate() {
-      this._mounted = false;
-    }
-
-
-    componentDidUpdate() {
-      this._mounted = true;
-    }
-
-
-    componentWillUnmount() {
-      this._mounted = false;
-      this.context.store.unsubscribe(this._handleStoreChange);
     }
 
 
@@ -105,7 +69,7 @@ export default function Relax(
     shouldComponentUpdate(nextProps:Object) {
       if (this._debug) {
         console.time('relax calculator props ');
-        console.groupCollapsed(`iflux2:Relax:) ${Component.name} shouldComponentUpdate`);
+        console.groupCollapsed(`Relax(${Component.name}) should update`);
       }
 
       //compare nextProps && this.props
@@ -120,7 +84,7 @@ export default function Relax(
 
       //合并新的属性集合
       //判断是不是数据没有变化, 如果没有变化不需要render
-      const newRelaxProps = assign({}, nextProps, this.getProps());
+      const newRelaxProps = assign({}, nextProps, this.getProps(nextProps));
 
       for (let key in newRelaxProps) {
         if (newRelaxProps.hasOwnProperty(key)) {
@@ -139,7 +103,7 @@ export default function Relax(
       }
 
       if (this._debug) {
-        console.log(`iflux2: Relax ${Component.name} avoid re-render`);
+        console.log(`Relax(${Component.name}) avoid re-render`);
         console.timeEnd('relax calculator props ');
         console.groupEnd();
       }
@@ -164,7 +128,7 @@ export default function Relax(
      * 5. 是不是store得某个key值
      * 6. 都不是就是默认值
      */
-    getProps() {
+    getProps(reactProps) {
       const dql = {};
       const props = {};
       const {store} = this.context;
@@ -188,8 +152,8 @@ export default function Relax(
           props[propName] = defaultProps[propName];
 
           //如果默认属性中匹配上
-          if (this._isNotUndefinedAndNull(this.props[propName])) {
-            props[propName] = this.props[propName];
+          if (this._isNotUndefinedAndNull(reactProps[propName])) {
+            props[propName] = reactProps[propName];
           } else if (this._isNotUndefinedAndNull(store[propName])) {
             props[propName] = store[propName];
           } else if (this._isNotUndefinedAndNull(store.state().get(propName))) {
@@ -210,24 +174,11 @@ export default function Relax(
 
 
     /**
-     * 监听store的变化
-     * @param  {Object} state
-     */
-    _handleStoreChange:Function = (state:Object) => {
-      if (this._mounted) {
-        //re-render
-        this.setState({storeState: state});
-      }
-    };
-
-
-
-    /**
      * 判断当前的值是不是undefined或者null
      * @param  {any} param
      */
     _isNotUndefinedAndNull(param: any) {
-      return typeof (param) != 'undefined' && null != param;
+      return typeof(param) != 'undefined' && null != param;
     }
   }
 }

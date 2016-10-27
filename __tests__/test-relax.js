@@ -1,63 +1,69 @@
-import {fromJS} from 'immutable'
+import React from 'react'
+import renderer from 'react-test-renderer';
+import Relax from '../src/relax'
+import StoreProvider from '../src/store-provider';
+import Store from '../src/store'
+import Actor from '../src/actor'
+import {Action} from '../src/decorator'
 
-class Store {
-  state() {
-    return fromJS({
-      d: false
-    })
-  }
-}
-
-const store = new Store();
-
-
-class Relax {
-  constructor(props, defaultProps) {
-    this.props = props;
-    this.defaultProps = defaultProps;
-  }
-
-  _isNotUndefinedOrNull(param: any) {
-    return typeof (param) != 'undefined' && null != param;
-  }
-
-  getProps() {
-    const props = {};
-    const defaultProps = this.defaultProps;
-
-
-    for (let propName in defaultProps) {
-      if (defaultProps.hasOwnProperty(propName)) {
-
-        props[propName] = defaultProps[propName];
-        //如果默认属性中匹配上
-        if (this._isNotUndefinedOrNull(this.props[propName])) {
-          props[propName] = this.props[propName];
-        } else if (this._isNotUndefinedOrNull(store[propName])) {
-          props[propName] = store[propName];
-        } else if (this._isNotUndefinedOrNull(store.state().get(propName))) {
-          props[propName] = store.state().get(propName);
-        }
-      }
+//;;;;;;;;;;Actor;;;;;;;;;;;;;;;;;;
+class TestActor extends Actor {
+  defaultState() {
+    return {
+      text: 'hello world'
     }
-    return props;
+  }
+
+  @Action('init')
+  init(state, text) {
+    return state.set('text', text);
   }
 }
 
-const relax = new Relax(
-  {a: 0,b: false}, 
-  {
-    a: 1,
-    b: true,
-    d: true
-  });
 
+//;;;;;;;;;;;;;;;Store;;;;;;;;;;;;;;;
+class AppStore extends Store  {
+  bindActor() {
+    return [
+      new TestActor()
+    ]
+  }
 
-describe('relax test suite', () => {
-  it('null or undefined', () => {
-    console.log(relax.getProps());
-    expect(0).toEqual(relax.getProps()['a']);
-    expect(false).toEqual(relax.getProps()['b']);
-    expect(false).toEqual(relax.getProps()['d']);
-  });
+  init = () => {
+    this.dispatch('init', 'hello iflux2');
+  };
+}
+
+//;;;;;;;;;;;;;;;;Relax;;;;;;;;;;;;;;;
+@Relax
+class Text extends React.Component {
+  static defaultProps = {
+    text: ''
+  };
+
+  render() {
+    return (
+      <div>{this.props.text}</div>
+    )
+  }
+}
+
+//;;;;;;;;;;;;;;;;;;root;;;;;;;;;;;;;
+@StoreProvider(AppStore)
+class HelloApp extends React.Component {
+  componentWillMount() {
+    this.props.store.init();
+  }
+
+  render() {
+    return (
+      <Text/>
+    )
+  }
+}
+
+//;;;;;;;;;;;test;;;;;;;;;;;;;;;;;;;;;
+test('test store provider and relax', () => {
+  const tree = renderer.create(<HelloApp/>).toJSON();
+  expect(tree).toMatchSnapshot();
 });
