@@ -46,7 +46,7 @@ export default function Relax(
       //设置debug级别
       this._debug = this.context.store._debug;
       if (this._debug) {
-        console.time('relax calculator props');
+        console.time('relax time');
         console.groupCollapsed(`Relax(${Component.name}) will mount`);
       }
 
@@ -55,7 +55,7 @@ export default function Relax(
 
       //trace log
       if (this._debug) {
-        console.timeEnd('relax calculator props');
+        console.timeEnd('relax time');
         console.groupEnd();
       }
     }
@@ -68,7 +68,7 @@ export default function Relax(
      */
     shouldComponentUpdate(nextProps:Object) {
       if (this._debug) {
-        console.time('relax calculator props ');
+        console.time('relax time');
         console.groupCollapsed(`Relax(${Component.name}) should update`);
       }
 
@@ -93,7 +93,7 @@ export default function Relax(
 
             //trace log
             if (this._debug) {
-              console.timeEnd('relax calculator props ');
+              console.timeEnd('react time');
               console.groupEnd();
             }
 
@@ -104,7 +104,7 @@ export default function Relax(
 
       if (this._debug) {
         console.log(`Relax(${Component.name}) avoid re-render`);
-        console.timeEnd('relax calculator props ');
+        console.timeEnd('relax time');
         console.groupEnd();
       }
 
