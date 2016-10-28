@@ -6,7 +6,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "iflux2": "^1.1.8",
+    "iflux2": "^1.2.0",
     "react": "15.3.1",
     "react-native": "0.32.0"
   },

@@ -18,7 +18,7 @@
   "author": "hufeng",
   "license": "ISC",
   "dependencies": {
-    "iflux2": "^1.0.0",
+    "iflux2": "^1.2.0",
     "qm-pure-render": "^1.0.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",

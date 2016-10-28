@@ -1970,15 +1970,9 @@ ieee754@^1.1.4:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
 
-iflux@^1.2.14:
-  version "1.2.14"
-  resolved "https://registry.yarnpkg.com/iflux/-/iflux-1.2.14.tgz#562d444ade9ae10d91821aad70ff11efc9253fb1"
-  dependencies:
-    object-assign "^4.0.1"
-
-iflux2@^1.1.5:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.1.8.tgz#9a468dcf63ce9c70f6f03e6a8a739b51ddf80d2b"
+iflux2@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.2.0.tgz#55a76073bd846092507c46ebf81d2b84f76464f1"
   dependencies:
     events "^1.1.0"
     immutable "^3.8.1"
