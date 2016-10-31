@@ -305,7 +305,7 @@ var Store = function () {
 
       //trace log
       this.debug(function () {
-        var result = metaData.result.toJS ? metaData.result.toJS() : metaData.result;
+        var result = metaData.result && metaData.result.toJS ? metaData.result.toJS() : metaData.result;
         console.log('!!result => ' + JSON.stringify(result, null, 2));
         console.groupEnd && console.groupEnd();
         console.timeEnd('bigQuery');

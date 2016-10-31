@@ -277,7 +277,7 @@ export default class Store {
     //trace log
     this.debug(() => {
       const result = (
-        metaData.result.toJS
+        (metaData.result && metaData.result.toJS)
           ? metaData.result.toJS()
           : metaData.result
       );

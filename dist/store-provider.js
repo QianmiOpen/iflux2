@@ -39,6 +39,11 @@ function connectToStore(AppStore) {
   return function (Component) {
     var _class, _temp;
 
+    //proxy Component componentDidMount
+    var proxyDidMount = Component.prototype.componentDidMount || function () {};
+    //清空
+    Component.prototype.componentDidMount = function () {};
+
     return _temp = _class = function (_React$Component) {
       _inherits(StoreContainer, _React$Component);
 
@@ -93,6 +98,11 @@ function connectToStore(AppStore) {
           }
           this._isMounted = true;
           this._store.subscribe(this._handleStoreChange);
+
+          //代理的子componentDidMount执行一次
+          if (this.App) {
+            proxyDidMount.call(this.App);
+          }
         }
       }, {
         key: 'componentWillUpdate',
@@ -121,7 +131,15 @@ function connectToStore(AppStore) {
       }, {
         key: 'render',
         value: function render() {
-          return _react2.default.createElement(Component, _extends({}, this.props, { store: this._store }));
+          var _this2 = this;
+
+          return _react2.default.createElement(Component, _extends({
+            ref: function ref(App) {
+              return _this2.App = App;
+            }
+          }, this.props, {
+            store: this._store
+          }));
         }
       }]);
 

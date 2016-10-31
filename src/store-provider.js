@@ -25,6 +25,11 @@ export default function connectToStore(
   opts: Options = {}
 ) {
   return function (Component: ReactClass<{}>) {
+    //proxy Component componentDidMount
+    const proxyDidMount = Component.prototype.componentDidMount || (() => {});
+    //清空
+    Component.prototype.componentDidMount = () => {};
+
     return class StoreContainer extends React.Component {
       //关联的store
       _store: Object;
@@ -70,6 +75,11 @@ export default function connectToStore(
         }
         this._isMounted = true;
         this._store.subscribe(this._handleStoreChange);
+
+        //代理的子componentDidMount执行一次
+        if (this.App) {
+          proxyDidMount.call(this.App);
+        }
       }
 
       componentWillUpdate() {
@@ -96,7 +106,11 @@ export default function connectToStore(
 
       render() {
         return (
-          <Component {...this.props} store={this._store} />
+          <Component 
+            ref={(App) => this.App = App} 
+            {...this.props} 
+            store={this._store} 
+          />
         );
       }
 
