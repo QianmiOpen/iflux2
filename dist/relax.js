@@ -49,19 +49,40 @@ function Relax(Component) {
   return _temp = _class = function (_React$Component) {
     _inherits(RelaxContainer, _React$Component);
 
-    function RelaxContainer() {
+    function RelaxContainer(props) {
       _classCallCheck(this, RelaxContainer);
 
-      return _possibleConstructorReturn(this, (RelaxContainer.__proto__ || Object.getPrototypeOf(RelaxContainer)).apply(this, arguments));
+      var _this = _possibleConstructorReturn(this, (RelaxContainer.__proto__ || Object.getPrototypeOf(RelaxContainer)).call(this, props));
+
+      _this._subscribeStoreChange = function (state) {
+        if (_this._isMounted) {
+          //re-render
+          _this.setState({ storeState: state });
+        }
+      };
+
+      _this._isMounted = false;
+      _this.state = {
+        storeState: (0, _immutable.fromJS)({})
+      };
+      return _this;
     }
+
+    //当前的状态
+
+    //当前组件的挂载状态
+
+    //当前的所有的子组件的props
+
+    //debug状态
+
 
     _createClass(RelaxContainer, [{
       key: 'componentWillMount',
-
-      //debug状态
-
-      //当前的状态
       value: function componentWillMount() {
+        //设置当前组件的状态
+        this._isMounted = false;
+
         //检查store是不是存在上下文
         if (!this.context.store) {
           throw new Error('Could not find any @StoreProvider bind AppStore in current context');
@@ -83,14 +104,33 @@ function Relax(Component) {
           console.groupEnd();
         }
       }
+    }, {
+      key: 'componentDidMount',
+      value: function componentDidMount() {
+        this._isMounted = true;
+        this.context.store.subscribe(this._subscribeStoreChange);
+      }
+    }, {
+      key: 'componentWillUpdate',
+      value: function componentWillUpdate() {
+        this._isMounted = false;
+      }
+    }, {
+      key: 'componentDidUpdate',
+      value: function componentDidUpdate() {
+        this._isMounted = true;
+      }
+    }, {
+      key: 'componentWillUnmount',
+      value: function componentWillUnmount() {
+        this.context.store.unsubscribe(this._subscribeStoreChange);
+      }
 
       /**
        * 3ks immutable
        * @param nextProps
        * @returns {boolean}
        */
-
-      //当前的所有的子组件的props
 
     }, {
       key: 'shouldComponentUpdate',

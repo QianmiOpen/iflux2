@@ -50,7 +50,7 @@ var Store = function () {
     /**
      * 初始化store
      *
-     * @param  {Object={debug:false}} opts
+     * @param opts
      */
 
     //缓存QL的计算结果
@@ -188,7 +188,7 @@ var Store = function () {
         //从新计算一次最新的state状态
         _this2._state = _this2.reduceState();
 
-        _this2._callbacks.forEach(function (callback) {
+        _this2._callbacks.reverse().forEach(function (callback) {
           callback(_this2._state);
         });
       });
@@ -408,6 +408,7 @@ var Store = function () {
     /**
      * 格式化ql的查询结果
      * @param ql
+     * @param opts
      */
 
   }, {

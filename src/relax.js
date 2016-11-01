@@ -21,12 +21,24 @@ type State = {
   storeState: Object;
 };
 
+type ImmutableMap = mixed;
+
 export default function Relax(
   Component: ReactClass<{}>
 ): ReactClass<{}> {
    return class RelaxContainer extends React.Component {
+     constructor(props) {
+       super(props);
+       this._isMounted = false;
+       this.state = {
+         storeState: fromJS({})
+       };
+     }
+
     //当前的状态
     state: State;
+    //当前组件的挂载状态
+    _isMounted: boolean;
     //当前的所有的子组件的props
     _relaxProps: Object;
     //debug状态
@@ -38,6 +50,9 @@ export default function Relax(
     };
 
     componentWillMount() {
+      //设置当前组件的状态
+      this._isMounted = false;
+
       //检查store是不是存在上下文
       if (!this.context.store) {
         throw new Error('Could not find any @StoreProvider bind AppStore in current context');
@@ -58,6 +73,23 @@ export default function Relax(
         console.timeEnd('relax time');
         console.groupEnd();
       }
+    }
+
+    componentDidMount() {
+      this._isMounted = true;
+      this.context.store.subscribe(this._subscribeStoreChange);
+    }
+
+    componentWillUpdate() {
+      this._isMounted = false;
+    }
+
+    componentDidUpdate() {
+      this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+      this.context.store.unsubscribe(this._subscribeStoreChange);
     }
 
 
@@ -180,5 +212,13 @@ export default function Relax(
     _isNotUndefinedAndNull(param: any) {
       return typeof(param) != 'undefined' && null != param;
     }
+
+
+     _subscribeStoreChange = (state: ImmutableMap) => {
+       if (this._isMounted) {
+         //re-render
+         this.setState({storeState: state});
+       }
+     };
   }
 }

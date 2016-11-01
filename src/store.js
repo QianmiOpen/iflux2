@@ -49,11 +49,10 @@ export default class Store {
   }
 
 
-
   /**
    * 初始化store
    *
-   * @param  {Object={debug:false}} opts
+   * @param opts
    */
   constructor(opts: Object = { debug: false }) {
     this._debug = opts.debug;
@@ -162,7 +161,7 @@ export default class Store {
       //从新计算一次最新的state状态
       this._state = this.reduceState();
 
-      this._callbacks.forEach((callback) => {
+      this._callbacks.reverse().forEach((callback) => {
         callback(this._state);
       });
     });
@@ -366,6 +365,7 @@ export default class Store {
   /**
    * 格式化ql的查询结果
    * @param ql
+   * @param opts
    */
   pprintBigQuery(ql: Object, opts: Object) {
     this.prettyPrint(this.bigQuery(ql, opts));
