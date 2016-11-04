@@ -31,6 +31,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /**
  * WrapperComponent
  * @param AppStore
+ * @param opts
  * @returns {Function}
  */
 function connectToStore(AppStore) {

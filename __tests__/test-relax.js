@@ -5,6 +5,7 @@ import StoreProvider from '../src/store-provider';
 import Store from '../src/store'
 import Actor from '../src/actor'
 import {Action} from '../src/decorator'
+jest.mock('react-dom');
 
 //;;;;;;;;;;Actor;;;;;;;;;;;;;;;;;;
 class TestActor extends Actor {

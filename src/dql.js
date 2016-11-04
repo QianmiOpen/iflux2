@@ -20,7 +20,7 @@ export class DynamicQueryLang {
   /**
    * 分析路径中的动态元素，然后根据上下文替换
    *
-   * @param  {Array<Object>} lang
+   * @param ql
    */
   analyserLang(ql: Object) {
     //校验query的合法性

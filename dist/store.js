@@ -23,11 +23,16 @@ var _util = require('./util');
 
 var _ql = require('./ql');
 
+var _reactDom = require('react-dom');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-//;;;;;;;;;define flowtype;;;;;;;;;;;;;;;;;
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Store;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+//;;;;;;;;;;;;;;;;;;define flowtype;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 var Store = function () {
   _createClass(Store, [{
     key: 'bindActor',
@@ -188,8 +193,10 @@ var Store = function () {
         //从新计算一次最新的state状态
         _this2._state = _this2.reduceState();
 
-        _this2._callbacks.reverse().forEach(function (callback) {
-          callback(_this2._state);
+        (0, _reactDom.unstable_batchedUpdates)(function () {
+          _this2._callbacks.reverse().forEach(function (callback) {
+            callback(_this2._state);
+          });
         });
       });
     }
@@ -197,7 +204,6 @@ var Store = function () {
     /**
      * 计算query-lang的值
      * @param ql
-     * @param opts
      * @returns {*}
      */
 
@@ -386,13 +392,13 @@ var Store = function () {
     }
 
     /**
-    * 格式化当前的状态
-    */
+     * 格式化当前的状态
+     */
 
   }, {
     key: 'pprint',
     value: function pprint() {
-      this.prettyPrint(this.state());
+      Store.prettyPrint(this.state());
     }
 
     /**
@@ -402,7 +408,7 @@ var Store = function () {
   }, {
     key: 'pprintActor',
     value: function pprintActor() {
-      this.prettyPrint(this._actorState);
+      Store.prettyPrint(this._actorState);
     }
 
     /**
@@ -414,7 +420,7 @@ var Store = function () {
   }, {
     key: 'pprintBigQuery',
     value: function pprintBigQuery(ql, opts) {
-      this.prettyPrint(this.bigQuery(ql, opts));
+      Store.prettyPrint(this.bigQuery(ql, opts));
     }
 
     /**
@@ -422,7 +428,7 @@ var Store = function () {
      * @param obj
      */
 
-  }, {
+  }], [{
     key: 'prettyPrint',
     value: function prettyPrint(obj) {
       console.log(JSON.stringify(obj, null, 2));

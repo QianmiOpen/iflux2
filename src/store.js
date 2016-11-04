@@ -4,12 +4,13 @@
  *
  * @flow
  */
-import {is, fromJS, OrderedMap} from 'immutable';
+import {fromJS, OrderedMap} from 'immutable';
 import Cursor from 'immutable/contrib/cursor';
 import {isArray, filterActorConflictKey} from './util';
 import {QueryLang} from './ql';
+import {unstable_batchedUpdates as batchedUpdates} from 'react-dom';
 
-//;;;;;;;;;define flowtype;;;;;;;;;;;;;;;;;
+//;;;;;;;;;;;;;;;;;;define flowtype;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 type ImmutableState = mixed;
 
 type Callback = (state: ImmutableState) => void;
@@ -25,6 +26,7 @@ type QL = {
   lang: () => Object;
 };
 
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Store;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 export default class Store {
   //状态变化的事件通知
   _callbacks: Array<Callback>;
@@ -54,7 +56,7 @@ export default class Store {
    *
    * @param opts
    */
-  constructor(opts: Object = { debug: false }) {
+  constructor(opts: Object = {debug: false}) {
     this._debug = opts.debug;
     this._cacheQL = {};
     this._callbacks = [];
@@ -161,8 +163,10 @@ export default class Store {
       //从新计算一次最新的state状态
       this._state = this.reduceState();
 
-      this._callbacks.reverse().forEach((callback) => {
-        callback(this._state);
+      batchedUpdates(() => {
+        this._callbacks.reverse().forEach((callback) => {
+          callback(this._state);
+        });
       });
     });
   }
@@ -171,7 +175,6 @@ export default class Store {
   /**
    * 计算query-lang的值
    * @param ql
-   * @param opts
    * @returns {*}
    */
   bigQuery(ql: QL) {
@@ -313,7 +316,9 @@ export default class Store {
    * @param callback
    */
   subscribe(callback: Function) {
-    if (!callback) { return; }
+    if (!callback) {
+      return;
+    }
 
     if (this._callbacks.indexOf(callback) == -1) {
       this._callbacks.push(callback);
@@ -326,7 +331,9 @@ export default class Store {
    * @param callback
    */
   unsubscribe(callback: Function) {
-    if (!callback) { return; }
+    if (!callback) {
+      return;
+    }
 
     const index = this._callbacks.indexOf(callback);
     if (index != -1) {
@@ -347,10 +354,10 @@ export default class Store {
 
 
   /**
-  * 格式化当前的状态
-  */
+   * 格式化当前的状态
+   */
   pprint() {
-    this.prettyPrint(this.state());
+    Store.prettyPrint(this.state());
   }
 
 
@@ -358,7 +365,7 @@ export default class Store {
    * 内部状态
    */
   pprintActor() {
-    this.prettyPrint(this._actorState)
+    Store.prettyPrint(this._actorState)
   }
 
 
@@ -368,7 +375,7 @@ export default class Store {
    * @param opts
    */
   pprintBigQuery(ql: Object, opts: Object) {
-    this.prettyPrint(this.bigQuery(ql, opts));
+    Store.prettyPrint(this.bigQuery(ql, opts));
   }
 
 
@@ -376,7 +383,7 @@ export default class Store {
    * 漂亮的格式化
    * @param obj
    */
-  prettyPrint(obj: Object) {
+  static prettyPrint(obj: Object) {
     console.log(JSON.stringify(obj, null, 2));
   }
 }

@@ -48,7 +48,7 @@ export function type(type: any): string {
 
 /**
  * 过滤出actor中重复的key
- * @param  {Array<Object>=[]} actor
+ * @param actor
  * @returns Array
  */
 export function filterActorConflictKey(actor: Array<Object> = []): Array<Object> {

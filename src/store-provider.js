@@ -18,6 +18,7 @@ type Options = {
 /**
  * WrapperComponent
  * @param AppStore
+ * @param opts
  * @returns {Function}
  */
 export default function connectToStore(

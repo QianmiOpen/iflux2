@@ -26,7 +26,7 @@ var Validator = function () {
      * 验证
      * @param obj
      * @param rules
-     * @param opts
+     * @param options
      */
     value: function validate(obj, rules, options) {
       //保存错误信息
@@ -422,20 +422,6 @@ var Validator = function () {
     key: 'zipCode',
     value: function zipCode(value) {
       return (/^[0-9]{6}$/.test(value)
-      );
-    }
-
-    /**
-     * 判断是不是数字最多两位小数
-     *
-     * @param value
-     * @returns {boolean}
-     */
-
-  }, {
-    key: 'number',
-    value: function number(value) {
-      return (/^[0-9]+(.[0-9]{1,2})?$/.test(value)
       );
     }
 

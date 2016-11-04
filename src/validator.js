@@ -9,7 +9,7 @@ export default class Validator {
    * 验证
    * @param obj
    * @param rules
-   * @param opts
+   * @param options
    */
   static validate(obj, rules, options) {
     //保存错误信息
@@ -365,17 +365,6 @@ export default class Validator {
    */
   static zipCode(value) {
     return /^[0-9]{6}$/.test(value);
-  }
-
-
-  /**
-   * 判断是不是数字最多两位小数
-   *
-   * @param value
-   * @returns {boolean}
-   */
-  static number(value) {
-    return /^[0-9]+(.[0-9]{1,2})?$/.test(value);
   }
 
 

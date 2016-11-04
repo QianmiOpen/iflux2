@@ -222,11 +222,11 @@ function Relax(Component) {
             props[propName] = defaultProps[propName];
 
             //如果默认属性中匹配上
-            if (this._isNotUndefinedAndNull(reactProps[propName])) {
+            if (RelaxContainer._isNotUndefinedAndNull(reactProps[propName])) {
               props[propName] = reactProps[propName];
-            } else if (this._isNotUndefinedAndNull(store[propName])) {
+            } else if (RelaxContainer._isNotUndefinedAndNull(store[propName])) {
               props[propName] = store[propName];
-            } else if (this._isNotUndefinedAndNull(store.state().get(propName))) {
+            } else if (RelaxContainer._isNotUndefinedAndNull(store.state().get(propName))) {
               props[propName] = store.state().get(propName);
             }
           }
@@ -247,7 +247,7 @@ function Relax(Component) {
        * @param  {any} param
        */
 
-    }, {
+    }], [{
       key: '_isNotUndefinedAndNull',
       value: function _isNotUndefinedAndNull(param) {
         return typeof param != 'undefined' && null != param;

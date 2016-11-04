@@ -56,7 +56,7 @@ function type(type) {
 
 /**
  * 过滤出actor中重复的key
- * @param  {Array<Object>=[]} actor
+ * @param actor
  * @returns Array
  */
 function filterActorConflictKey() {

@@ -184,11 +184,11 @@ export default function Relax(
           props[propName] = defaultProps[propName];
 
           //如果默认属性中匹配上
-          if (this._isNotUndefinedAndNull(reactProps[propName])) {
+          if (RelaxContainer._isNotUndefinedAndNull(reactProps[propName])) {
             props[propName] = reactProps[propName];
-          } else if (this._isNotUndefinedAndNull(store[propName])) {
+          } else if (RelaxContainer._isNotUndefinedAndNull(store[propName])) {
             props[propName] = store[propName];
-          } else if (this._isNotUndefinedAndNull(store.state().get(propName))) {
+          } else if (RelaxContainer._isNotUndefinedAndNull(store.state().get(propName))) {
             props[propName] = store.state().get(propName);
           }
         }
@@ -209,7 +209,7 @@ export default function Relax(
      * 判断当前的值是不是undefined或者null
      * @param  {any} param
      */
-    _isNotUndefinedAndNull(param: any) {
+    static _isNotUndefinedAndNull(param: any) {
       return typeof(param) != 'undefined' && null != param;
     }
 
