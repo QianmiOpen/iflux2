@@ -9,7 +9,7 @@
     "start": "./node_modules/.bin/webpack-dev-server --port 3000"
   },
   "dependencies": {
-    "iflux2": "^1.2.0",
+    "iflux2": "1.2.3",
     "qm-pure-render": "^1.0.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0"
