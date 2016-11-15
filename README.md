@@ -248,6 +248,7 @@ export const countQL = QL('countQL', [
 npm install iflux2 --save
 ```
 
+> web
 
 ```js
 //web .babelrc
@@ -269,13 +270,42 @@ npm install iflux2 --save
     }
   }
 }
+```
 
+> react-native
+
+```js
 //react-native .babelrc
 {
   "presets": ["react-native"],
   "plugins":[
     "transform-decorators-legacy"
   ]
+}
+```
+
+```text
+➜  Hello tree -L 1
+.
+├── __tests__
+├── android
+├── index.android.js
+├── index.ios.js
+├── ios
+├── node_modules
+├── package.json
+├── react-dom //拷贝这个react-native mock的react-dom
+├── tsconfig.json
+├── typings
+└── yarn.lock
+
+6 directories, 5 files
+```
+
+```js
+//package.json
+"scripts": {
+  "preinstall": "npm install ./react-dom"
 }
 ```
 
