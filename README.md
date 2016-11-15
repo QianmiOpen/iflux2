@@ -309,6 +309,8 @@ npm install iflux2 --save
 }
 ```
 
+react-native demo可以参考 https://github.com/QianmiOpen/iflux2/tree/master/examples/iflux2Native
+
 ### more examples
 
 * https://github.com/hufeng/iflux2-blog
