@@ -69,6 +69,7 @@ function connectToStore(AppStore) {
 
         if (opts.debug) {
           console.group('StoreProvider(' + Component.name + ') in debug mode.');
+          console.time('first-render-time');
         }
 
         //初始化当前的组件状态
@@ -81,14 +82,6 @@ function connectToStore(AppStore) {
 
 
       _createClass(StoreContainer, [{
-        key: 'componentWillMount',
-        value: function componentWillMount() {
-          this._isMounted = false;
-          if (opts.debug) {
-            console.time('first-render-time');
-          }
-        }
-      }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
           if (opts.debug) {

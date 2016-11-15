@@ -61,7 +61,7 @@ export default function Relax(
       //设置debug级别
       this._debug = this.context.store._debug;
       if (this._debug) {
-        console.time(`Relax(${Component.name})`);
+        console.time('relax time');
         console.groupCollapsed(`Relax(${Component.name}) will mount`);
       }
 
@@ -70,7 +70,7 @@ export default function Relax(
 
       //trace log
       if (this._debug) {
-        console.timeEnd(`Relax(${Component.name})`);
+        console.timeEnd('relax time');
         console.groupEnd();
       }
     }

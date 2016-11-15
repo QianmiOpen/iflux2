@@ -126,10 +126,10 @@ var Store = function () {
 
       //trace log
       this.debug(function () {
-        console.time('dispatch');
         console.groupCollapsed('store dispatch {msg =>' + JSON.stringify(msg) + '}}');
-        console.log('param=>');
+        console.log('param ->');
         console.log(param.toJS ? param.toJS() : param);
+        console.time('dispatch');
       });
 
       //cursor更新最新的状态
@@ -170,8 +170,8 @@ var Store = function () {
 
       //end log
       this.debug(function () {
-        console.groupEnd && console.groupEnd();
         console.timeEnd('dispatch');
+        console.groupEnd && console.groupEnd();
       });
     }
 

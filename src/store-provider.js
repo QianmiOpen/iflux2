@@ -52,19 +52,13 @@ export default function connectToStore(
         //如果是debug状态
         if (opts.debug) {
           console.group(`StoreProvider(${Component.name}) in debug mode.`);
+          console.time('first-render-time');
         }
 
         //初始化当前的组件状态
         this._isMounted = false;
         //初始化Store
         this._store = new AppStore(opts);
-      }
-
-      componentWillMount() {
-        this._isMounted = false;
-        if (opts.debug) {
-          console.time('first-render-time');
-        }
       }
 
       componentDidMount() {
