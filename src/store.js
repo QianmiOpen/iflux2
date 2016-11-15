@@ -75,10 +75,6 @@ export default class Store {
    * @params actorList
    */
   reduceActor(actorList: Array<Actor>) {
-    this.debug(() => {
-      console.time('reduceActor');
-    });
-
     const state = {};
     for (let i = 0, len = actorList.length; i < len; i++) {
       const actor = actorList[i];
@@ -90,7 +86,6 @@ export default class Store {
 
     //计算有没有冲突的key
     this.debug(() => {
-      console.timeEnd('reduceActor');
       const conflictList = filterActorConflictKey(actorList);
       conflictList.forEach(v => {
         console.warn(`actor:key ‘${v[0]}’ was conflicted among ‘${v[1]}’ `);
@@ -129,13 +124,13 @@ export default class Store {
             const _route = actor._route || {};
             const handlerName = _route[msg] ? _route[msg].name : 'default handler(no match)';
             console.log(`${name} handle => ${handlerName}`);
-            console.time(`${name} time`);
+            console.time(`${name}`);
           });
 
           const newState = actor.receive(msg, state, param);
 
           this.debug(() => {
-            console.timeEnd(`${name} time`);
+            console.timeEnd(`${name}`);
           });
 
           // 更新变化的actor的状态
@@ -200,7 +195,7 @@ export default class Store {
 
     //trace log
     this.debug(() => {
-      console.time(`bigQuery[${name}]`);
+      console.time(`${name}`);
       console.groupCollapsed(`ql#${name} big query ==>`);
     });
 
@@ -296,7 +291,7 @@ export default class Store {
       );
       console.log('!!result => ' + JSON.stringify(result, null, 2));
       console.groupEnd && console.groupEnd();
-      console.timeEnd(`bigQuery[${name}]`);
+      console.timeEnd(`${name}`);
     });
 
     return result;
@@ -316,18 +311,10 @@ export default class Store {
    * 从actorState聚合出对外暴露的状态
    */
   reduceState() {
-    this.debug(() => {
-      console.time('reduceState');
-    });
-
     return OrderedMap().update(value => {
       return this._actorState.valueSeq().reduce((init, state) => {
         return init.merge(state);
       }, value);
-    });
-
-    this.debug(() => {
-      console.timeEnd('reduceState');
     });
   }
 

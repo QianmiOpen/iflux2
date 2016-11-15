@@ -85,7 +85,6 @@ function connectToStore(AppStore) {
         value: function componentWillMount() {
           this._isMounted = false;
           if (opts.debug) {
-            console.log(Component.name + ' will mount...');
             console.time('first-render-time');
           }
         }
@@ -93,7 +92,6 @@ function connectToStore(AppStore) {
         key: 'componentDidMount',
         value: function componentDidMount() {
           if (opts.debug) {
-            console.log(Component.name + ' did mount');
             console.timeEnd('first-render-time');
             console.groupEnd();
           }
@@ -110,7 +108,6 @@ function connectToStore(AppStore) {
         value: function componentWillUpdate() {
           this._isMounted = false;
           if (opts.debug) {
-            console.group(Component.name + ' will update');
             console.time('update-render-time');
           }
         }
@@ -119,7 +116,6 @@ function connectToStore(AppStore) {
         value: function componentDidUpdate() {
           this._isMounted = true;
           if (opts.debug) {
-            console.log(Component.name + ' did update');
             console.timeEnd('update-render-time');
             console.groupEnd();
           }

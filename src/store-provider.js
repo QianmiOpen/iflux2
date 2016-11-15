@@ -63,14 +63,12 @@ export default function connectToStore(
       componentWillMount() {
         this._isMounted = false;
         if (opts.debug) {
-          console.log(`${Component.name} will mount...`);
           console.time('first-render-time');
         }
       }
 
       componentDidMount() {
         if (opts.debug) {
-          console.log(`${Component.name} did mount`);
           console.timeEnd('first-render-time');
           console.groupEnd();
         }
@@ -86,7 +84,6 @@ export default function connectToStore(
       componentWillUpdate() {
         this._isMounted = false;
         if (opts.debug) {
-          console.group(`${Component.name} will update`);
           console.time('update-render-time');
         }
       }
@@ -94,7 +91,6 @@ export default function connectToStore(
       componentDidUpdate() {
         this._isMounted = true;
         if (opts.debug) {
-          console.log(`${Component.name} did update`)
           console.timeEnd('update-render-time')
           console.groupEnd();
         }
