@@ -64,6 +64,8 @@ var Store = function () {
 
     //当前的actor
 
+    //storeprovider订阅者
+
   }]);
 
   function Store() {
@@ -128,7 +130,7 @@ var Store = function () {
       this.debug(function () {
         console.groupCollapsed('store dispatch {msg =>' + JSON.stringify(msg) + '}}');
         console.log('param ->');
-        console.log(param.toJS ? param.toJS() : param);
+        console.log(param && param.toJS ? param.toJS() : param);
         console.time('dispatch');
       });
 
@@ -167,12 +169,6 @@ var Store = function () {
           _loop(_name);
         }
       });
-
-      //end log
-      this.debug(function () {
-        console.timeEnd('dispatch');
-        console.groupEnd && console.groupEnd();
-      });
     }
 
     /**
@@ -200,7 +196,15 @@ var Store = function () {
         _this2._state = _this2.reduceState();
 
         (0, _reactDom.unstable_batchedUpdates)(function () {
-          _this2._callbacks.reverse().forEach(function (callback) {
+          //先通知storeProvider做刷新
+          _this2._storeProviderSubscribe && _this2._storeProviderSubscribe(function () {
+            //end log
+            _this2.debug(function () {
+              console.timeEnd('dispatch');
+              console.groupEnd && console.groupEnd();
+            });
+          });
+          _this2._callbacks.forEach(function (callback) {
             callback(_this2._state);
           });
         });
@@ -356,12 +360,21 @@ var Store = function () {
     /**
      * 订阅state的变化
      * @param callback
+     * @param isStoreProvider
      */
 
   }, {
     key: 'subscribe',
     value: function subscribe(callback) {
+      var isStoreProvider = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
       if (!callback) {
+        return;
+      }
+
+      //特别保存storeprovider的订阅者
+      if (isStoreProvider) {
+        this._storeProviderSubscribe = callback;
         return;
       }
 

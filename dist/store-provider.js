@@ -61,9 +61,11 @@ function connectToStore(AppStore) {
           };
         };
 
-        _this._handleStoreChange = function () {
+        _this._handleStoreChange = function (cb) {
           if (_this._isMounted) {
-            _this.forceUpdate();
+            _this.forceUpdate(function () {
+              return cb();
+            });
           }
         };
 
@@ -89,7 +91,7 @@ function connectToStore(AppStore) {
             console.groupEnd();
           }
           this._isMounted = true;
-          this._store.subscribe(this._handleStoreChange);
+          this._store.subscribe(this._handleStoreChange, true);
 
           //代理的子componentDidMount执行一次
           if (this.App) {
@@ -101,6 +103,7 @@ function connectToStore(AppStore) {
         value: function componentWillUpdate() {
           this._isMounted = false;
           if (opts.debug) {
+            console.group('StoreProvider(' + Component.name + ') will update');
             console.time('update-render-time');
           }
         }
