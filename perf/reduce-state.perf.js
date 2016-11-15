@@ -1,13 +1,30 @@
+/**
+ * 科学的方式分析改进系统的性能问题
+ * M.P.D.I.A
+ * M: Measure
+ * P: Profile
+ * D: Diagnose
+ * I: Indentify
+ * A: Attemp
+ * 
+ * 通过timeline迅速了解系统的整个时间流
+ */
 const Immutable = require('immutable');
 const {fromJS, OrderedMap} = Immutable;
 
 
+/**
+ * 旧的reduceState的算法
+ */
 const reduceState = (actorState) => {
   return actorState.valueSeq().reduce((init, value) => {
     return init.merge(value);
   }, OrderedMap());
 };
 
+/**
+ * 新的reduceState算法
+ */
 const newReduceState = (actorState) => {
   return OrderedMap().update(value => {
     return actorState.valueSeq().reduce((init, state) => {
@@ -16,6 +33,7 @@ const newReduceState = (actorState) => {
   });
 };
 
+//mock data
 const actorState = fromJS({
   1: {
     storeId:1,

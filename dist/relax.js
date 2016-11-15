@@ -91,7 +91,7 @@ function Relax(Component) {
         //设置debug级别
         this._debug = this.context.store._debug;
         if (this._debug) {
-          console.time('relax time');
+          console.time('Relax(' + Component.name + ')');
           console.groupCollapsed('Relax(' + Component.name + ') will mount');
         }
 
@@ -100,7 +100,7 @@ function Relax(Component) {
 
         //trace log
         if (this._debug) {
-          console.timeEnd('relax time');
+          console.timeEnd('Relax(' + Component.name + ')');
           console.groupEnd();
         }
       }

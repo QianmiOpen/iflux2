@@ -92,6 +92,10 @@ var Store = function () {
   _createClass(Store, [{
     key: 'reduceActor',
     value: function reduceActor(actorList) {
+      this.debug(function () {
+        console.time('reduceActor');
+      });
+
       var state = {};
       for (var i = 0, len = actorList.length; i < len; i++) {
         var actor = actorList[i];
@@ -103,6 +107,7 @@ var Store = function () {
 
       //计算有没有冲突的key
       this.debug(function () {
+        console.timeEnd('reduceActor');
         var conflictList = (0, _util.filterActorConflictKey)(actorList);
         conflictList.forEach(function (v) {
           console.warn('actor:key \u2018' + v[0] + '\u2019 was conflicted among \u2018' + v[1] + '\u2019 ');
@@ -145,9 +150,15 @@ var Store = function () {
                 var _route = actor._route || {};
                 var handlerName = _route[msg] ? _route[msg].name : 'default handler(no match)';
                 console.log(_name + ' handle => ' + handlerName);
+                console.time(_name + ' time');
               });
 
               var newState = actor.receive(msg, state, param);
+
+              _this.debug(function () {
+                console.timeEnd(_name + ' time');
+              });
+
               // 更新变化的actor的状态
               if (newState != state) {
                 cursor.set(_name, newState);
@@ -223,7 +234,7 @@ var Store = function () {
 
       //trace log
       this.debug(function () {
-        console.time('bigQuery');
+        console.time('bigQuery[' + name + ']');
         console.groupCollapsed('ql#' + name + ' big query ==>');
       });
 
@@ -314,7 +325,7 @@ var Store = function () {
         var result = metaData.result && metaData.result.toJS ? metaData.result.toJS() : metaData.result;
         console.log('!!result => ' + JSON.stringify(result, null, 2));
         console.groupEnd && console.groupEnd();
-        console.timeEnd('bigQuery');
+        console.timeEnd('bigQuery[' + name + ']');
       });
 
       return result;
@@ -340,10 +351,18 @@ var Store = function () {
     value: function reduceState() {
       var _this4 = this;
 
+      this.debug(function () {
+        console.time('reduceState');
+      });
+
       return (0, _immutable.OrderedMap)().update(function (value) {
         return _this4._actorState.valueSeq().reduce(function (init, state) {
           return init.merge(state);
         }, value);
+      });
+
+      this.debug(function () {
+        console.timeEnd('reduceState');
       });
     }
 
