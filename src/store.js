@@ -28,6 +28,8 @@ type QL = {
 
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Store;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 export default class Store {
+  //storeprovider订阅者
+  _storeProviderSubscribe: Callback;
   //状态变化的事件通知
   _callbacks: Array<Callback>;
   //当前的actor
@@ -107,7 +109,7 @@ export default class Store {
         `store dispatch {msg =>${JSON.stringify(msg)}}}`
       );
       console.log('param ->');
-      console.log(param.toJS ? param.toJS() : param);
+      console.log((param && param.toJS) ? param.toJS() : param);
       console.time('dispatch');
     });
 
@@ -140,13 +142,6 @@ export default class Store {
         }
       }
     });
-
-
-    //end log
-    this.debug(() => {
-      console.timeEnd('dispatch');
-      console.groupEnd && console.groupEnd();
-    });
   }
 
 
@@ -170,7 +165,15 @@ export default class Store {
       this._state = this.reduceState();
 
       batchedUpdates(() => {
-        this._callbacks.reverse().forEach((callback) => {
+        //先通知storeProvider做刷新
+        this._storeProviderSubscribe && this._storeProviderSubscribe(() => {
+          //end log
+          this.debug(() => {
+            console.timeEnd('dispatch');
+            console.groupEnd && console.groupEnd();
+          });
+        });
+        this._callbacks.forEach((callback) => {
           callback(this._state);
         });
       });
@@ -322,9 +325,16 @@ export default class Store {
   /**
    * 订阅state的变化
    * @param callback
+   * @param isStoreProvider
    */
-  subscribe(callback: Function) {
+  subscribe(callback: Function, isStoreProvider: boolean = false) {
     if (!callback) {
+      return;
+    }
+
+    //特别保存storeprovider的订阅者
+    if (isStoreProvider) {
+      this._storeProviderSubscribe = callback;
       return;
     }
 

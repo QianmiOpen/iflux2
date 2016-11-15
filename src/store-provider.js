@@ -12,7 +12,7 @@ type Store = {
 };
 
 type Options = {
-  debug: boolean;
+  debug?: boolean;
 };
 
 /**
@@ -67,7 +67,7 @@ export default function connectToStore(
           console.groupEnd();
         }
         this._isMounted = true;
-        this._store.subscribe(this._handleStoreChange);
+        this._store.subscribe(this._handleStoreChange, true);
 
         //代理的子componentDidMount执行一次
         if (this.App) {
@@ -78,6 +78,7 @@ export default function connectToStore(
       componentWillUpdate() {
         this._isMounted = false;
         if (opts.debug) {
+          console.group(`StoreProvider(${Component.name}) will update`);
           console.time('update-render-time');
         }
       }
@@ -85,7 +86,7 @@ export default function connectToStore(
       componentDidUpdate() {
         this._isMounted = true;
         if (opts.debug) {
-          console.timeEnd('update-render-time')
+          console.timeEnd('update-render-time');
           console.groupEnd();
         }
       }
@@ -106,9 +107,9 @@ export default function connectToStore(
       }
 
 
-      _handleStoreChange = () => {
+      _handleStoreChange = (cb: Function) => {
         if (this._isMounted) {
-          this.forceUpdate();
+          this.forceUpdate(() => cb());
         }
       };
     }
