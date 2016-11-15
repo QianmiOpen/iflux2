@@ -338,9 +338,13 @@ var Store = function () {
   }, {
     key: 'reduceState',
     value: function reduceState() {
-      return this._actorState.valueSeq().reduce(function (init, value) {
-        return init.merge(value);
-      }, (0, _immutable.OrderedMap)());
+      var _this4 = this;
+
+      return (0, _immutable.OrderedMap)().update(function (value) {
+        return _this4._actorState.valueSeq().reduce(function (init, state) {
+          return init.merge(state);
+        }, value);
+      });
     }
 
     /**
