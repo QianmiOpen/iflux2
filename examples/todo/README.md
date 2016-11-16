@@ -3,8 +3,9 @@ a simple todomvc (iflux2)
 
 
 ## get started
-npm install
-
-npm start
+```sh
+yarn 
+yarn start
+```
 
 http://localhost:3000

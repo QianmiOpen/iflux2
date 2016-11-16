@@ -12,8 +12,8 @@ view只是显示了我们的校验结果而已。
 4. 异步校验使用正常业务逻辑流转
 
 ```sh
-npm install
-npm start
+yarn
+yarn start
 ```
 
-http://localhost:3000/bundle
+http://localhost:3000/

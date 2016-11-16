@@ -1,10 +1,9 @@
 # iflux2-blog
 
 ```sh
-npm install
-npm start
+yarn
+yarn start
 ```
-
-visit
+# visit
 
 http://localhost:3000

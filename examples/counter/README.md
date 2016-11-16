@@ -1,8 +1,8 @@
 ### iflux2-counter
 
 ```sh
- npm install
-npm start
+yarn 
+yarn start
 ```
 
 ### browser
