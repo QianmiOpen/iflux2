@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "jest --verbose",
-    "build": "node_modules/.bin/babel src --out-dir dist "
+    "rebuild": "node_modules/.bin/babel src --out-dir dist "
   },
   "author": "hufeng",
   "license": "BSD",

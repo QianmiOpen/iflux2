@@ -350,7 +350,8 @@ var Store = function () {
     value: function reduceState() {
       var _this4 = this;
 
-      return (0, _immutable.OrderedMap)().update(function (value) {
+      this._state = this._state || (0, _immutable.OrderedMap)();
+      return this._state.update(function (value) {
         return _this4._actorState.valueSeq().reduce(function (init, state) {
           return init.merge(state);
         }, value);

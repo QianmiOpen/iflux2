@@ -314,7 +314,8 @@ export default class Store {
    * 从actorState聚合出对外暴露的状态
    */
   reduceState() {
-    return OrderedMap().update(value => {
+    this._state = this._state || OrderedMap();
+    return this._state.update(value => {
       return this._actorState.valueSeq().reduce((init, state) => {
         return init.merge(state);
       }, value);
