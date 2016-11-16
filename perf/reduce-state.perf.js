@@ -55,6 +55,10 @@ const actorState = fromJS({
 });
 
 
+/**
+ * origin#reduceState: 2.532ms
+ * new#reduceState: 0.227ms
+ */
 
 console.time('origin#reduceState');
 reduceState(actorState);
