@@ -27,6 +27,7 @@ export default function Relax(
   Component: ReactClass<{}>
 ): ReactClass<{}> {
    return class RelaxContainer extends React.Component {
+     static displayName = `Relax(${getDisplayName(Component)})`;
      constructor(props) {
        super(props);
        this._isMounted = false;
@@ -220,5 +221,9 @@ export default function Relax(
          this.setState({storeState: state});
        }
      };
+  }
+
+  function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component'
   }
 }

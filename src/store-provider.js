@@ -37,6 +37,8 @@ export default function connectToStore(
       //当前的组件状态
       _isMounted: boolean;
 
+      static displayName = `StoreProvider(${getDisplayName(Component)})`;
+
       static childContextTypes = {
         store: React.PropTypes.object
       };
@@ -113,5 +115,9 @@ export default function connectToStore(
         }
       };
     }
+  }
+
+  function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component'
   }
 }

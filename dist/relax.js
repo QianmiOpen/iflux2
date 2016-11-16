@@ -255,7 +255,11 @@ function Relax(Component) {
     }]);
 
     return RelaxContainer;
-  }(_react2.default.Component), _class.contextTypes = {
+  }(_react2.default.Component), _class.displayName = 'Relax(' + getDisplayName(Component) + ')', _class.contextTypes = {
     store: _react2.default.PropTypes.object
   }, _temp;
+
+  function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+  }
 }

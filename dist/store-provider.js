@@ -48,7 +48,7 @@ function connectToStore(AppStore) {
     return _temp = _class = function (_React$Component) {
       _inherits(StoreContainer, _React$Component);
 
-      //关联的store
+      //当前的组件状态
       function StoreContainer(props) {
         _classCallCheck(this, StoreContainer);
 
@@ -80,7 +80,7 @@ function connectToStore(AppStore) {
         _this._store = new AppStore(opts);
         return _this;
       }
-      //当前的组件状态
+      //关联的store
 
 
       _createClass(StoreContainer, [{
@@ -137,8 +137,12 @@ function connectToStore(AppStore) {
       }]);
 
       return StoreContainer;
-    }(_react2.default.Component), _class.childContextTypes = {
+    }(_react2.default.Component), _class.displayName = 'StoreProvider(' + getDisplayName(Component) + ')', _class.childContextTypes = {
       store: _react2.default.PropTypes.object
     }, _temp;
   };
+
+  function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+  }
 }
