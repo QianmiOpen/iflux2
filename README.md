@@ -161,7 +161,10 @@ export default class AppStore extends Store {
 
   constructor(props) {
     super(props)
-    window.store = this
+    if (__DEV__) {
+      //you can use _store directly in browser's console
+      window._store = this
+    }
   }
 
   //;;;;;;;;;;;;;;;;;Action;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -183,7 +186,7 @@ import { StoreProvider } from 'iflux2'
 import AppStore from './store'
 import Counter from './component/counter'
 
-
+// debug: true 更多的console信息
 @StoreProvider(AppStore, {debug: true})
 export default class CounterApp extends Component {
   render() {
@@ -207,10 +210,10 @@ const noop = () => {}
 @Relax
 export default class Counter extends Component {
   static defaultProps = {
-    count: 0,
-    countQL,
-    increment: noop,
-    decrement: noop
+    count: 0, //Inject by store's count
+    countQL,  //calculate by store's bigQuery
+    increment: noop, //Inject by store's increment
+    decrement: noop //Inject by store's decrement
   };
 
 
