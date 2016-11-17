@@ -308,7 +308,7 @@ npm install iflux2 --save
 ```js
 //package.json
 "scripts": {
-  "preinstall": "npm install ./react-dom"
+  "postinstall": "npm install ./react-dom"
 }
 ```
 
