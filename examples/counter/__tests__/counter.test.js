@@ -5,9 +5,9 @@ import Store from '../src/store'
 import {StoreProvider} from 'iflux2'
 
 @StoreProvider(Store)
-class App extends React.Component{
+class App extends Counter{
   render() {
-    return <Counter/>
+    return super.render();
   }
 }
 
