@@ -1,0 +1,47 @@
+exports[`Relax Counter test counter 1`] = `
+<div>
+  <a
+    href="javascript:void(0);"
+    onClick={[Function]}>
+    increment
+  </a>
+  <br />
+  <span>
+    0
+  </span>
+  <br />
+  <span>
+    QL:0
+  </span>
+  <br />
+  <a
+    href="javascript:void(0);"
+    onClick={[Function]}>
+    decrement
+  </a>
+</div>
+`;
+
+exports[`Relax Counter test counter 2`] = `
+<div>
+  <a
+    href="javascript:void(0);"
+    onClick={[Function]}>
+    increment
+  </a>
+  <br />
+  <span>
+    1
+  </span>
+  <br />
+  <span>
+    QL:1
+  </span>
+  <br />
+  <a
+    href="javascript:void(0);"
+    onClick={[Function]}>
+    decrement
+  </a>
+</div>
+`;

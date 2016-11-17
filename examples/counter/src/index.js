@@ -8,11 +8,9 @@ import Counter from './component/counter'
 //debug: true
 //it will print more iflux2 trace log
 @StoreProvider(AppStore, {debug: true})
-export default class CounterApp extends Component {
+export default class CounterApp extends Counter {
   render() {
-    return (
-      <Counter/>
-    )
+    return super.render();
   }
 }
 
