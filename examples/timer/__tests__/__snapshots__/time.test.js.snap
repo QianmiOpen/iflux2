@@ -1,0 +1,51 @@
+exports[`Relax Counter test counter 1`] = `
+<div>
+  <a
+    href="javascript:void(0);"
+    onClick={[Function]}>
+    start
+  </a>
+  <span
+    style={
+      Object {
+        "color": "red",
+        "fontSize": 18,
+        "marginLeft": 10,
+        "marginRight": 10,
+      }
+    }>
+    0
+  </span>
+  <a
+    href="javascript:void(0);"
+    onClick={[Function]}>
+    reset
+  </a>
+</div>
+`;
+
+exports[`Relax Counter test counter 2`] = `
+<div>
+  <a
+    href="javascript:void(0);"
+    onClick={[Function]}>
+    start
+  </a>
+  <span
+    style={
+      Object {
+        "color": "red",
+        "fontSize": 18,
+        "marginLeft": 10,
+        "marginRight": 10,
+      }
+    }>
+    1
+  </span>
+  <a
+    href="javascript:void(0);"
+    onClick={[Function]}>
+    reset
+  </a>
+</div>
+`;

@@ -1,0 +1,48 @@
+{
+  "name": "timer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --verbose",
+    "test:coverage": "jest --coverage",
+    "build": "NODE_ENV=production ./node_modules/.bin/webpack --config webpack.production.js",
+    "start": "./node_modules/.bin/webpack-dev-server --port 3000"
+  },
+  "dependencies": {
+    "iflux2": "1.2.6",
+    "react": "15.4.1",
+    "react-dom": "15.4.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "hufeng",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-jest": "^17.0.2",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-syntax-async-functions": "^6.8.0",
+    "babel-plugin-transform-class-properties": "^6.10.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.10.3",
+    "babel-plugin-transform-flow-strip-types": "^6.8.0",
+    "babel-plugin-transform-react-constant-elements": "^6.9.1",
+    "babel-plugin-transform-react-inline-elements": "^6.8.0",
+    "babel-plugin-transform-runtime": "^6.9.0",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-3": "^6.5.0",
+    "css-loader": "^0.23.1",
+    "html-webpack-plugin": "^2.22.0",
+    "jest": "^17.0.3",
+    "react-addons-perf": "^15.3.0",
+    "react-test-renderer": "^15.4.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^2.1.0-beta.15",
+    "webpack-dev-server": "^1.14.1"
+  }
+}

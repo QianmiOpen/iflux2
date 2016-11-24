@@ -1,0 +1,17 @@
+exports[`store store decrement 1`] = `
+Object {
+  "time": 0,
+}
+`;
+
+exports[`store store increment 1`] = `
+Object {
+  "time": 1,
+}
+`;
+
+exports[`store store init state 1`] = `
+Object {
+  "time": 0,
+}
+`;
