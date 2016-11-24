@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --verbose",
+    "test:coverage": "jest --coverage",
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --config webpack.production.js",
     "start": "./node_modules/.bin/webpack-dev-server --port 3000"
   },
