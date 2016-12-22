@@ -48,7 +48,7 @@ function connectToStore(AppStore) {
     return _temp = _class = function (_React$Component) {
       _inherits(StoreContainer, _React$Component);
 
-      //当前的组件状态
+      //关联的store
       function StoreContainer(props) {
         _classCallCheck(this, StoreContainer);
 
@@ -80,7 +80,7 @@ function connectToStore(AppStore) {
         _this._store = new AppStore(opts);
         return _this;
       }
-      //关联的store
+      //当前的组件状态
 
 
       _createClass(StoreContainer, [{

@@ -21,7 +21,7 @@ type State = {
   storeState: Object;
 };
 
-type ImmutableMap = mixed;
+type ImmutableMap = Object;
 
 export default function Relax(
   Component: ReactClass<{}>

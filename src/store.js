@@ -11,11 +11,16 @@ import {QueryLang} from './ql';
 import {unstable_batchedUpdates as batchedUpdates} from 'react-dom';
 
 //;;;;;;;;;;;;;;;;;;define flowtype;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-type ImmutableState = mixed;
+type ImmutableState = {
+  get(path: string|number): any;
+  getIn(path: Array<string|number>): any;
+  update(value: Object): any;
+};
 
-type Callback = (state: ImmutableState) => void;
+type Callback = (state: mixed) => void;
 
 type Actor = {
+  _route: Object;
   defaultState: () => Object;
   receive: (msg: string, state: ImmutableState, params?: any) => Object;
 };
@@ -24,6 +29,7 @@ type QL = {
   id: () => number;
   name: () => string;
   lang: () => Object;
+  isValidQuery(ql: QL): boolean;
 };
 
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Store;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -33,9 +39,13 @@ export default class Store {
   //状态变化的事件通知
   _callbacks: Array<Callback>;
   //当前的actor
-  _actors: {[name: string]: Actor};
+  _actors: {[name: string|number]: Actor};
   //actor聚合的状态
-  _actorState: {[name: string]: ImmutableState};
+  _actorState: {
+    [name: string]: ImmutableState; 
+    get(path: string): any; 
+    valueSeq(): Array<any>
+  };
   //当前的对外暴露的状态
   _state: ImmutableState;
   //当前的状态

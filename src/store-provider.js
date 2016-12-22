@@ -22,7 +22,7 @@ type Options = {
  * @returns {Function}
  */
 export default function connectToStore(
-  AppStore: Store,
+  AppStore: (opts: Options) => Store,
   opts: Options = {}
 ) {
   return function (Component: ReactClass<{}>) {
@@ -33,9 +33,10 @@ export default function connectToStore(
 
     return class StoreContainer extends React.Component {
       //关联的store
-      _store: Object;
+      _store: Store;
       //当前的组件状态
       _isMounted: boolean;
+      App: Object;
 
       static displayName = `StoreProvider(${getDisplayName(Component)})`;
 
@@ -100,10 +101,10 @@ export default function connectToStore(
 
       render() {
         return (
-          <Component 
-            ref={(App) => this.App = App} 
-            {...this.props} 
-            store={this._store} 
+          <Component
+            ref={(App) => this.App = App}
+            {...this.props}
+            store={this._store}
           />
         );
       }

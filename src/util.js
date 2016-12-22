@@ -51,7 +51,7 @@ export function type(type: any): string {
  * @param actor
  * @returns Array
  */
-export function filterActorConflictKey(actor: Array<Object> = []): Array<Object> {
+export function filterActorConflictKey(actor: Array<Object> = []): Array<[string, string]> {
   //返回冲突的key的数组
   let conflictKeyList = [];
 
