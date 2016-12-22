@@ -42,9 +42,9 @@ export default class Store {
   _actors: {[name: string|number]: Actor};
   //actor聚合的状态
   _actorState: {
-    [name: string]: ImmutableState; 
-    get(path: string): any; 
-    valueSeq(): Array<any>
+    [name: string]: ImmutableState;
+    get(path: string): any;
+    valueSeq(): Object; 
   };
   //当前的对外暴露的状态
   _state: ImmutableState;
