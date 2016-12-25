@@ -1,3 +1,4 @@
+//@flow
 import {QL, DQL} from 'iflux2'
 import {fromJS} from 'immutable'
 

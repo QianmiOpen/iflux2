@@ -1,7 +1,16 @@
+//@flow
 import {Actor, Action} from 'iflux2'
 import {fromJS} from 'immutable'
+import type {Map, List, Record} from 'immutable'
 let uuid = 0
 
+type Todo = Record<{|
+  id: number;
+  text: string;
+  done: boolean;
+|}>;
+
+type State = Map<string, List<Todo>>;
 
 export default class TodoActor extends Actor {
   defaultState() {
@@ -11,7 +20,7 @@ export default class TodoActor extends Actor {
   }
 
   @Action('submit')
-  submit(state, value) {
+  submit(state: State, value: string) {
     return state.update('todo', (todo) => {
       return todo.push(fromJS({
         id: ++uuid,
@@ -23,32 +32,30 @@ export default class TodoActor extends Actor {
 
 
   @Action('toggle')
-  toggle(state, index) {
+  toggle(state: State, index: number) {
     return state.updateIn(['todo', index, 'done'], (done) => !done)
   }
 
 
   @Action('destroy')
-  destroy(state, index) {
+  destroy(state: State, index: number) {
     return state.deleteIn(['todo', index])
   }
 
 
   @Action('toggleAll')
-  toggleAll(state, checked) {
-    return state.update('todo', (todo) => todo.map(v => v.set('done', checked)))
+  toggleAll(state: State, checked: boolean) {
+    return state.update('todo', (todo) => todo.map((v: Todo) => v.set('done', checked)))
   }
 
 
   @Action('clearCompleted')
-  clearCompleted(state) {
-    return state.update('todo', (todo) => {
-      return todo.filter(v => !v.get('done'))
-    })
+  clearCompleted(state: State) {
+    return state.update('todo', todo => todo.filter((v: Todo) => !v.get('done')));
   }
 
   @Action('init')
-  init(state, {todo}) {
+  init(state: State, {todo}: {todo: Todo}) {
     return state.set('todo', fromJS(todo))
   }
 }

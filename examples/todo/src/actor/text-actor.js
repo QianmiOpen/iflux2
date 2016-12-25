@@ -1,4 +1,8 @@
+//@flow
 import {Actor, Action} from 'iflux2';
+import type {Map} from 'immutable'
+
+type State = Map<string, string>;
 
 export default class TextActor extends Actor {
   defaultState() {
@@ -8,17 +12,17 @@ export default class TextActor extends Actor {
   }
 
   @Action('changeValue')
-  changeValue(state, value) {
+  changeValue(state: State, value: {value: string}) {
     return state.set('value', value);
   }
 
   @Action('submit')
-  submit(state) {
+  submit(state: State) {
     return state.set('value', '')
   }
 
   @Action('init')
-  init(state, {value}) {
+  init(state: State, {value}: {value: string}) {
     return state.set('value', value)
   }
 }

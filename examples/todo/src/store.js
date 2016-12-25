@@ -1,8 +1,12 @@
+//@flow
 import {Store} from 'iflux2'
 import TextActor from './actor/text-actor'
 import TodoActor from './actor/todo-actor'
 import FilterActor from './actor/filter-actor'
 
+type Options = {
+  debug: boolean;
+}
 
 export default class AppStore extends Store {
   bindActor() {
@@ -14,15 +18,16 @@ export default class AppStore extends Store {
   }
 
 
-  constructor(props) {
+  constructor(props: Options = {debug: false}) {
     super(props)
-    //debug
-    window._store = this;
+    if (__DEV__) {
+      window._store = this;
+    }
   }
 
 
 //;;;;;;;;;;;;;action;;;;;;;;;;;;;;;;;;;;;;;
-  changeValue = (value) => {
+  changeValue = (value: string) => {
     this.dispatch('changeValue', value);
   };
 
@@ -33,21 +38,21 @@ export default class AppStore extends Store {
   };
 
 
-  changeFilter = (status) => {
+  changeFilter = (status: string) => {
     this.dispatch('filter', status)
   };
 
 
-  toggle = (index) => {
+  toggle = (index: number) => {
     this.dispatch('toggle', index)
   }
 
 
-  destroy = (index) => {
+  destroy = (index: number) => {
     this.dispatch('destroy', index)
   };
 
-  toggleAll = (checked) => {
+  toggleAll = (checked: number) => {
     this.dispatch('toggleAll', checked)
   };
 

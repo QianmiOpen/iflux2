@@ -1,8 +1,8 @@
+//@flow
 import React, {Component} from 'react';
 import {Relax} from 'iflux2'
 import {valueQL} from '../ql'
 const noop = () => {};
-
 
 @Relax
 export default class Header extends Component {
@@ -26,12 +26,12 @@ export default class Header extends Component {
     );
   }
 
-  _handleChange = (e) => {
+  _handleChange = (e: SyntheticInputEvent) => {
     this.props.changeValue(e.target.value);
   };
 
 
-  _handleKeyDown = (e) => {
+  _handleKeyDown = (e: SyntheticKeyboardEvent) => {
     if (e.keyCode === 13) {
       this.props.submit();
     }
