@@ -10,7 +10,7 @@
     "start": "./node_modules/.bin/webpack-dev-server --port 3000"
   },
   "dependencies": {
-    "iflux2": "1.2.6",
+    "iflux2": "1.2.7",
     "react": "15.4.1",
     "react-dom": "15.4.1"
   },

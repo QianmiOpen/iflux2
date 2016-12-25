@@ -1,3 +1,4 @@
+//@flow
 import React, { Component } from 'react'
 import { Relax } from 'iflux2'
 const noop = () => {}
@@ -16,9 +17,9 @@ export default class Counter extends Component {
     const {time, start, reset} = this.props
 
     const style = {
-      marginLeft: 10, 
-      marginRight: 10, 
-      fontSize: 18, 
+      marginLeft: 10,
+      marginRight: 10,
+      fontSize: 18,
       color: 'red'
     }
 
