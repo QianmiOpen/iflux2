@@ -1,3 +1,4 @@
+//@flow
 import React, { Component } from 'react'
 import { Relax } from 'iflux2'
 import FormField from './form-field'
@@ -95,7 +96,7 @@ export default class Form extends Component {
     )
   }
 
-  _getErrorInfo = (name) => {
+  _getErrorInfo = (name: string) => {
     const errors = this.props.validator.errors
     return (errors[name] || [''])[0];
   };

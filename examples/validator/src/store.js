@@ -1,9 +1,14 @@
+//@flow
 import { Store } from 'iflux2'
 import UserActor from './actor/user-actor'
 import ValidateFieldActor from './actor/validate-field-actor'
 
+type Options = {
+  debug: boolean;
+}
+
 export default class AppStore extends Store {
-  constructor(props) {
+  constructor(props: Options) {
     super(props)
     window.store = this
   }
@@ -16,12 +21,12 @@ export default class AppStore extends Store {
   }
 
   //;;;;;;;;;;;;;;;;handle action;;;;;;;;;;;;;;;;;;;;
-  changeValue = (name, value) => {
+  changeValue = (name: string, value: string) => {
     this.dispatch('changeValue', {name, value})
     this.dispatch('validateField', name)
   };
 
-  validateField = (name) => {
+  validateField = (name: string) => {
     this.dispatch('validateField', name)
   };
 

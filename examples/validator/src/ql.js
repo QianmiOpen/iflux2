@@ -1,3 +1,4 @@
+//@flow
 import { QL, Validator } from 'iflux2'
 
 export const validatorQL = QL('validatorQL', [
