@@ -1,5 +1,7 @@
+//@flow
 import { Store } from 'iflux2'
 import BlogActor from './actor/blog-actor'
+import type {Options} from '../types'
 
 
 export default class AppStore extends Store  {
@@ -9,13 +11,20 @@ export default class AppStore extends Store  {
     ]
   }
 
+  constructor(props: Options) {
+    super(props)
+    if (__DEV__) {
+      window._store = this
+    }
+  }
+
   //;;;;;;;;;;;;;;;;;;action;;;;;;;;;;;;;;;;;;;;
-  changeTitle = (title) => {
+  changeTitle = (title: string) => {
     this.dispatch('changeTitle', title)
   };
 
 
-  changeContent = (content) => {
+  changeContent = (content: string) => {
     this.dispatch('changeContent', content)
   };
 

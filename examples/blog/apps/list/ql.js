@@ -1,3 +1,4 @@
+//@flow
 import {QL} from 'iflux2'
 
 //query lang

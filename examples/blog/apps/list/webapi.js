@@ -1,6 +1,7 @@
+//@flow
 import 'whatwg-fetch'
 
-export const fetchMsg = () => {
+export const fetchMsg = (): Promise<Object> => {
   return new Promise(resolve => {
     //稍微延时一下
     setTimeout(() => {

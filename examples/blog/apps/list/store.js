@@ -1,3 +1,4 @@
+//@flow
 /**
  * appstore, state container
  */
@@ -5,13 +6,15 @@ import {Store} from 'iflux2'
 import ListActor from './actor/list-actor'
 import {fromJS} from 'immutable'
 // import {fetchMsg} from './webapi'
+import type {Options} from '../types'
 
 
 export default class AppStore extends Store {
-  constructor(props) {
+  constructor(props: Options = {debug: false}) {
     super(props)
-    //debug
-    window.store = this
+    if (__DEV__) {
+      window.store = this
+    }
   }
 
   bindActor() {
@@ -25,7 +28,7 @@ export default class AppStore extends Store {
   init = () => {
     const blogIds = JSON.parse(localStorage.getItem('blog@all') || '[]')
     const blogs = blogIds.map(v => JSON.parse(
-      localStorage.getItem(`blog@${v}`)
+      localStorage.getItem(`blog@${v}`) || ''
     ))
     this.dispatch('init', fromJS(blogs))
   };

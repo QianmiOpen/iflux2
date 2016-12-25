@@ -1,3 +1,4 @@
+//@flow
 import React, { Component } from 'react'
 import { StoreProvider } from 'iflux2'
 import AppStore from './store'

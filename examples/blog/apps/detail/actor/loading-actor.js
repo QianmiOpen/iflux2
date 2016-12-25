@@ -1,4 +1,8 @@
+//@flow
 import { Actor, Action }  from 'iflux2'
+import type {Map} from 'immutable'
+
+type State = Map<string, boolean>;
 
 export default class LoadingActor extends Actor {
   defaultState() {
@@ -8,7 +12,7 @@ export default class LoadingActor extends Actor {
   }
 
   @Action('loading')
-  loading(state, status) {
+  loading(state: State, status: boolean) {
     return state.set('loading', status)
   }
 }

@@ -1,3 +1,4 @@
+//@flow
 import React, { Component} from 'react'
 import Edit from './component/edit'
 import { StoreProvider } from 'iflux2'

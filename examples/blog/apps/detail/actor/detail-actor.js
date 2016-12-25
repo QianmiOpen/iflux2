@@ -1,4 +1,6 @@
+//@flow
 import { Actor, Action }  from 'iflux2'
+import type {Map} from 'immutable'
 
 export default class DetailActor extends Actor {
   defaultState() {
@@ -11,7 +13,7 @@ export default class DetailActor extends Actor {
   }
 
   @Action('init')
-  init(state, blog){
+  init(state: Map<string, number|boolean>, blog: Object){
     return state.merge(blog)
   };
 }

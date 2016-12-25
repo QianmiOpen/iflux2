@@ -1,3 +1,4 @@
+//@flow
 import React, {Component} from 'react'
 import { Relax } from 'iflux2'
 import { fromJS } from 'immutable'

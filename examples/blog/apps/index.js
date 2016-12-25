@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
-import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router'
+import {
+  Router,
+  Route,
+  IndexRoute,
+  Link,
+  hashHistory
+} from 'react-router'
 
 class Blog extends Component {
   render() {
