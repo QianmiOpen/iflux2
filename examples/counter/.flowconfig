@@ -5,4 +5,4 @@
 [libs]
 
 [options]
-experimentalDecorators
+esproposal.decorators=ignore

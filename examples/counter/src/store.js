@@ -1,7 +1,9 @@
+//@flow
 import { Store } from 'iflux2'
 import CounterActor from './actor/counter-actor'
 
 
+//State container
 export default class AppStore extends Store {
   bindActor() {
     return [
@@ -9,11 +11,13 @@ export default class AppStore extends Store {
     ]
   }
 
-  constructor(props) {
+  constructor(props: {debug: boolean} = {debug: false}) {
     super(props)
     //debug
     //you can quickly test in chrome
-    window.store = this
+    if (__DEV__) {
+      window.store = this
+    }
   }
 
   //;;;;;;;;;;;;;;;;;Action;;;;;;;;;;;;;;;;;;;;;;;;;;;;
