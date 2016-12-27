@@ -1,3 +1,10 @@
+/**
+ * StoreProvider
+ * 主要的作用是在Store和React的App之间建立桥梁
+ * 将Store初始化,切绑定到React顶层App的上下文
+ * 
+ */
+
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -20,13 +27,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * StoreProvider
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 主要的作用是在Store和React的App之间建立桥梁
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 将Store初始化,切绑定到React顶层App的上下文
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
  * WrapperComponent
@@ -34,8 +35,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @param opts
  * @returns {Function}
  */
+
+
+//高阶函数包装类型
 function connectToStore(AppStore) {
-  var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { debug: false };
 
   return function (Component) {
     var _class, _temp;
@@ -91,7 +95,7 @@ function connectToStore(AppStore) {
             console.groupEnd();
           }
           this._isMounted = true;
-          this._store.subscribe(this._handleStoreChange, true);
+          this._store.subscribeStoreProvider(this._handleStoreChange, true);
 
           //代理的子componentDidMount执行一次
           if (this.App) {
@@ -119,7 +123,7 @@ function connectToStore(AppStore) {
       }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
-          this._store.unsubscribe(this._handleStoreChange);
+          this._store.unsubscribeStoreProvider(this._handleStoreChange);
         }
       }, {
         key: 'render',

@@ -5,7 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.DQL = exports.DynamicQueryLang = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); //flow
+
 
 var _ql = require('./ql');
 
@@ -13,11 +14,14 @@ var _util = require('./util');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+'use strict';
+
 /**
  * 动态的QueryLang
- * 
  */
 var DynamicQueryLang = exports.DynamicQueryLang = function () {
+
+  //init
   function DynamicQueryLang(name, lang) {
     _classCallCheck(this, DynamicQueryLang);
 
@@ -27,7 +31,6 @@ var DynamicQueryLang = exports.DynamicQueryLang = function () {
 
   /**
    * 分析路径中的动态元素，然后根据上下文替换
-   *
    * @param ql
    */
 
@@ -93,8 +96,8 @@ var DynamicQueryLang = exports.DynamicQueryLang = function () {
 
 /**
  * 工厂函数
- * @param  {string|Array<Object>} name
- * @param  {Array<Object>} lang
+ * @param  {string name
+ * @param  {Lang} lang
  */
 
 

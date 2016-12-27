@@ -1,3 +1,10 @@
+/**
+ * 判断当前的参数是不是query-lang的合法形式
+ * @param ql
+ * @returns {boolean}
+ * 
+ */
+
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9,12 +16,6 @@ exports.isFn = isFn;
 exports.isStr = isStr;
 exports.type = type;
 exports.filterActorConflictKey = filterActorConflictKey;
-/**
- * 判断当前的参数是不是query-lang的合法形式
- * @param ql
- * @returns {boolean}
- * 
- */
 function isQuery(ql) {
   return isArray(ql) && isFn(ql[ql.length - 1]);
 }

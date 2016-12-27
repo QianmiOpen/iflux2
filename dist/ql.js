@@ -1,3 +1,8 @@
+/**
+ * 查询语言
+ * 
+ */
+
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5,11 +10,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.QL = exports.QueryLang = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 查询语言
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _util = require('./util');
 
@@ -19,20 +20,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var incrementId = 0;
 
 var QueryLang = exports.QueryLang = function () {
+
+  /**
+   * init
+   */
   function QueryLang(name, lang) {
     _classCallCheck(this, QueryLang);
 
     this._id = ++incrementId;
-
-    //如果第一个参数为字符串，改字符串就代表了该QL的name
-    //该name就是为了更好的帮助我们debug调试问题
-    if (typeof name === 'string' || (0, _util.isStr)(name)) {
-      this._name = name;
-      this._lang = lang;
-    } else {
-      this._name = '';
-      this._lang = name;
-    }
+    this._name = name;
+    this._lang = lang;
   }
 
   /**

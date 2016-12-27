@@ -1,4 +1,12 @@
-"use strict";
+/**
+ * Actor，致敬Erlang，Scala的akka的Actor model
+ * Actor, 独立计算的执行单元
+ * 我们不共享状态(share state), 只去transform state
+ *
+ * 
+ */
+
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8,22 +16,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
- * Actor，致敬Erlang，Scala的akka的Actor model
- * Actor, 独立计算的执行单元
- * 我们不共享状态(share state), 只去transform state
- *
- * 
- */
-
-//;;;;;;;;flowtype;;;;;;;;;;;;;;;
 var Actor = function () {
   function Actor() {
     _classCallCheck(this, Actor);
   }
 
   _createClass(Actor, [{
-    key: "defaultState",
+    key: 'defaultState',
 
 
     /**
@@ -45,7 +44,7 @@ var Actor = function () {
     //记录当前的路由信息
 
   }, {
-    key: "receive",
+    key: 'receive',
     value: function receive(msg, state, param) {
       //this._route是在@Action标记中初始化完成
       var route = this._route || {};

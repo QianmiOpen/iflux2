@@ -1,3 +1,17 @@
+/**
+ * 致敬Reley,更希望我们小伙伴可以relax
+ *
+ * Relax根据containerComponent的defaultProps
+ * 自动数据依赖注入, 数据源优先级为:
+ * 1. this.props
+ * 2. store的action函数
+ * 3. query-lang
+ * 4. store的state
+ * 5. 组件设置的默认值
+ *
+ * 
+ */
+
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14,13 +28,13 @@ var _react2 = _interopRequireDefault(_react);
 
 var _immutable = require('immutable');
 
-var _ql = require('./ql');
-
-var _dql = require('./dql');
-
 var _objectAssign = require('object-assign');
 
 var _objectAssign2 = _interopRequireDefault(_objectAssign);
+
+var _ql = require('./ql');
+
+var _dql = require('./dql');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28,20 +42,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 致敬Reley,更希望我们小伙伴可以relax
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Relax根据containerComponent的defaultProps
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 自动数据依赖注入, 数据源优先级为:
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 1. this.props
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 2. store的action函数
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 3. query-lang
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 4. store的state
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 5. 组件设置的默认值
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function Relax(Component) {
   var _class, _temp;
@@ -259,6 +260,9 @@ function Relax(Component) {
     store: _react2.default.PropTypes.object
   }, _temp;
 
+  /**
+   * displayName
+   */
   function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component';
   }

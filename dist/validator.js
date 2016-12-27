@@ -1,3 +1,9 @@
+/**
+ * Validator
+ *
+ * 封装常用的校验工具方法
+ */
+
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8,11 +14,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
- * Validator
- *
- * 封装常用的校验工具方法
- */
 var Validator = function () {
   function Validator() {
     _classCallCheck(this, Validator);

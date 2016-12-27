@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _events = require('events');
 
-exports.default = new _events.EventEmitter(); /**
-                                               * msg
-                                               */
+var _events2 = _interopRequireDefault(_events);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = new _events2.default();

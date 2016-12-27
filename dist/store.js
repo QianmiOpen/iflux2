@@ -1,3 +1,10 @@
+/**
+ * iflux的状态容器中心(MapReduce)
+ * 聚合actor, 分派action, 计算query-lang
+ *
+ * 
+ */
+
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5,13 +12,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * iflux的状态容器中心(MapReduce)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 聚合actor, 分派action, 计算query-lang
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _immutable = require('immutable');
 
@@ -19,20 +20,17 @@ var _cursor = require('immutable/contrib/cursor');
 
 var _cursor2 = _interopRequireDefault(_cursor);
 
+var _reactDom = require('react-dom');
+
 var _util = require('./util');
 
 var _ql = require('./ql');
-
-var _reactDom = require('react-dom');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Store;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-//;;;;;;;;;;;;;;;;;;define flowtype;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 var Store = function () {
   _createClass(Store, [{
     key: 'bindActor',
@@ -54,7 +52,6 @@ var Store = function () {
 
     /**
      * 初始化store
-     *
      * @param opts
      */
 
@@ -77,7 +74,8 @@ var Store = function () {
     this._cacheQL = {};
     this._callbacks = [];
     this._actors = {};
-    this._actorState = (0, _immutable.OrderedMap)();
+    this._actorState = new _immutable.OrderedMap();
+    this._storeProviderSubscribe = null;
 
     //聚合actor
     this.reduceActor(this.bindActor());
@@ -95,12 +93,14 @@ var Store = function () {
     key: 'reduceActor',
     value: function reduceActor(actorList) {
       var state = {};
+
       for (var i = 0, len = actorList.length; i < len; i++) {
         var actor = actorList[i];
         var key = this._debug ? actor.constructor.name : i;
         this._actors[key] = actor;
         state[key] = actor.defaultState();
       }
+
       this._actorState = (0, _immutable.fromJS)(state);
 
       //计算有没有冲突的key
@@ -124,7 +124,6 @@ var Store = function () {
       var _this = this;
 
       var param = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
 
       //trace log
       this.debug(function () {
@@ -196,6 +195,7 @@ var Store = function () {
         _this2._state = _this2.reduceState();
 
         (0, _reactDom.unstable_batchedUpdates)(function () {
+
           //先通知storeProvider做刷新
           _this2._storeProviderSubscribe && _this2._storeProviderSubscribe(function () {
             //end log
@@ -204,6 +204,8 @@ var Store = function () {
               console.groupEnd && console.groupEnd();
             });
           });
+
+          //通知relax
           _this2._callbacks.forEach(function (callback) {
             callback(_this2._state);
           });
@@ -367,15 +369,7 @@ var Store = function () {
   }, {
     key: 'subscribe',
     value: function subscribe(callback) {
-      var isStoreProvider = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-      if (!callback) {
-        return;
-      }
-
-      //特别保存storeprovider的订阅者
-      if (isStoreProvider) {
-        this._storeProviderSubscribe = callback;
+      if (!(0, _util.isFn)(callback)) {
         return;
       }
 
@@ -392,7 +386,7 @@ var Store = function () {
   }, {
     key: 'unsubscribe',
     value: function unsubscribe(callback) {
-      if (!callback) {
+      if (!(0, _util.isFn)(callback)) {
         return;
       }
 
@@ -400,6 +394,24 @@ var Store = function () {
       if (index != -1) {
         this._callbacks.splice(index, 1);
       }
+    }
+  }, {
+    key: 'subscribeStoreProvider',
+    value: function subscribeStoreProvider(cb) {
+      if (!(0, _util.isFn)(cb)) {
+        return;
+      }
+
+      this._storeProviderSubscribe = cb;
+    }
+  }, {
+    key: 'unsubscribeStoreProvider',
+    value: function unsubscribeStoreProvider(cb) {
+      if (!(0, _util.isFn)(cb)) {
+        return;
+      }
+
+      this._storeProviderSubscribe = null;
     }
 
     //;;;;;;;;;;;;;;;;;;;;;;help method;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -1,16 +1,22 @@
 //@flow
+import {Map} from 'immutable'
 
-declare type StoreOptions = {
+//store构造函数参数
+export type StoreOptions = {
   debug: boolean;
 };
 
-declare type ValidatorOptions = {
-  oneError: boolean;
-  debug: boolean;
+//校验的规则参数
+export type ValidatorOptions = {
+  oneError?: boolean;
+  debug?: boolean;
   validateFields: Array<string>;
 }
 
-declare type ImmutableState = mixed;
+//Immutable State
+export type IState = Map<string, any>;
+//当前的Actor的z状态类型
+export type ActorState = Map<string, any>;
 
 declare type QueryLang = {
   id: () => number;
@@ -33,12 +39,12 @@ declare class Store {
   bindActor(): Array<Actor>;
   dispatch(msg: string, param?: any): void;
   bigQuery(ql: QueryLang): any;
-  state(): ImmutableState;
+  state(): IState;
 }
 
 declare class Atom {
   constructor(record: Object): void;
-  value(path: string|Array<String>): ImmutableState;
+  value(path: string|Array<String>): IState;
   subscribe(callback: Function): void;
   unsubscribe(callback: Function): void;
 }
@@ -77,12 +83,12 @@ declare class Validator {
 declare var msg: events$EventEmitter;
 
 declare function QL(
-  name?: string,
+  name: string,
   lang: Array<string|Array<string|number>|Function>
 ): QueryLang;
 
 declare function DQL(
-  name?: string,
+  name: string,
   lang: Array<string|Array<string|number>|Function>
 ): QueryLang;
 

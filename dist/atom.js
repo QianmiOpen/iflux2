@@ -1,3 +1,9 @@
+/**
+ * 原子不可变数据容器
+ *
+ * 
+ */
+
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5,12 +11,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Atom
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _immutable = require('immutable');
 
@@ -24,10 +25,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
- * 原子不可变数据容器
- * 
- */
 var Atom = function () {
 
   /**
@@ -45,6 +42,7 @@ var Atom = function () {
    * 1. 如果path为空,就返回所有的值
    * 2. 如果path为字符串或者数组就按照immutable的path返回数据
    * 3. 其他返回空值
+   *
    * @param path
    * @returns {*}
    */
@@ -54,11 +52,13 @@ var Atom = function () {
     key: 'value',
     value: function value(path) {
       var value = null;
+
       if (!path) {
         value = this._atom;
       } else if ((0, _util.isStr)(path) || (0, _util.isArray)(path)) {
         value = this._atom[(0, _util.isStr)(path) ? 'get' : 'getIn'](path);
       }
+
       return value;
     }
 
