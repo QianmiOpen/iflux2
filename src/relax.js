@@ -11,17 +11,21 @@
  *
  * @flow
  */
+
+'use strict';
+
 import React from 'react';
 import {fromJS} from 'immutable';
-import {QueryLang} from './ql';
-import {DynamicQueryLang} from './dql';
 import assign from 'object-assign';
 
-type State = {
-  storeState: Object;
-};
+import {QueryLang} from './ql';
+import {DynamicQueryLang} from './dql';
 
-type ImmutableMap = Object;
+import type {IState} from './types'
+
+type State = {
+  storeState: IState;
+};
 
 export default function Relax(
   Component: ReactClass<{}>
@@ -44,7 +48,6 @@ export default function Relax(
     _relaxProps: Object;
     //debug状态
     _debug: boolean;
-
 
     static contextTypes = {
       store: React.PropTypes.object
@@ -92,7 +95,6 @@ export default function Relax(
     componentWillUnmount() {
       this.context.store.unsubscribe(this._subscribeStoreChange);
     }
-
 
     /**
      * 3ks immutable
@@ -143,7 +145,6 @@ export default function Relax(
 
       return false;
     }
-
 
     render() {
       return (
@@ -205,7 +206,6 @@ export default function Relax(
       return props;
     }
 
-
     /**
      * 判断当前的值是不是undefined或者null
      * @param  {any} param
@@ -214,15 +214,17 @@ export default function Relax(
       return typeof(param) != 'undefined' && null != param;
     }
 
-
-     _subscribeStoreChange = (state: ImmutableMap) => {
-       if (this._isMounted) {
-         //re-render
-         this.setState({storeState: state});
-       }
-     };
+   _subscribeStoreChange = (state: IState) => {
+     if (this._isMounted) {
+       //re-render
+       this.setState({storeState: state});
+     }
+   };
   }
 
+  /**
+   * displayName
+   */
   function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component'
   }

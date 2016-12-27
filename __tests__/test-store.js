@@ -1,9 +1,10 @@
+import {fromJS} from 'immutable';
+
 import Store from '../src/store';
 import Actor from '../src/actor';
 import {QL} from '../src/ql';
 import {Action} from '../src/decorator';
 import {DQL} from '../src/dql';
-import {fromJS} from 'immutable';
 
 
 
@@ -67,7 +68,7 @@ const userQL = QL('userQL', [
   (loading, name) => ({ loading, name })
 ]);
 
-const idQL = QL([
+const idQL = QL('idQL', [
   ['id'],
   (id) => id
 ]);
@@ -98,10 +99,15 @@ function mockSubscribeCallback() {
 //;;;;;;;;;;;;;;;;;;;;;;test suite;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 describe('app store test suite', () => {
   it('store subscribe', () => {
+    appStore.subscribe('');
+    expect(0).toEqual(appStore._callbacks.length);
     //重复添加
     appStore.subscribe(mockSubscribeCallback);
     appStore.subscribe(mockSubscribeCallback);
 
+    expect(1).toEqual(appStore._callbacks.length);
+
+    appStore.unsubscribe('');
     expect(1).toEqual(appStore._callbacks.length);
   });
 
@@ -198,4 +204,27 @@ describe('app store test suite', () => {
 
     new MyStore({debug: true})
   });
+
+  it('debug method', () => {
+    appStore.pprint();
+    appStore.pprintActor();
+    appStore.pprintBigQuery(userQL);
+    appStore
+  });
+
+  it('test StoreProvider subscribeStoreProvider', () => {
+    appStore.subscribeStoreProvider('hello');
+    expect(null).toEqual(appStore._storeProviderSubscribe);
+
+    const cb= () => {};
+    appStore.subscribeStoreProvider(cb);
+    expect(cb).toEqual(appStore._storeProviderSubscribe);
+
+    appStore.unsubscribeStoreProvider('');
+    expect(cb).toEqual(appStore._storeProviderSubscribe);
+    
+    appStore.unsubscribeStoreProvider(cb);
+    expect(null).toEqual(appStore._storeProviderSubscribe);
+
+  })
 });

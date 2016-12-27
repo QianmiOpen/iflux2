@@ -1,25 +1,26 @@
+//flow
 import {QL, QueryLang} from './ql';
 import {isArray, isStr, isQuery} from './util';
 
+'use strict';
+
+type Lang = Array<string|number|Array<string|number>|Function>;
 
 /**
  * 动态的QueryLang
- * @flow
  */
 export class DynamicQueryLang {
   _ctx: Object;
   _ql: Object;
 
-
-  constructor(name: string | Array<Object>, lang: Array<Object>) {
+  //init
+  constructor(name: string, lang: Lang) {
     this._ctx = {};
     this._ql = QL(name, lang);
   }
 
-
   /**
    * 分析路径中的动态元素，然后根据上下文替换
-   *
    * @param ql
    */
   analyserLang(ql: Object) {
@@ -52,7 +53,6 @@ export class DynamicQueryLang {
     }
   }
 
-
   /**
    * 返回可用的query lang
    */
@@ -60,7 +60,6 @@ export class DynamicQueryLang {
     this.analyserLang(this._ql);
     return this._ql;
   }
-
 
   /**
    * 设置上下文
@@ -72,10 +71,12 @@ export class DynamicQueryLang {
   }
 }
 
-
 /**
  * 工厂函数
- * @param  {string|Array<Object>} name
- * @param  {Array<Object>} lang
+ * @param  {string name
+ * @param  {Lang} lang
  */
-export const DQL = (name: string | Array<Object>, lang: Array<Object>) => new DynamicQueryLang(name, lang);
+export const DQL = (
+  name: string,
+  lang: Lang
+) => new DynamicQueryLang(name, lang);

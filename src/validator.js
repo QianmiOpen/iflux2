@@ -3,8 +3,11 @@
  *
  * 封装常用的校验工具方法
  */
-export default class Validator {
 
+'use strict';
+
+export default class Validator {
+  
   /**
    * 验证
    * @param obj
@@ -144,7 +147,6 @@ export default class Validator {
     return /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(value);
   }
 
-
   /**
    * 判断是不是url
    *
@@ -154,7 +156,6 @@ export default class Validator {
   static url(value) {
     return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(value);
   }
-
 
   /**
    *  校验是不是日期
@@ -166,7 +167,6 @@ export default class Validator {
     return !/Invalid|NaN/.test(new Date(value).toString());
   }
 
-
   /**
    * 判断是不是数字带小数点
    *
@@ -176,7 +176,6 @@ export default class Validator {
   static number(value) {
     return /^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value);
   }
-
 
   /**
    * 校验是不是数字不带小数点
@@ -188,7 +187,6 @@ export default class Validator {
     return /^\d+$/.test(value);
   }
 
-
   /**
    * 校验必须项
    *
@@ -198,7 +196,6 @@ export default class Validator {
   static required(value) {
     return /\w+/.test(value);
   }
-
 
   /**
    * 身份证号码
@@ -233,7 +230,6 @@ export default class Validator {
     return true;
   }
 
-
   /**
    * qq
    * @param value
@@ -242,7 +238,6 @@ export default class Validator {
   static qq(value) {
     return /^[1-9][0-9]{4,14}$/.test(value);
   }
-
 
   /**
    * 手机号码
@@ -265,7 +260,6 @@ export default class Validator {
     return reg.test(value);
   }
 
-
   /**
    * 密码强度验证: 密码必须是字符与数字的混合
    *
@@ -277,7 +271,6 @@ export default class Validator {
     return reg.test(value);
   }
 
-
   /**
    * 最小值
    * @param param
@@ -288,7 +281,6 @@ export default class Validator {
     return value >= param;
   }
 
-
   /**
    * 最大值
    * @param param
@@ -298,7 +290,6 @@ export default class Validator {
   static max(param, value) {
     return value <= param;
   }
-
 
   /**
    * 最小长度
@@ -311,7 +302,6 @@ export default class Validator {
     return value.length >= param;
   }
 
-
   /**
    * 最大长度
    * @param param
@@ -321,7 +311,6 @@ export default class Validator {
   static maxLength(param, value) {
     return value.length <= param;
   }
-
 
   /**
    * 在范围内
@@ -334,7 +323,6 @@ export default class Validator {
     return value >= param[0] && value <= param[1];
   }
 
-
   /**
    * 长度在范围之内
    * @param param
@@ -344,7 +332,6 @@ export default class Validator {
   static rangeLength(param, val) {
     return val.length >= param[0] && val.length <= param[1];
   }
-
 
   /**
    * 非法字符
@@ -356,7 +343,6 @@ export default class Validator {
     return /[&\\<>'"]/.test(value);
   }
 
-
   /**
    * 邮编
    *
@@ -366,7 +352,6 @@ export default class Validator {
   static zipCode(value) {
     return /^[0-9]{6}$/.test(value);
   }
-
 
   /**
    * 添加自定义校验方法

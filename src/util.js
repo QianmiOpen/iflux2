@@ -4,10 +4,12 @@
  * @returns {boolean}
  * @flow
  */
+
+'use strict';
+
 export function isQuery(ql: any): boolean {
   return isArray(ql) && isFn(ql[ql.length -1]);
 }
-
 
 /**
  * 判断当前的参数是不是数组
@@ -35,7 +37,6 @@ export function isStr(str: any): boolean {
   return type(str) === '[object String]';
 }
 
-
 /**
  * 判断数据类型
  * @param type
@@ -45,13 +46,14 @@ export function type(type: any): string {
   return Object.prototype.toString.call(type);
 }
 
-
 /**
  * 过滤出actor中重复的key
  * @param actor
  * @returns Array
  */
-export function filterActorConflictKey(actor: Array<Object> = []): Array<[string, string]> {
+export function filterActorConflictKey(
+  actor: Array<Object> = []
+): Array<[string, string]> {
   //返回冲突的key的数组
   let conflictKeyList = [];
 

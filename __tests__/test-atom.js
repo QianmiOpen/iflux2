@@ -15,7 +15,7 @@ describe('atom test suite', () => {
     //path is array
     expect('auth fsdfjkferwerjk')
       .toEqual(appCache.value(['token']));
-    
+
     //path is string
     expect('auth fsdfjkferwerjk')
       .toEqual(appCache.value('token'));
@@ -59,7 +59,7 @@ describe('atom test suite', () => {
     appCache
       .cursor()
       .setIn(['skuCountList', 'g1101'], 100);
-    
+
   });
 
 
@@ -73,5 +73,9 @@ describe('atom test suite', () => {
 
     appCache.unsubscribe(callback);
     expect(1).toEqual(appCache._callbacks.length);
+  });
+
+  it('pprint', () => {
+    appCache.pprint();
   });
 });

@@ -4,16 +4,16 @@
  * 将Store初始化,切绑定到React顶层App的上下文
  * @flow
  */
+
+'use strict';
+
 import React from 'react';
 
-type Store = {
-  subscribe: (callback: Function) => void;
-  unsubscribe: (callback: Function) => void;
-};
+import type Store from './store'
+import type {StoreOptions} from './types'
 
-type Options = {
-  debug?: boolean;
-};
+//高阶函数包装类型
+type WrapperComponent = (Cmp: ReactClass<{}>) => ReactClass<{}>;
 
 /**
  * WrapperComponent
@@ -22,9 +22,9 @@ type Options = {
  * @returns {Function}
  */
 export default function connectToStore(
-  AppStore: (opts: Options) => Store,
-  opts: Options = {}
-) {
+  AppStore: (opts: StoreOptions) => Store,
+  opts: StoreOptions = {debug: false}
+): WrapperComponent {
   return function (Component: ReactClass<{}>) {
     //proxy Component componentDidMount
     const proxyDidMount = Component.prototype.componentDidMount || (() => {});
@@ -70,7 +70,7 @@ export default function connectToStore(
           console.groupEnd();
         }
         this._isMounted = true;
-        this._store.subscribe(this._handleStoreChange, true);
+        this._store.subscribeStoreProvider(this._handleStoreChange, true);
 
         //代理的子componentDidMount执行一次
         if (this.App) {
@@ -95,9 +95,8 @@ export default function connectToStore(
       }
 
       componentWillUnmount() {
-        this._store.unsubscribe(this._handleStoreChange);
+        this._store.unsubscribeStoreProvider(this._handleStoreChange);
       }
-
 
       render() {
         return (
@@ -116,7 +115,7 @@ export default function connectToStore(
         }
       };
     }
-  }
+  };
 
   function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component'

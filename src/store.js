@@ -4,25 +4,24 @@
  *
  * @flow
  */
+
+'use strict';
+
 import {fromJS, OrderedMap} from 'immutable';
 import Cursor from 'immutable/contrib/cursor';
-import {isArray, filterActorConflictKey} from './util';
-import {QueryLang} from './ql';
 import {unstable_batchedUpdates as batchedUpdates} from 'react-dom';
 
-//;;;;;;;;;;;;;;;;;;define flowtype;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-type ImmutableState = {
-  get(path: string|number): any;
-  getIn(path: Array<string|number>): any;
-  update(value: Object): any;
-};
+import {isArray, filterActorConflictKey, isFn} from './util';
+import {QueryLang} from './ql';
 
-type Callback = (state: mixed) => void;
+import type {StoreOptions, IState} from './types'
+
+type Callback = (state: IState) => void;
 
 type Actor = {
   _route: Object;
   defaultState: () => Object;
-  receive: (msg: string, state: ImmutableState, params?: any) => Object;
+  receive: (msg: string, state: IState, params?: any) => IState;
 };
 
 type QL = {
@@ -35,24 +34,19 @@ type QL = {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Store;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 export default class Store {
   //storeprovider订阅者
-  _storeProviderSubscribe: Callback;
+  _storeProviderSubscribe: ?Function;
   //状态变化的事件通知
   _callbacks: Array<Callback>;
   //当前的actor
   _actors: {[name: string|number]: Actor};
   //actor聚合的状态
-  _actorState: {
-    [name: string]: ImmutableState;
-    get(path: string): any;
-    valueSeq(): Object; 
-  };
+  _actorState: OrderedMap<string, any>;
   //当前的对外暴露的状态
-  _state: ImmutableState;
+  _state: IState & {[name: string]: any};
   //当前的状态
   _debug: boolean;
   //缓存QL的计算结果
   _cacheQL: Object;
-
 
   /**
    * 绑定Actor
@@ -62,18 +56,17 @@ export default class Store {
     return [];
   }
 
-
   /**
    * 初始化store
-   *
    * @param opts
    */
-  constructor(opts: Object = {debug: false}) {
+  constructor(opts: StoreOptions = {debug: false}) {
     this._debug = opts.debug;
     this._cacheQL = {};
     this._callbacks = [];
     this._actors = {};
-    this._actorState = OrderedMap();
+    this._actorState = new OrderedMap();
+    this._storeProviderSubscribe = null;
 
     //聚合actor
     this.reduceActor(this.bindActor());
@@ -81,19 +74,20 @@ export default class Store {
     this._state = this.reduceState();
   }
 
-
   /**
    * 聚合actor的defaultState到一个对象中去
    * @params actorList
    */
   reduceActor(actorList: Array<Actor>) {
     const state = {};
+
     for (let i = 0, len = actorList.length; i < len; i++) {
       const actor = actorList[i];
       const key = this._debug ? actor.constructor.name : i;
       this._actors[key] = actor;
       state[key] = actor.defaultState();
     }
+
     this._actorState = fromJS(state);
 
     //计算有没有冲突的key
@@ -105,14 +99,12 @@ export default class Store {
     });
   }
 
-
   /**
    * 响应view层的事件,将业务分发到所有的actor
    * @param msg
    * @param param
    */
-  dispatch(msg: string, param: ?Object = {}) {
-
+  dispatch(msg: string, param: ?Object = {}): void {
     //trace log
     this.debug(() => {
       console.groupCollapsed(
@@ -154,11 +146,10 @@ export default class Store {
     });
   }
 
-
   /**
    * 获取当前的cursor
    */
-  cursor() {
+  cursor(): Cursor {
     return Cursor.from(this._actorState, (nextState, state) => {
       //warning
       if (state != this._actorState) {
@@ -175,14 +166,18 @@ export default class Store {
       this._state = this.reduceState();
 
       batchedUpdates(() => {
+
         //先通知storeProvider做刷新
-        this._storeProviderSubscribe && this._storeProviderSubscribe(() => {
-          //end log
-          this.debug(() => {
-            console.timeEnd('dispatch');
-            console.groupEnd && console.groupEnd();
-          });
+        this._storeProviderSubscribe && this._storeProviderSubscribe(
+          () => {
+            //end log
+            this.debug(() => {
+              console.timeEnd('dispatch');
+              console.groupEnd && console.groupEnd();
+            });
         });
+
+        //通知relax
         this._callbacks.forEach((callback) => {
           callback(this._state);
         });
@@ -190,13 +185,12 @@ export default class Store {
     });
   }
 
-
   /**
    * 计算query-lang的值
    * @param ql
    * @returns {*}
    */
-  bigQuery(ql: QL) {
+  bigQuery(ql: QL): any {
     //校验query-lang
     if (!ql.isValidQuery(ql)) {
       throw new Error('Invalid query lang');
@@ -319,7 +313,6 @@ export default class Store {
     return this._state;
   }
 
-
   /**
    * 从actorState聚合出对外暴露的状态
    */
@@ -332,20 +325,13 @@ export default class Store {
     });
   }
 
-
   /**
    * 订阅state的变化
    * @param callback
    * @param isStoreProvider
    */
-  subscribe(callback: Function, isStoreProvider: boolean = false) {
-    if (!callback) {
-      return;
-    }
-
-    //特别保存storeprovider的订阅者
-    if (isStoreProvider) {
-      this._storeProviderSubscribe = callback;
+  subscribe(callback: Function) {
+    if (!isFn(callback)) {
       return;
     }
 
@@ -354,13 +340,12 @@ export default class Store {
     }
   }
 
-
   /**
    * 取消订阅State的变化
    * @param callback
    */
   unsubscribe(callback: Function) {
-    if (!callback) {
+    if (!isFn(callback)) {
       return;
     }
 
@@ -370,6 +355,21 @@ export default class Store {
     }
   }
 
+  subscribeStoreProvider(cb: Function) {
+    if (!isFn(cb)) {
+      return;
+    }
+
+    this._storeProviderSubscribe = cb;
+  }
+
+  unsubscribeStoreProvider(cb: Function) {
+    if (!isFn(cb)) {
+      return;
+    }
+
+    this._storeProviderSubscribe = null;
+  }
 
   //;;;;;;;;;;;;;;;;;;;;;;help method;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   /**
@@ -381,7 +381,6 @@ export default class Store {
     }
   }
 
-
   /**
    * 格式化当前的状态
    */
@@ -389,14 +388,12 @@ export default class Store {
     Store.prettyPrint(this.state());
   }
 
-
   /**
    * 内部状态
    */
   pprintActor() {
     Store.prettyPrint(this._actorState)
   }
-
 
   /**
    * 格式化ql的查询结果
@@ -406,7 +403,6 @@ export default class Store {
   pprintBigQuery(ql: Object, opts: Object) {
     Store.prettyPrint(this.bigQuery(ql, opts));
   }
-
 
   /**
    * 漂亮的格式化

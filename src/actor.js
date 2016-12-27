@@ -6,18 +6,17 @@
  * @flow
  */
 
-//;;;;;;;;flowtype;;;;;;;;;;;;;;;
+'use strict';
+
+import type {IState} from './types'
+
 type Route = {
   [name: string]: Function;
-}
-
-type ImmutableState = mixed;
-
+};
 
 export default class Actor {
   //记录当前的路由信息
   _route: Route;
-
 
   /**
    * 定义actor的默认状态
@@ -34,7 +33,7 @@ export default class Actor {
    * @param param
    * @returns {Object}
    */
-  receive(msg: string, state: ImmutableState, param?: any) {
+  receive(msg: string, state: IState, param?: any) {
     //this._route是在@Action标记中初始化完成
     const route = this._route || {};
     //获取处理的函数

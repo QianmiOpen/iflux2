@@ -1,7 +1,8 @@
 import {QL} from '../src/ql';
 
 
-const testQL = QL([
+//QL的name改为必填项
+const testQL = QL('testQL', [
   ['user'],
   (user) => user
 ]);
@@ -13,4 +14,3 @@ describe('query lang test suite', () => {
     expect(1).toEqual(testQL.id());
   });
 });
-

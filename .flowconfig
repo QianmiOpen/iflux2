@@ -1,14 +1,9 @@
 [ignore]
-  .*/index.d.ts
-  .*/node_modules/fbjs/lib/Deferred.js.flow
-  .*/node_modules/fbjs/lib/shallowEqual.js.flow
+.*/examples/**
 
 [include]
-  ./node_modules/immutable
-  ./node_modules/immutable/contrib/cursor
-[libs]
-  ./node_modules/immutable/immutable.js.flow
 
+[libs]
 
 [options]
 esproposal.class_static_fields=enable

@@ -2,59 +2,52 @@
  * 查询语言
  * @flow
  */
+
+'use strict';
+
 import {isQuery, isStr} from './util';
 
+type Lang = Array<string|Array<string|number>|Function>;
 
 //递增的id
 let incrementId = 0;
 
-
 export class QueryLang {
   _id: number;
-  _lang: Array<Object>;
-  _name: string|Array<Object>;
+  _lang: Lang;
+  _name: string;
 
-
-  constructor(name: string|Array<Object>, lang: Array<Object>) {
+  /**
+   * init
+   */
+  constructor(name: string, lang: Lang) {
     this._id = ++incrementId;
-
-    //如果第一个参数为字符串，改字符串就代表了该QL的name
-    //该name就是为了更好的帮助我们debug调试问题
-    if (typeof(name) === 'string' || isStr(name)) {
-      this._name = name;
-      this._lang = lang;
-    } else {
-      this._name = '';
-      this._lang = name;
-    }
+    this._name = name;
+    this._lang = lang;
   }
-
 
   /**
    * 判断当前是不是一个合法的query lang
    * @returns {boolean}
    */
-  isValidQuery() {
+  isValidQuery(): boolean {
     return isQuery(this._lang);
   }
-
 
   /**
    * 当前的id
    * @returns {number}
    */
-  id() {
+  id(): number {
     return this._id;
   }
-
 
   /**
    * 当前的name
    */
-  name() {
+  name(): string | number {
     return this._name || this._id;
   }
-
 
   /**
    * 当前的语法标记
@@ -65,6 +58,8 @@ export class QueryLang {
   }
 }
 
-
 //Factory Method
-export const QL = (name: string|Array<Object>, lang:Array<Object>) => new QueryLang(name, lang);
+export const QL = (
+  name: string,
+  lang: Lang
+) => new QueryLang(name, lang);

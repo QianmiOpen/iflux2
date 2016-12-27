@@ -1,6 +1,7 @@
-/**
- * msg
- */
-import {EventEmitter} from 'events';
+//@flow
+
+'use strict';
+
+import EventEmitter from 'events';
 
 export default new EventEmitter();
