@@ -1,4 +1,4 @@
-var webpack = require（'webpack')
+var webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
@@ -18,9 +18,9 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin(
+    new webpack.DefinePlugin({
       __DEV__: true,
-    ),
+    }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: './index.html'
