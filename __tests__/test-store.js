@@ -222,9 +222,46 @@ describe('app store test suite', () => {
 
     appStore.unsubscribeStoreProvider('');
     expect(cb).toEqual(appStore._storeProviderSubscribe);
-    
+
     appStore.unsubscribeStoreProvider(cb);
     expect(null).toEqual(appStore._storeProviderSubscribe);
 
-  })
+  });
+
+  it('dispatch redux single object', () => {
+    class HelloActor extends Actor {
+      defaultState() {
+        return {}
+      }
+
+      @Action('ADD_TO_DO')
+      addTodo(state, {id, text, done}) {
+        expect({id, text, done}).toEqual({
+          id: 1,
+          text: 'hello iflux2',
+          done: false
+        })
+        return state;
+      }
+    }
+
+    class AppStore extends Store {
+      bindActor() {
+        return [
+          new HelloActor
+        ]
+      }
+    }
+
+    const store = new AppStore({debug: false});
+
+    store.dispatch();
+
+    store.dispatch({
+      type: 'ADD_TO_DO',
+      id: 1,
+      text: 'hello iflux2',
+      done: false
+    })
+  });
 });

@@ -104,7 +104,29 @@ export default class Store {
    * @param msg
    * @param param
    */
-  dispatch(msg: string, param: ?Object = {}): void {
+  dispatch(): void {
+    if (arguments.length == 0) {
+      console.warn('😭 invalid dispatch without arguments');
+      return;
+    }
+
+    //消息
+    let msg = '';
+    //参数
+    let param = {};
+
+    if (typeof(arguments[0]) === 'object') {
+      //兼容Redux单值对象的数据格式
+      //e.g: {type: 'ADD_TO_DO', id: 1, text: 'hello iflux2', done: false}
+      const {type: msg, ...param} = arguments[0];
+      if (!msg) {
+        throw new Error('😭 msg should include `type` field.');
+      }
+    } else {
+      msg = arguments[0];
+      param = arguments[1];
+    }
+
     //trace log
     this.debug(() => {
       console.groupCollapsed(
@@ -355,7 +377,11 @@ export default class Store {
     }
   }
 
-  subscribeStoreProvider(cb: Function) {
+  /**
+   * 订阅StoreProvider的回调
+   * @param cb
+   */
+  subscribeStoreProvider(cb: Function): void {
     if (!isFn(cb)) {
       return;
     }
@@ -363,6 +389,10 @@ export default class Store {
     this._storeProviderSubscribe = cb;
   }
 
+  /**
+   * 取消StoreProvider的订阅
+   * @param cb
+   */
   unsubscribeStoreProvider(cb: Function) {
     if (!isFn(cb)) {
       return;
@@ -375,7 +405,7 @@ export default class Store {
   /**
    * 替代if
    */
-  debug(callback: Function) {
+  debug(callback: Function): void {
     if (this._debug) {
       callback();
     }
@@ -384,14 +414,14 @@ export default class Store {
   /**
    * 格式化当前的状态
    */
-  pprint() {
+  pprint(): void {
     Store.prettyPrint(this.state());
   }
 
   /**
    * 内部状态
    */
-  pprintActor() {
+  pprintActor(): void {
     Store.prettyPrint(this._actorState)
   }
 
@@ -400,7 +430,7 @@ export default class Store {
    * @param ql
    * @param opts
    */
-  pprintBigQuery(ql: Object, opts: Object) {
+  pprintBigQuery(ql: Object, opts: Object): void {
     Store.prettyPrint(this.bigQuery(ql, opts));
   }
 
@@ -408,7 +438,7 @@ export default class Store {
    * 漂亮的格式化
    * @param obj
    */
-  static prettyPrint(obj: Object) {
+  static prettyPrint(obj: Object): void {
     console.log(JSON.stringify(obj, null, 2));
   }
 }
