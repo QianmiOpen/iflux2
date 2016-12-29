@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _immutable = require('immutable');
@@ -27,6 +29,8 @@ var _util = require('./util');
 var _ql = require('./ql');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -120,10 +124,35 @@ var Store = function () {
 
   }, {
     key: 'dispatch',
-    value: function dispatch(msg) {
+    value: function dispatch() {
       var _this = this;
 
-      var param = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      if (arguments.length == 0) {
+        console.warn('😭 invalid dispatch without arguments');
+        return;
+      }
+
+      //消息
+      var msg = '';
+      //参数
+      var param = {};
+
+      if (_typeof(arguments[0]) === 'object') {
+        //兼容Redux单值对象的数据格式
+        //e.g: {type: 'ADD_TO_DO', id: 1, text: 'hello iflux2', done: false}
+        var _arguments$ = arguments[0],
+            type = _arguments$.type,
+            rest = _objectWithoutProperties(_arguments$, ['type']);
+
+        msg = type;
+        param = rest;
+        if (!msg) {
+          throw new Error('😭 msg should include `type` field.');
+        }
+      } else {
+        msg = arguments[0];
+        param = arguments[1];
+      }
 
       //trace log
       this.debug(function () {
@@ -395,6 +424,12 @@ var Store = function () {
         this._callbacks.splice(index, 1);
       }
     }
+
+    /**
+     * 订阅StoreProvider的回调
+     * @param cb
+     */
+
   }, {
     key: 'subscribeStoreProvider',
     value: function subscribeStoreProvider(cb) {
@@ -404,6 +439,12 @@ var Store = function () {
 
       this._storeProviderSubscribe = cb;
     }
+
+    /**
+     * 取消StoreProvider的订阅
+     * @param cb
+     */
+
   }, {
     key: 'unsubscribeStoreProvider',
     value: function unsubscribeStoreProvider(cb) {

@@ -15,8 +15,14 @@ export type ValidatorOptions = {
 
 //Immutable State
 export type IState = Map<string, any>;
+
 //当前的Actor的z状态类型
 export type ActorState = Map<string, any>;
+
+//定义redux类型的action
+export type ReduxAction = {
+  type: string;
+};
 
 declare type QueryLang = {
   id: () => number;
@@ -37,7 +43,7 @@ declare class Actor {
 declare class Store {
   constructor(opts: StoreOptions): void;
   bindActor(): Array<Actor>;
-  dispatch(msg: string, param?: any): void;
+  dispatch(msg: string | ReduxAction, param?: any): void;
   bigQuery(ql: QueryLang): any;
   state(): IState;
 }
