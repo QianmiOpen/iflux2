@@ -118,7 +118,9 @@ export default class Store {
     if (typeof(arguments[0]) === 'object') {
       //兼容Redux单值对象的数据格式
       //e.g: {type: 'ADD_TO_DO', id: 1, text: 'hello iflux2', done: false}
-      const {type: msg, ...param} = arguments[0];
+      const {type, ...rest} = arguments[0];
+      msg = type;
+      param = rest;
       if (!msg) {
         throw new Error('😭 msg should include `type` field.');
       }
