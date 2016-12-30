@@ -9,8 +9,13 @@
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --config webpack.production.js",
     "start": "./node_modules/.bin/webpack-dev-server --port 3000"
   },
+  "jest": {
+    "globals": {
+      "__DEV__": true
+    }
+  },
   "dependencies": {
-    "iflux2": "1.2.7",
+    "iflux2": "1.2.9",
     "react": "15.4.1",
     "react-dom": "15.4.1"
   },

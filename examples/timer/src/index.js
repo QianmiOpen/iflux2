@@ -1,4 +1,7 @@
 //@flow
+
+'use strict;'
+
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { StoreProvider } from 'iflux2'
@@ -13,6 +16,5 @@ export default class TimerApp extends Component {
     return <Timer/>
   }
 }
-
 
 render(<TimerApp/>, document.getElementById('app'))
