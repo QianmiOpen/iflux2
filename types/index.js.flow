@@ -90,12 +90,12 @@ declare var msg: events$EventEmitter;
 
 declare function QL(
   name: string,
-  lang: Array<string|Array<string|number>|Function>
+  lang: Array<QL|string|Array<string|number>|Function>
 ): QueryLang;
 
 declare function DQL(
   name: string,
-  lang: Array<string|Array<string|number>|Function>
+  lang: Array<DQL|string|Array<string|number>|Function>
 ): QueryLang;
 
 declare function Action(name: string): Function;
