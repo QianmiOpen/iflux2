@@ -2,7 +2,7 @@ import CounterActor from '../src/actor/counter-actor'
 import {fromJS} from 'immutable'
 
 describe('test counter actor', () => {
-  
+
   it('test default value', () => {
     const counter = new CounterActor
     expect({

@@ -6,7 +6,7 @@ describe('ql', () => {
     expect(true).toEqual(countQL.isValidQuery());
     const store = new Store()
     expect('QL:0').toEqual(store.bigQuery(countQL));
-    
+
     store.increment();
     expect('QL:1').toEqual(store.bigQuery(countQL));
 

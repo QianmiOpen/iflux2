@@ -1,11 +1,8 @@
 //@flow
-import { QL } from 'iflux2'
 
-//dev
-//in order to quick test ql in chrome
-if (__DEV__) {
-  window.QL = QL
-}
+'use strict;'
+
+import { QL } from 'iflux2'
 
 export const countQL = QL('countQL', [
   'count',

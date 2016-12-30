@@ -20,6 +20,6 @@ describe('Relax Counter', () => {
     // tree.props.increment();
     window.store.increment();
     tree = component.toJSON();
-    expect(tree).toMatchSnapshot();    
+    expect(tree).toMatchSnapshot();
   })
 })

@@ -1,4 +1,7 @@
 //@flow
+
+'use strict;'
+
 import React, { Component } from 'react'
 import { Relax } from 'iflux2'
 import { countQL } from '../ql'

@@ -1,6 +1,11 @@
 //@flow
+
+'use strict;'
+
 import { Store } from 'iflux2'
 import CounterActor from './actor/counter-actor'
+
+import type {StoreOptions} from 'iflux2'
 
 
 //State container
@@ -11,7 +16,7 @@ export default class AppStore extends Store {
     ]
   }
 
-  constructor(props: {debug: boolean} = {debug: false}) {
+  constructor(props: StoreOptions) {
     super(props)
     //debug
     //you can quickly test in chrome
