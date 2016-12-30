@@ -1,8 +1,14 @@
 //@flow
-import {Actor, Action} from 'iflux2';
-import type {Map} from 'immutable'
 
-type State = Map<string, string>;
+'use strict;'
+
+import {Actor, Action} from 'iflux2';
+
+import type {ActorState} from 'iflux2'
+
+type Value = {
+  value: string;
+}
 
 export default class TextActor extends Actor {
   defaultState() {
@@ -12,17 +18,17 @@ export default class TextActor extends Actor {
   }
 
   @Action('changeValue')
-  changeValue(state: State, value: {value: string}) {
+  changeValue(state: ActorState, value: Value) {
     return state.set('value', value);
   }
 
   @Action('submit')
-  submit(state: State) {
+  submit(state: ActorState) {
     return state.set('value', '')
   }
 
   @Action('init')
-  init(state: State, {value}: {value: string}) {
+  init(state: ActorState, {value}: Value) {
     return state.set('value', value)
   }
 }

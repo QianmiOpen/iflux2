@@ -1,7 +1,9 @@
 //@flow
+
+'use strict;'
+
 import {QL, DQL} from 'iflux2'
 import {fromJS} from 'immutable'
-
 
 /**
  * 查询输入框的值

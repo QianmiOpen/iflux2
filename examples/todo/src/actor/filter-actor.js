@@ -1,8 +1,10 @@
 //@flow
-import {Action, Actor} from 'iflux2'
-import type {Map} from 'immutable'
 
-type State = Map<string, string>;
+'use strict;'
+
+import {Action, Actor} from 'iflux2'
+
+import type {ActorState} from 'iflux2'
 
 export default class FilterActor extends Actor {
   defaultState() {
@@ -12,12 +14,12 @@ export default class FilterActor extends Actor {
   }
 
   @Action('filter')
-  changeFilter(state: State, status: string) {
+  changeFilter(state: ActorState, status: string) {
     return state.set('filterStatus', status)
   }
 
   @Action('init')
-  init(state: State, {filterStatus}: {filterStatus: string}) {
+  init(state: ActorState, {filterStatus}: {filterStatus: string}) {
     return state.set('filterStatus', filterStatus)
   }
 }

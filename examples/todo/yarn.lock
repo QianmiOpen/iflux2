@@ -1972,9 +1972,9 @@ ieee754@^1.1.4:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
 
-iflux2@1.2.7:
-  version "1.2.7"
-  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.2.7.tgz#a258e4c7008fff666b3db1ab4562be920359ba98"
+iflux2@1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.2.9.tgz#ab778661b7f62671d12e41384001cb8b34b90398"
   dependencies:
     events "^1.1.0"
     immutable "^3.8.1"
@@ -3102,17 +3102,17 @@ react-addons-perf@^15.3.0:
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react-addons-perf/-/react-addons-perf-15.3.2.tgz#bbdbebe8649f936f9636a5750ac145bf5c620213"
 
-react-dom@15.4.0:
-  version "15.4.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.4.0.tgz#6a97a69000966570db48c746bc4b7b0ca50d1534"
+react-dom@15.4.1:
+  version "15.4.1"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.4.1.tgz#d54c913261aaedb17adc20410d029dcc18a1344a"
   dependencies:
     fbjs "^0.8.1"
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
 
-react@15.4.0:
-  version "15.4.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-15.4.0.tgz#736c1c7c542e8088127106e1f450b010f86d172b"
+react@15.4.1:
+  version "15.4.1"
+  resolved "https://registry.yarnpkg.com/react/-/react-15.4.1.tgz#498e918602677a3983cd0fd206dfe700389a0dd6"
   dependencies:
     fbjs "^0.8.4"
     loose-envify "^1.1.0"

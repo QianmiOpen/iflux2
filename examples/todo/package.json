@@ -9,9 +9,9 @@
     "start": "./node_modules/.bin/webpack-dev-server --port 3000 --config webpack.config.js"
   },
   "dependencies": {
-    "iflux2": "1.2.7",
-    "react": "15.4.0",
-    "react-dom": "15.4.0"
+    "iflux2": "1.2.9",
+    "react": "15.4.1",
+    "react-dom": "15.4.1"
   },
   "repository": {
     "type": "git",
