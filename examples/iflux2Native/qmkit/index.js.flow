@@ -1,0 +1,8 @@
+//@flow
+
+//空函数
+declare function isEmpty(): void;
+
+export {
+  isEmpty,
+}

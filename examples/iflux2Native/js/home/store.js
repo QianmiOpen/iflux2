@@ -1,9 +1,16 @@
+//@flow
+
+'use strict;'
+
 import { Store } from 'iflux2'
+
 import TextActor from './actor/text-actor'
 import LoadingActor from './actor/loading-actor'
 
+import type {StoreOptions} from 'iflux2'
+
 export default class AppStore extends Store {
-  constructor(props) {
+  constructor(props: StoreOptions) {
     super(props)
     //dev mode
     if (__DEV__) {

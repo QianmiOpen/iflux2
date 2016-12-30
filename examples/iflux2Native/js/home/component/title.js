@@ -1,7 +1,7 @@
+//@flow
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Relax } from 'iflux2'
-import emptyFn from 'empty-fn'
 
 @Relax
 export default class Title extends Component {
