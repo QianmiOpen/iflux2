@@ -37,6 +37,10 @@ export function isStr(str: any): boolean {
   return type(str) === '[object String]';
 }
 
+export function isObject(str: any): boolean {
+  return type(str) === '[object Object]';
+}
+
 /**
  * 判断数据类型
  * @param type

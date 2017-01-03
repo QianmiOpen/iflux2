@@ -255,7 +255,12 @@ describe('app store test suite', () => {
 
     const store = new AppStore({debug: false});
 
-    store.dispatch();
+    //如果参数不传递，直接报错
+    try {
+      store.dispatch();
+    } catch (err) {
+      expect(err.message).toEqual('😭 invalid dispatch without arguments')
+    }
 
     store.dispatch({
       type: 'ADD_TO_DO',
@@ -263,5 +268,78 @@ describe('app store test suite', () => {
       text: 'hello iflux2',
       done: false
     })
+  });
+
+  it('batch dispatch', () => {
+    class LoadingTestActor extends Actor {
+      defaultState() {
+        return {
+          loading: true
+        }
+      }
+
+      @Action('loading')
+      loading(state, status) {
+        return state.set('loading', status);
+      }
+    }
+
+    class DefaultArgsActor extends Actor {
+      defaultState() {
+        return {
+          defaultState: true
+        }
+      }
+
+      @Action('change:state')
+      changeState(state) {
+        return state.set('defaultState', !state.get('defaultState'))
+      }
+    }
+
+    class ReduxActor extends Actor {
+      defaultState() {
+        return {
+          id: 1,
+          name: '',
+          done: false
+        }
+      }
+
+      @Action('redux:action')
+      change(state, todo) {
+        return state.merge(todo);
+      }
+    }
+
+    class BatchStore extends Store {
+      bindActor() {
+        return [
+          new LoadingTestActor,
+          new DefaultArgsActor,
+          new ReduxActor,
+        ]
+      }
+
+      batch = () => {
+        this.batchDispatch([
+          ['loading', true],
+          ['loading', false],
+          'change:state',
+          {type: 'redux:action', id: 1, name: 'redux action', done: true}
+        ]);
+
+        expect(this.state().toJS()).toEqual({
+          loading: false,
+          defaultState: false,
+          id: 1,
+          name: 'redux action',
+          done: true
+        });
+      }
+    }
+
+    const store = new BatchStore({debug: false});
+    store.batch();
   });
 });

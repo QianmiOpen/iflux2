@@ -44,6 +44,7 @@ declare class Store {
   constructor(opts: StoreOptions): void;
   bindActor(): Array<Actor>;
   dispatch(msg: string | ReduxAction, param?: any): void;
+  batchDispatch(actions: Array<string | [string, param?: any] | ReduxAction>): void;
   bigQuery(ql: QueryLang): any;
   state(): IState;
 }
@@ -90,12 +91,12 @@ declare var msg: events$EventEmitter;
 
 declare function QL(
   name: string,
-  lang: Array<QL|string|Array<string|number>|Function>
+  lang: Array<QL|string|Array<string|number>|Function>|QL
 ): QueryLang;
 
 declare function DQL(
   name: string,
-  lang: Array<DQL|string|Array<string|number>|Function>
+  lang: Array<DQL|string|Array<string|number>|Function>|DQL
 ): QueryLang;
 
 declare function Action(name: string): Function;
@@ -109,7 +110,17 @@ declare function Relax(
   Component: ReactClass<{}>
 ): ReactClass<{}>;
 
+declare var Util: {
+  isQuery(ql: any): boolean;
+  isArray(arr: any): boolean;
+  isFn(fn: any): boolean;
+  isStr(str: any): boolean;
+  isObject(str: any): boolean;
+  type(type: any): string;
+};
+
 export {
+  Util,
   Actor,
   Action,
   Atom,

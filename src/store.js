@@ -11,7 +11,7 @@ import {fromJS, OrderedMap} from 'immutable';
 import Cursor from 'immutable/contrib/cursor';
 import {unstable_batchedUpdates as batchedUpdates} from 'react-dom';
 
-import {isArray, filterActorConflictKey, isFn} from './util';
+import {isArray, filterActorConflictKey, isFn, isStr, isObject} from './util';
 import {QueryLang} from './ql';
 
 import type {StoreOptions, IState} from './types'
@@ -29,6 +29,11 @@ type QL = {
   name: () => string;
   lang: () => Object;
   isValidQuery(ql: QL): boolean;
+};
+
+type ArgResult = {
+  msg: string,
+  param?: any
 };
 
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Store;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -49,11 +54,45 @@ export default class Store {
   _cacheQL: Object;
 
   /**
-   * 绑定Actor
-   * @returns {Array}
+   * map Actor
    */
-  bindActor(): Array<Actor> {
-    return [];
+  _mapActor(cursor: Object, msg: string, param: any): void {
+    //trace log
+    this.debug(() => {
+      console.groupCollapsed(
+        `store dispatch {msg =>${JSON.stringify(msg)}}}`
+      );
+      console.log('param ->');
+      console.log((param && param.toJS) ? param.toJS() : param);
+      console.time('dispatch');
+    });
+
+    //dispatch => every actor
+    for (let name in this._actors) {
+      if (this._actors.hasOwnProperty(name)) {
+        const actor = this._actors[name];
+        const state = this._actorState.get(name);
+
+        //trace log
+        this.debug(() => {
+          const _route = actor._route || {};
+          const handlerName = _route[msg] ? _route[msg].name : 'default handler(no match)';
+          console.log(`${name} handle => ${handlerName}`);
+          console.time(`${name}`);
+        });
+
+        const newState = actor.receive(msg, state, param);
+
+        this.debug(() => {
+          console.timeEnd(`${name}`);
+        });
+
+        // 更新变化的actor的状态
+        if (newState != state) {
+          cursor.set(name, newState);
+        }
+      }
+    }
   }
 
   /**
@@ -73,6 +112,15 @@ export default class Store {
     //聚合状态
     this._state = this.reduceState();
   }
+
+  /**
+   * 绑定Actor
+   * @returns {Array}
+   */
+  bindActor(): Array<Actor> {
+    return [];
+  }
+
 
   /**
    * 聚合actor的defaultState到一个对象中去
@@ -104,70 +152,88 @@ export default class Store {
    * @param msg
    * @param param
    */
-  dispatch(): void {
-    if (arguments.length == 0) {
-      console.warn('😭 invalid dispatch without arguments');
-      return;
+  dispatch(action: string | {type: string}, extra?: any): void {
+    //校验参数是否为空
+    if (!action) {
+      throw new Error('😭 invalid dispatch without arguments');
     }
+    const {msg, param} = _parseArgs(action, extra);
+    this.cursor().withMutations(cursor => {
+      this._mapActor(cursor, msg, param);
+    });
 
-    //消息
-    let msg = '';
-    //参数
-    let param = {};
-
-    if (typeof(arguments[0]) === 'object') {
+    /**
+     * 解析参数
+     */
+    function _parseArgs(
+      action: string | {type: string},
+      extra?: any
+    ): ArgResult {
+      //init
+      let res: ArgResult = {msg: '', param: null};
       //兼容Redux单值对象的数据格式
       //e.g: {type: 'ADD_TO_DO', id: 1, text: 'hello iflux2', done: false}
-      const {type, ...rest} = arguments[0];
-      msg = type;
-      param = rest;
-      if (!msg) {
-        throw new Error('😭 msg should include `type` field.');
+      if (isObject(action)) {
+        const {type, ...rest} = action;
+        if (!type) {
+          throw new Error('😭 msg should include `type` field.');
+        }
+        res.msg = type;
+        res.param = rest;
+      } else if (isStr(action)) {
+        res.msg = action;
+        res.param = extra;
       }
-    } else {
-      msg = arguments[0];
-      param = arguments[1];
+
+      return res;
+    }
+  }
+
+  /**
+   * 批量dispatch，适用于合并一些小计算量的多个dispatch
+   * e.g:
+   *  this.batchDispatch([
+   *    ['loading', true],
+   *    ['init', {id: 1, name: 'test'}],
+   *    {type: 'ADD_TO_DO', id: 1, text: 'hello todo', done: false}
+   *  ]);
+   *
+   */
+  batchDispatch(actions: Array<[string, any] | {type: string}> = []): void {
+    //校验参数是否为空
+    if (arguments.length == 0) {
+      throw new Error('😭 invalid batch dispatch without arguments');
     }
 
-    //trace log
-    this.debug(() => {
-      console.groupCollapsed(
-        `store dispatch {msg =>${JSON.stringify(msg)}}}`
-      );
-      console.log('param ->');
-      console.log((param && param.toJS) ? param.toJS() : param);
-      console.time('dispatch');
-    });
-
-    //cursor更新最新的状态
     this.cursor().withMutations(cursor => {
-      //dispatch => every actor
-      for (let name in this._actors) {
-        if (this._actors.hasOwnProperty(name)) {
-          const actor = this._actors[name];
-          const state = this._actorState.get(name);
-
-          //trace log
-          this.debug(() => {
-            const _route = actor._route || {};
-            const handlerName = _route[msg] ? _route[msg].name : 'default handler(no match)';
-            console.log(`${name} handle => ${handlerName}`);
-            console.time(`${name}`);
-          });
-
-          const newState = actor.receive(msg, state, param);
-
-          this.debug(() => {
-            console.timeEnd(`${name}`);
-          });
-
-          // 更新变化的actor的状态
-          if (newState != state) {
-            cursor.set(name, newState);
-          }
-        }
+      for (let action of actions) {
+        const {msg, param} = _parseArgs(action);
+        this._mapActor(cursor, msg, param);
       }
     });
+
+    /**
+     * 解析参数
+     */
+    function _parseArgs(action): ArgResult {
+      const res: ArgResult = {msg: '', param: null};
+
+      if (isStr(action)) {
+        res.msg = action;
+      } else if (isArray(action)) {
+        res.msg = action[0];
+        res.param = action[1];
+      } else if (isObject(action)) {
+        const {type, ...rest} = action;
+        if (!type) {
+          throw new Error('😭 msg should include `type` field.');
+        }
+        res.msg = type;
+        res.param = rest;
+      }
+
+      return res;
+    }
   }
 
   /**
