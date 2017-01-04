@@ -44,7 +44,7 @@ declare class Store {
   constructor(opts: StoreOptions): void;
   bindActor(): Array<Actor>;
   dispatch(msg: string | ReduxAction, param?: any): void;
-  batchDispatch(actions: Array<string | [string, param?: any] | ReduxAction>): void;
+  batchDispatch(actions: Array<string | [string, any] | ReduxAction>): void;
   bigQuery(ql: QueryLang): any;
   state(): IState;
 }
@@ -91,12 +91,12 @@ declare var msg: events$EventEmitter;
 
 declare function QL(
   name: string,
-  lang: Array<QL|string|Array<string|number>|Function>|QL
+  lang: Array<QueryLang|string|Array<string|number>|Function>|QueryLang
 ): QueryLang;
 
 declare function DQL(
   name: string,
-  lang: Array<DQL|string|Array<string|number>|Function>|DQL
+  lang: Array<QueryLang|string|Array<string|number>|Function>|QueryLang
 ): QueryLang;
 
 declare function Action(name: string): Function;

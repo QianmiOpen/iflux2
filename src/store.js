@@ -166,7 +166,7 @@ export default class Store {
      * 解析参数
      */
     function _parseArgs(
-      action: string | {type: string},
+      action: any,
       extra?: any
     ): ArgResult {
       //init
@@ -214,8 +214,9 @@ export default class Store {
 
     /**
      * 解析参数
+     * 不加具体参数，发现flow仅支持typeof的类型判断
      */
-    function _parseArgs(action): ArgResult {
+    function _parseArgs(action: any): ArgResult {
       const res: ArgResult = {msg: '', param: null};
 
       if (isStr(action)) {
