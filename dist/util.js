@@ -14,6 +14,7 @@ exports.isQuery = isQuery;
 exports.isArray = isArray;
 exports.isFn = isFn;
 exports.isStr = isStr;
+exports.isObject = isObject;
 exports.type = type;
 exports.filterActorConflictKey = filterActorConflictKey;
 function isQuery(ql) {
@@ -44,6 +45,10 @@ function isFn(fn) {
  */
 function isStr(str) {
   return type(str) === '[object String]';
+}
+
+function isObject(str) {
+  return type(str) === '[object Object]';
 }
 
 /**

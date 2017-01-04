@@ -12,8 +12,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _immutable = require('immutable');
@@ -37,12 +35,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Store;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 var Store = function () {
   _createClass(Store, [{
-    key: 'bindActor',
+    key: '_mapActor',
 
 
     /**
-     * 绑定Actor
-     * @returns {Array}
+     * map Actor
      */
 
     //当前的状态
@@ -50,8 +47,50 @@ var Store = function () {
     //actor聚合的状态
 
     //状态变化的事件通知
-    value: function bindActor() {
-      return [];
+    value: function _mapActor(cursor, msg, param) {
+      var _this = this;
+
+      //trace log
+      this.debug(function () {
+        console.groupCollapsed('store dispatch {msg =>' + JSON.stringify(msg) + '}}');
+        console.log('param ->');
+        console.log(param && param.toJS ? param.toJS() : param);
+        console.time('dispatch');
+      });
+
+      //dispatch => every actor
+
+      var _loop = function _loop(_name) {
+        if (_this._actors.hasOwnProperty(_name)) {
+          (function () {
+            var actor = _this._actors[_name];
+            var state = _this._actorState.get(_name);
+
+            //trace log
+            _this.debug(function () {
+              var _route = actor._route || {};
+              var handlerName = _route[msg] ? _route[msg].name : 'default handler(no match)';
+              console.log(_name + ' handle => ' + handlerName);
+              console.time('' + _name);
+            });
+
+            var newState = actor.receive(msg, state, param);
+
+            _this.debug(function () {
+              console.timeEnd('' + _name);
+            });
+
+            // 更新变化的actor的状态
+            if (newState != state) {
+              cursor.set(_name, newState);
+            }
+          })();
+        }
+      };
+
+      for (var _name in this._actors) {
+        _loop(_name);
+      }
     }
 
     /**
@@ -88,12 +127,23 @@ var Store = function () {
   }
 
   /**
-   * 聚合actor的defaultState到一个对象中去
-   * @params actorList
+   * 绑定Actor
+   * @returns {Array}
    */
 
 
   _createClass(Store, [{
+    key: 'bindActor',
+    value: function bindActor() {
+      return [];
+    }
+
+    /**
+     * 聚合actor的defaultState到一个对象中去
+     * @params actorList
+     */
+
+  }, {
     key: 'reduceActor',
     value: function reduceActor(actorList) {
       var state = {};
@@ -124,79 +174,127 @@ var Store = function () {
 
   }, {
     key: 'dispatch',
-    value: function dispatch() {
-      var _this = this;
+    value: function dispatch(action, extra) {
+      var _this2 = this;
 
-      if (arguments.length == 0) {
-        console.warn('😭 invalid dispatch without arguments');
-        return;
+      //校验参数是否为空
+      if (!action) {
+        throw new Error('😭 invalid dispatch without arguments');
       }
 
-      //消息
-      var msg = '';
-      //参数
-      var param = {};
+      var _parseArgs2 = _parseArgs(action, extra),
+          msg = _parseArgs2.msg,
+          param = _parseArgs2.param;
 
-      if (_typeof(arguments[0]) === 'object') {
+      this.cursor().withMutations(function (cursor) {
+        _this2._mapActor(cursor, msg, param);
+      });
+
+      /**
+       * 解析参数
+       */
+      function _parseArgs(action, extra) {
+        //init
+        var res = { msg: '', param: null };
         //兼容Redux单值对象的数据格式
         //e.g: {type: 'ADD_TO_DO', id: 1, text: 'hello iflux2', done: false}
-        var _arguments$ = arguments[0],
-            type = _arguments$.type,
-            rest = _objectWithoutProperties(_arguments$, ['type']);
+        if ((0, _util.isObject)(action)) {
+          var _type = action.type,
+              rest = _objectWithoutProperties(action, ['type']);
 
-        msg = type;
-        param = rest;
-        if (!msg) {
-          throw new Error('😭 msg should include `type` field.');
+          if (!_type) {
+            throw new Error('😭 msg should include `type` field.');
+          }
+          res.msg = _type;
+          res.param = rest;
+        } else if ((0, _util.isStr)(action)) {
+          res.msg = action;
+          res.param = extra;
         }
-      } else {
-        msg = arguments[0];
-        param = arguments[1];
+
+        return res;
+      }
+    }
+
+    /**
+     * 批量dispatch，适用于合并一些小计算量的多个dispatch
+     * e.g:
+     *  this.batchDispatch([
+     *    ['loading', true],
+     *    ['init', {id: 1, name: 'test'}],
+     *    {type: 'ADD_TO_DO', id: 1, text: 'hello todo', done: false}
+     *  ]);
+     *
+     */
+
+  }, {
+    key: 'batchDispatch',
+    value: function batchDispatch() {
+      var _this3 = this;
+
+      var actions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+      //校验参数是否为空
+      if (arguments.length == 0) {
+        throw new Error('😭 invalid batch dispatch without arguments');
       }
 
-      //trace log
-      this.debug(function () {
-        console.groupCollapsed('store dispatch {msg =>' + JSON.stringify(msg) + '}}');
-        console.log('param ->');
-        console.log(param && param.toJS ? param.toJS() : param);
-        console.time('dispatch');
-      });
-
-      //cursor更新最新的状态
       this.cursor().withMutations(function (cursor) {
-        var _loop = function _loop(_name) {
-          if (_this._actors.hasOwnProperty(_name)) {
-            (function () {
-              var actor = _this._actors[_name];
-              var state = _this._actorState.get(_name);
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-              //trace log
-              _this.debug(function () {
-                var _route = actor._route || {};
-                var handlerName = _route[msg] ? _route[msg].name : 'default handler(no match)';
-                console.log(_name + ' handle => ' + handlerName);
-                console.time('' + _name);
-              });
+        try {
+          for (var _iterator = actions[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var action = _step.value;
 
-              var newState = actor.receive(msg, state, param);
+            var _parseArgs3 = _parseArgs(action),
+                _msg = _parseArgs3.msg,
+                _param = _parseArgs3.param;
 
-              _this.debug(function () {
-                console.timeEnd('' + _name);
-              });
-
-              // 更新变化的actor的状态
-              if (newState != state) {
-                cursor.set(_name, newState);
-              }
-            })();
+            _this3._mapActor(cursor, _msg, _param);
           }
-        };
-
-        //dispatch => every actor
-        for (var _name in _this._actors) {
-          _loop(_name);
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
         }
       });
+
+      /**
+       * 解析参数
+       * 不加具体参数，发现flow仅支持typeof的类型判断
+       */
+      function _parseArgs(action) {
+        var res = { msg: '', param: null };
+
+        if ((0, _util.isStr)(action)) {
+          res.msg = action;
+        } else if ((0, _util.isArray)(action)) {
+          res.msg = action[0];
+          res.param = action[1];
+        } else if ((0, _util.isObject)(action)) {
+          var _type2 = action.type,
+              rest = _objectWithoutProperties(action, ['type']);
+
+          if (!_type2) {
+            throw new Error('😭 msg should include `type` field.');
+          }
+          res.msg = _type2;
+          res.param = rest;
+        }
+
+        return res;
+      }
     }
 
     /**
@@ -206,11 +304,11 @@ var Store = function () {
   }, {
     key: 'cursor',
     value: function cursor() {
-      var _this2 = this;
+      var _this4 = this;
 
       return _cursor2.default.from(this._actorState, function (nextState, state) {
         //warning
-        if (state != _this2._actorState) {
+        if (state != _this4._actorState) {
           console.warn && console.warn('attempted to alter expired state');
         }
 
@@ -219,24 +317,24 @@ var Store = function () {
           return;
         }
 
-        _this2._actorState = nextState;
+        _this4._actorState = nextState;
         //从新计算一次最新的state状态
-        _this2._state = _this2.reduceState();
+        _this4._state = _this4.reduceState();
 
         (0, _reactDom.unstable_batchedUpdates)(function () {
 
           //先通知storeProvider做刷新
-          _this2._storeProviderSubscribe && _this2._storeProviderSubscribe(function () {
+          _this4._storeProviderSubscribe && _this4._storeProviderSubscribe(function () {
             //end log
-            _this2.debug(function () {
+            _this4.debug(function () {
               console.timeEnd('dispatch');
               console.groupEnd && console.groupEnd();
             });
           });
 
           //通知relax
-          _this2._callbacks.forEach(function (callback) {
-            callback(_this2._state);
+          _this4._callbacks.forEach(function (callback) {
+            callback(_this4._state);
           });
         });
       });
@@ -251,7 +349,7 @@ var Store = function () {
   }, {
     key: 'bigQuery',
     value: function bigQuery(ql) {
-      var _this3 = this;
+      var _this5 = this;
 
       //校验query-lang
       if (!ql.isValidQuery(ql)) {
@@ -294,7 +392,7 @@ var Store = function () {
       var args = qlCopy.map(function (path, key) {
         //如果当前的参数仍然是query-lang,则直接递归计算一次query—lang的值
         if (path instanceof _ql.QueryLang) {
-          var _result = _this3.bigQuery(path);
+          var _result = _this5.bigQuery(path);
 
           //数据有变化
           if (_result != metaData.deps[key]) {
@@ -302,12 +400,12 @@ var Store = function () {
             expired = true;
 
             //trace log
-            _this3.debug(function () {
+            _this5.debug(function () {
               console.log(':( deps:ql#' + path.name() + ' data was expired.');
             });
           }
 
-          _this3.debug(function () {
+          _this5.debug(function () {
             console.log(':) deps:ql#' + path.name() + ' get result from cache');
           });
 
@@ -317,19 +415,19 @@ var Store = function () {
         //直接返回当前path下面的状态值
         //如果当前的参数是数组使用immutable的getIn
         //如果当前的参数是一个字符串使用get方式
-        var value = _this3._state[(0, _util.isArray)(path) ? 'getIn' : 'get'](path);
+        var value = _this5._state[(0, _util.isArray)(path) ? 'getIn' : 'get'](path);
 
         //不匹配
         if (value != metaData.deps[key]) {
           metaData.deps[key] = value;
           expired = true;
 
-          _this3.debug(function () {
+          _this5.debug(function () {
             console.log(':( deps: ' + JSON.stringify(path) + ' data had expired.');
           });
         } else if (typeof value === 'undefined' && typeof metaData.deps[key] === 'undefined') {
           expired = true;
-          _this3.debug(function () {
+          _this5.debug(function () {
             console.log(':( deps: ' + JSON.stringify(path) + ' undefined. Be careful!');
           });
         }
@@ -379,11 +477,11 @@ var Store = function () {
   }, {
     key: 'reduceState',
     value: function reduceState() {
-      var _this4 = this;
+      var _this6 = this;
 
       this._state = this._state || (0, _immutable.OrderedMap)();
       return this._state.update(function (value) {
-        return _this4._actorState.valueSeq().reduce(function (init, state) {
+        return _this6._actorState.valueSeq().reduce(function (init, state) {
           return init.merge(state);
         }, value);
       });
