@@ -21,9 +21,7 @@ export default class Detail extends Component {
       <div>
         <h3>{ title }</h3>
         <h4>{ createAt }</h4>
-        <p>
-          { content }
-        </p>
+        <p>{ content }</p>
       </div>
     )
   }

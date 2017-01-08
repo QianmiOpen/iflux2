@@ -6,11 +6,10 @@ import {Store} from 'iflux2'
 import ListActor from './actor/list-actor'
 import {fromJS} from 'immutable'
 // import {fetchMsg} from './webapi'
-import type {Options} from '../types'
-
+import type {StoreOptions} from 'iflux2'
 
 export default class AppStore extends Store {
-  constructor(props: Options = {debug: false}) {
+  constructor(props: StoreOptions = {debug: false}) {
     super(props)
     if (__DEV__) {
       window.store = this

@@ -43,12 +43,12 @@ export default class Edit extends Component {
     )
   }
 
-  _handleChangeTitle = (e) => {
+  _handleChangeTitle = (e: SyntheticInputEvent) => {
     this.props.changeTitle(e.target.value)
   };
 
 
-  _handleContentChange = (e) => {
+  _handleContentChange = (e: SyntheticInputEvent) => {
     this.props.changeContent(e.target.value)
   };
 }

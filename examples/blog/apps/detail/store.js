@@ -3,7 +3,8 @@ import { Store } from 'iflux2'
 import LoadingActor from './actor/loading-actor'
 import DetailActor from './actor/detail-actor'
 import { fetchDetail } from './webapi'
-import type { Options } from '../types.js'
+
+import type {StoreOptions} from 'iflux2'
 
 export default class AppStore extends Store {
   bindActor() {
@@ -13,7 +14,7 @@ export default class AppStore extends Store {
     ]
   }
 
-  constructor(props: Options) {
+  constructor(props: StoreOptions) {
     super(props)
     if (__DEV__) {
       //debug

@@ -51,8 +51,9 @@ export default class Footer extends Component {
             </a>
           </li>
         </ul>
-        <button className="clear-completed"
-                onClick={clearCompleted}>Clear completed</button>
+        <button
+          className="clear-completed"
+          onClick={clearCompleted}>Clear completed</button>
       </footer>
     );
   }

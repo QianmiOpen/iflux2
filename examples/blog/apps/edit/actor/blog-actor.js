@@ -1,8 +1,7 @@
 //@flow
 import { Actor, Action } from 'iflux2'
-import type {Map} from 'immutable'
 
-type State = Map<string, number|string>;
+import type {ActorState} from 'iflux2'
 
 export default class BlogActor extends Actor {
   defaultState() {
@@ -15,17 +14,17 @@ export default class BlogActor extends Actor {
   }
 
   @Action('changeTitle')
-  changeTitle(state: State, title: string) {
+  changeTitle(state: ActorState, title: string) {
     return state.set('title', title)
   }
 
   @Action('changeContent')
-  changeContent(state: State, content: string) {
+  changeContent(state: ActorState, content: string) {
     return state.set('content', content)
   }
 
   @Action('submit')
-  submit(state: State) {
+  submit(state: ActorState) {
     const id = Date.now()
     const blog = (
       state

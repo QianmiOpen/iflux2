@@ -1,8 +1,7 @@
 //@flow
 import {Action, Actor} from 'iflux2'
-import type {Map, List}  from 'immutable'
 
-type State = Map<string, List<Object>>;
+import type {ActorState} from 'iflux2'
 
 export default class ListActor extends Actor {
   defaultState() {
@@ -12,7 +11,7 @@ export default class ListActor extends Actor {
   }
 
   @Action('init')
-  init(state: State, blogs: Array<Object>) {
+  init(state: ActorState, blogs: Array<Object>) {
     return state.set('blogs', blogs)
   }
 }
