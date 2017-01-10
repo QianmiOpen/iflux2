@@ -7,7 +7,7 @@
 'use strict';
 
 export default class Validator {
-  
+
   /**
    * 验证
    * @param obj
@@ -62,9 +62,12 @@ export default class Validator {
         //错误集合
         let errors = [];
 
-        if (opts.debug) {
-          console.groupCollapsed(`validate '${field}'`)
+        if (process.env.NODE_ENV != 'production') {
+          if (opts.debug) {
+            console.groupCollapsed(`validate '${field}'`)
+          }
         }
+
 
         for (let rule in ruleMap) {
           if (ruleMap.hasOwnProperty(rule) && rule != 'message') {
@@ -88,38 +91,48 @@ export default class Validator {
             }
 
             const validateMethod = Validator[rule];
+
             //如果validateMethod不存在，给出警告
             if (!validateMethod) {
               console.warn && console.warn(`can not find '${rule}' rule in '${field}'`);
               continue;
             }
 
-            if (opts.debug) {
-              console.log && console.log(
-                `validator rule => '${rule}, ruleValue => '${ruleValue}'`
-              )
+            if (process.env.NODE_ENV != 'production') {
+              if (opts.debug) {
+                console.log(
+                  `validator rule => '${rule}, ruleValue => '${ruleValue}'`
+                )
+              }
             }
 
             //没有通过校验
             if (!validateMethod.apply(null, args)) {
-              if (opts.debug) {
-                console.log('result: failed')
+              if (process.env.NODE_ENV != 'production') {
+                if (opts.debug) {
+                  console.log('result: failed')
+                }
               }
+
               errors.push(message[rule]);
               //如果开启一个错误
               if (opts.oneError) {
                 break;
               }
             } else {
-              if (opts.debug) {
-                console.log('result: ok')
+              if (process.env.NODE_ENV != 'production') {
+                if (opts.debug) {
+                  console.log('result: ok')
+                }
               }
             }
           }
         }
 
-        if (opts.debug) {
-          console.groupEnd && console.groupEnd();
+        if (process.env.NODE_ENV != 'production') {
+          if (opts.debug) {
+            console.groupEnd && console.groupEnd();
+          }
         }
 
         if (errors.length != 0) {

@@ -26,7 +26,7 @@ export class DynamicQueryLang {
   analyserLang(ql: Object) {
     //校验query的合法性
     if (!ql.isValidQuery()) {
-      throw new Error(`DQL invalid partial query-lang`);
+      throw new Error(`DQL: syntax error`);
     }
 
     //获取语法结构

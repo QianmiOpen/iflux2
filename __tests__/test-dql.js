@@ -4,7 +4,7 @@ import {QL} from '../src/ql';
 
 const oneDQL = DQL('testQL', [
   '$id',
-  (id) => id 
+  (id) => id
 ])
 
 const testDQL = DQL('testhQL', [
@@ -34,10 +34,9 @@ describe('dynamic query lang test suite', () => {
     try {
       testDQL.ql();
     } catch(err) {
-      expect('DQL invalid partial query-lang').toEqual(
+      expect('DQL: syntax error').toEqual(
         err.message
       );
     }
   })
 });
-

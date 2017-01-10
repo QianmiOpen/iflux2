@@ -27,14 +27,26 @@ type State = {
   storeState: IState;
 };
 
+type Store = {
+  _debug: boolean;
+  state(): IState;
+  bigQuery(ql: mixed): any;
+  subscribe: Function;
+  unsubscribe: Function;
+};
+
 export default function Relax(
   Component: ReactClass<{}>
 ): ReactClass<{}> {
    return class RelaxContainer extends React.Component {
+
      static displayName = `Relax(${getDisplayName(Component)})`;
+
      constructor(props) {
        super(props);
+       //当前组件的挂载状态
        this._isMounted = false;
+       //当前组件的状态
        this.state = {
          storeState: fromJS({})
        };
@@ -48,6 +60,8 @@ export default function Relax(
     _relaxProps: Object;
     //debug状态
     _debug: boolean;
+    //当前上下文的store
+    _store: Store;
 
     static contextTypes = {
       store: React.PropTypes.object
@@ -56,32 +70,37 @@ export default function Relax(
     componentWillMount() {
       //设置当前组件的状态
       this._isMounted = false;
+      this._store = this.context.store;
 
       //检查store是不是存在上下文
-      if (!this.context.store) {
+      //抛出异常方便定位问题
+      if (!this._store) {
         throw new Error('Could not find any @StoreProvider bind AppStore in current context');
       }
 
-      //设置debug级别
-      this._debug = this.context.store._debug;
-      if (this._debug) {
-        console.time('relax time');
-        console.groupCollapsed(`Relax(${Component.name}) will mount`);
+      //在开发阶段可以有更好的日志跟踪，在线上可以drop掉log，reduce打包的体积
+      if (process.env.NODE_ENV != 'production') {
+        if (this._store._debug) {
+          console.time('relax time');
+          console.groupCollapsed(`Relax(${Component.name}) will mount`);
+        }
       }
 
       //计算最终的props,这样写的是避免querylang的重复计算
       this._relaxProps = assign({}, this.props, this.getProps(this.props));
 
-      //trace log
-      if (this._debug) {
-        console.timeEnd('relax time');
-        console.groupEnd();
+      if (process.env.NODE_ENV != 'production') {
+        //trace log
+        if (this._store._debug) {
+          console.timeEnd('relax time');
+          console.groupEnd();
+        }
       }
     }
 
     componentDidMount() {
       this._isMounted = true;
-      this.context.store.subscribe(this._subscribeStoreChange);
+      this._store.subscribe(this._subscribeStoreChange);
     }
 
     componentWillUpdate() {
@@ -93,7 +112,7 @@ export default function Relax(
     }
 
     componentWillUnmount() {
-      this.context.store.unsubscribe(this._subscribeStoreChange);
+      this._store.unsubscribe(this._subscribeStoreChange);
     }
 
     /**
@@ -102,16 +121,21 @@ export default function Relax(
      * @returns {boolean}
      */
     shouldComponentUpdate(nextProps:Object) {
-      if (this._debug) {
-        console.time('relax time');
-        console.groupCollapsed(`Relax(${Component.name}) should update`);
+      //will drop
+      if (process.env.NODE_ENV != 'production') {
+        if (this._store._debug) {
+          console.time('relax time');
+          console.groupCollapsed(`Relax(${Component.name}) should update`);
+        }
       }
 
       //compare nextProps && this.props
       //如果属性不一致, 就去render
       if (Object.keys(nextProps).length != Object.keys(this.props).length) {
-        if (this._debug) {
-          console.groupEnd();
+        if (process.env.NODE_ENV != 'production') {
+          if (this._store._debug) {
+            console.groupEnd();
+          }
         }
 
         return true;
@@ -126,10 +150,12 @@ export default function Relax(
           if (newRelaxProps[key] != this._relaxProps[key]) {
             this._relaxProps = newRelaxProps;
 
-            //trace log
-            if (this._debug) {
-              console.timeEnd('relax time');
-              console.groupEnd();
+            if (process.env.NODE_ENV != 'production') {
+              //trace log
+              if (this._store._debug) {
+                console.timeEnd('relax time');
+                console.groupEnd();
+              }
             }
 
             return true;
@@ -137,10 +163,12 @@ export default function Relax(
         }
       }
 
-      if (this._debug) {
-        console.log(`Relax(${Component.name}) avoid re-render`);
-        console.timeEnd('relax time');
-        console.groupEnd();
+      if (process.env.NODE_ENV != 'production') {
+        if (this._store._debug) {
+          console.log(`Relax(${Component.name}) avoid re-render`);
+          console.timeEnd('relax time');
+          console.groupEnd();
+        }
       }
 
       return false;
@@ -165,7 +193,7 @@ export default function Relax(
     getProps(reactProps) {
       const dql = {};
       const props = {};
-      const {store} = this.context;
+      const store = this._store;
       const defaultProps = Component.defaultProps || {};
 
       for (let propName in defaultProps) {
@@ -214,6 +242,9 @@ export default function Relax(
       return typeof(param) != 'undefined' && null != param;
     }
 
+    /**
+     * 订阅store的变化
+     */
    _subscribeStoreChange = (state: IState) => {
      if (this._isMounted) {
        //re-render

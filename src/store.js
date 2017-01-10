@@ -57,15 +57,17 @@ export default class Store {
    * map Actor
    */
   _mapActor(cursor: Object, msg: string, param: any): void {
-    //trace log
-    this.debug(() => {
-      console.groupCollapsed(
-        `store dispatch {msg =>${JSON.stringify(msg)}}}`
-      );
-      console.log('param ->');
-      console.log((param && param.toJS) ? param.toJS() : param);
-      console.time('dispatch');
-    });
+    if (process.env.NODE_ENV != 'production') {
+      //trace log
+      this.debug(() => {
+        console.groupCollapsed(
+          `store dispatch {msg =>${JSON.stringify(msg)}}}`
+        );
+        console.log('param ->');
+        console.log((param && param.toJS) ? param.toJS() : param);
+        console.time('dispatch');
+      });
+    }
 
     //dispatch => every actor
     for (let name in this._actors) {
@@ -73,19 +75,24 @@ export default class Store {
         const actor = this._actors[name];
         const state = this._actorState.get(name);
 
-        //trace log
-        this.debug(() => {
-          const _route = actor._route || {};
-          const handlerName = _route[msg] ? _route[msg].name : 'default handler(no match)';
-          console.log(`${name} handle => ${handlerName}`);
-          console.time(`${name}`);
-        });
+        if (process.env.NODE_ENV != 'production') {
+          //trace log
+          this.debug(() => {
+            const _route = actor._route || {};
+            const handlerName = _route[msg] ? _route[msg].name : 'default handler(no match)';
+            console.log(`${name} handle => ${handlerName}`);
+            console.time(`${name}`);
+          });
+        }
 
         const newState = actor.receive(msg, state, param);
 
-        this.debug(() => {
-          console.timeEnd(`${name}`);
-        });
+        if (process.env.NODE_ENV != 'production') {
+          this.debug(() => {
+            console.timeEnd(`${name}`);
+          });
+        }
+
 
         // 更新变化的actor的状态
         if (newState != state) {
@@ -138,13 +145,15 @@ export default class Store {
 
     this._actorState = fromJS(state);
 
-    //计算有没有冲突的key
-    this.debug(() => {
-      const conflictList = filterActorConflictKey(actorList);
-      conflictList.forEach(v => {
-        console.warn(`actor:key ‘${v[0]}’ was conflicted among ‘${v[1]}’ `);
-      })
-    });
+    if (process.env.NODE_ENV != 'production') {
+      //计算有没有冲突的key
+      this.debug(() => {
+        const conflictList = filterActorConflictKey(actorList);
+        conflictList.forEach(v => {
+          console.warn(`actor:key ‘${v[0]}’ was conflicted among ‘${v[1]}’ `);
+        })
+      });
+    }
   }
 
   /**
@@ -244,7 +253,7 @@ export default class Store {
     return Cursor.from(this._actorState, (nextState, state) => {
       //warning
       if (state != this._actorState) {
-        console.warn && console.warn('attempted to alter expired state');
+        throw new Error('attempted to alter expired state');
       }
 
       //如果没有数据状态的更新
@@ -261,11 +270,13 @@ export default class Store {
         //先通知storeProvider做刷新
         this._storeProviderSubscribe && this._storeProviderSubscribe(
           () => {
-            //end log
-            this.debug(() => {
-              console.timeEnd('dispatch');
-              console.groupEnd && console.groupEnd();
-            });
+            if (process.env.NODE_ENV != 'production') {
+              //end log
+              this.debug(() => {
+                console.timeEnd('dispatch');
+                console.groupEnd && console.groupEnd();
+              });
+            }
         });
 
         //通知relax
@@ -291,19 +302,23 @@ export default class Store {
     const name = ql.name();
     let metaData = {};
 
-    //trace log
-    this.debug(() => {
-      console.time(`${name}`);
-      console.groupCollapsed(`ql#${name} big query ==>`);
-    });
+    if (process.env.NODE_ENV != 'production') {
+      //trace log
+      this.debug(() => {
+        console.time(`${name}`);
+        console.groupCollapsed(`ql#${name} big query ==>`);
+      });
+    }
 
     //当前的QL是不是已经查询过
     //如果没有查询过构建查询meta data
     if (!this._cacheQL[id]) {
-      //trace log
-      this.debug(() => {
-        console.log(`:( not exist in cache`);
-      });
+      if (process.env.NODE_ENV != 'production') {
+        //trace log
+        this.debug(() => {
+          console.log(`:( not exist in cache`);
+        });
+      }
 
       this._cacheQL[id] = {
         result: 0,
@@ -330,15 +345,19 @@ export default class Store {
           metaData.deps[key] = result;
           expired = true;
 
-          //trace log
-          this.debug(() => {
-            console.log(`:( deps:ql#${path.name()} data was expired.`);
-          });
+          if (process.env.NODE_ENV != 'production') {
+            //trace log
+            this.debug(() => {
+              console.log(`:( deps:ql#${path.name()} data was expired.`);
+            });
+          }
         }
 
-        this.debug(() => {
-          console.log(`:) deps:ql#${path.name()} get result from cache`);
-        });
+        if (process.env.NODE_ENV != 'production') {
+          this.debug(() => {
+            console.log(`:) deps:ql#${path.name()} get result from cache`);
+          });
+        }
 
         return result;
       }
@@ -353,14 +372,19 @@ export default class Store {
         metaData.deps[key] = value;
         expired = true;
 
-        this.debug(() => {
-          console.log(`:( deps: ${JSON.stringify(path)} data had expired.`);
-        });
+        if (process.env.NODE_ENV != 'production') {
+          this.debug(() => {
+            console.log(`:( deps: ${JSON.stringify(path)} data had expired.`);
+          });
+        }
       } else if (typeof (value) === 'undefined' && typeof (metaData.deps[key]) === 'undefined') {
         expired = true;
-        this.debug(() => {
-          console.log(`:( deps: ${JSON.stringify(path)} undefined. Be careful!`);
-        });
+
+        if (process.env.NODE_ENV != 'production') {
+          this.debug(() => {
+            console.log(`:( deps: ${JSON.stringify(path)} undefined. Be careful!`);
+          });
+        }
       }
 
 
@@ -375,22 +399,26 @@ export default class Store {
       result = fn.apply(null, args);
       metaData.result = result;
     } else {
-      this.debug(() => {
-        console.log(`:) get result from cache`);
-      });
+      if (process.env.NODE_ENV != 'production') {
+        this.debug(() => {
+          console.log(`:) get result from cache`);
+        });
+      }
     }
 
-    //trace log
-    this.debug(() => {
-      const result = (
-        (metaData.result && metaData.result.toJS)
-          ? metaData.result.toJS()
-          : metaData.result
-      );
-      console.log('!!result => ' + JSON.stringify(result, null, 2));
-      console.groupEnd && console.groupEnd();
-      console.timeEnd(`${name}`);
-    });
+    if (process.env.NODE_ENV != 'production') {
+      //trace log
+      this.debug(() => {
+        const result = (
+          (metaData.result && metaData.result.toJS)
+            ? metaData.result.toJS()
+            : metaData.result
+        );
+        console.log('!!result => ' + JSON.stringify(result, null, 2));
+        console.groupEnd && console.groupEnd();
+        console.timeEnd(`${name}`);
+      });
+    }
 
     return result;
   }
@@ -409,6 +437,7 @@ export default class Store {
    */
   reduceState() {
     this._state = this._state || OrderedMap();
+
     return this._state.update(value => {
       return this._actorState.valueSeq().reduce((init, state) => {
         return init.merge(state);

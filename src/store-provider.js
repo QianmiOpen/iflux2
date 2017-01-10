@@ -36,6 +36,7 @@ export default function connectToStore(
       _store: Store;
       //当前的组件状态
       _isMounted: boolean;
+      //获取当前的ref
       App: Object;
 
       static displayName = `StoreProvider(${getDisplayName(Component)})`;
@@ -52,10 +53,13 @@ export default function connectToStore(
 
       constructor(props: Object) {
         super(props);
-        //如果是debug状态
-        if (opts.debug) {
-          console.group(`StoreProvider(${Component.name}) in debug mode.`);
-          console.time('first-render-time');
+
+        if (process.env.NODE_ENV != 'production') {
+          //如果是debug状态
+          if (opts.debug) {
+            console.group(`StoreProvider(${Component.name}) in debug mode.`);
+            console.time('first-render-time');
+          }
         }
 
         //初始化当前的组件状态
@@ -65,12 +69,16 @@ export default function connectToStore(
       }
 
       componentDidMount() {
-        if (opts.debug) {
-          console.timeEnd('first-render-time');
-          console.groupEnd();
+
+        if (process.env.NODE_ENV != 'production') {
+          if (opts.debug) {
+            console.timeEnd('first-render-time');
+            console.groupEnd();
+          }
         }
+
         this._isMounted = true;
-        this._store.subscribeStoreProvider(this._handleStoreChange, true);
+        this._store.subscribeStoreProvider(this._handleStoreChange);
 
         //代理的子componentDidMount执行一次
         if (this.App) {
@@ -80,17 +88,23 @@ export default function connectToStore(
 
       componentWillUpdate() {
         this._isMounted = false;
-        if (opts.debug) {
-          console.group(`StoreProvider(${Component.name}) will update`);
-          console.time('update-render-time');
+
+        if (process.env.NODE_ENV != 'production') {
+          if (opts.debug) {
+            console.group(`StoreProvider(${Component.name}) will update`);
+            console.time('update-render-time');
+          }
         }
       }
 
       componentDidUpdate() {
         this._isMounted = true;
-        if (opts.debug) {
-          console.timeEnd('update-render-time');
-          console.groupEnd();
+
+        if (process.env.NODE_ENV != 'production') {
+          if (opts.debug) {
+            console.timeEnd('update-render-time');
+            console.groupEnd();
+          }
         }
       }
 
