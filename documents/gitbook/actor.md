@@ -13,6 +13,7 @@
      * 领域模型数据
      */
     defaultState() {
+      //会被自动转化为immutable的状态
       return {
         id: 1,
         name: 'iflux2',
@@ -39,8 +40,21 @@ Actor所有子Actor的父类，子Actor继承Actor这个父类之后，通过简
 
 # 关于decorator
 借助Babel的decorators插件
+```sh
+# npm install babel-plugin-transform-decorators-legacy --save-dev
+# or
+# yarn add babel-plugin-transform-decorators-legacy --dev
+```
+
+配置.babelrc
+
 ```js
-{"babel-plugin-transform-decorators-legacy": "^1.3.4"}
+{
+  “plugins”: [
+    "transform-decorators-legacy"
+  ]
+}
+
 ```
 我们就可以使用这个@Action
 

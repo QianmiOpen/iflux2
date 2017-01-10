@@ -8,9 +8,10 @@ QL = Query Lang
 ## Syntax
 QL(displayName, [string|array|QL..., fn])
 
-displayName(可选)，主要是帮助我们在debug状态更好地日志跟踪
+displayName，主要是帮助我们在debug状态更好地日志跟踪
 
 string|array|QL: string|array都是immutable的get的path, QL其他的QL(支持无限嵌套)
+
 例如：
 ```js
 import {OrderedMap) from 'immutable'
@@ -29,6 +30,8 @@ const city = user.getIn(['address', 'city']) //path => ['address', 'city']
 ```
 
 fn: 可计算状态的回调函数，bigQuery会取得所有的所有的数组中的path对应的值，作为参数传递给fn,例如：
+
+
 ```js
 /**
  * 返回：{
@@ -39,8 +42,8 @@ fn: 可计算状态的回调函数，bigQuery会取得所有的所有的数组�
  * }
  *}
  */
- store.state() 
- 
+ store.state()
+
 // QL计算的结果值是 “iflux2南京"
 const ifluxQL = QL('ifluxQL', [
   'name',
@@ -62,90 +65,12 @@ const loadingQL = QL('loadingQL', [
 ])
 
 const userQL = QL('userQL', [
+  //query lang 支持嵌套
   loadingQL,
   ['user', 'id'],
   (id, loading) => ({id, loading})
 ])
 ```
-
-## source code
-
-> 没有任何高端的深度晦涩的code, 希望不会让你失望
-
-```js
-/**
- * 查询语言
- * @flow
- */
-import {isQuery, isStr} from './util';
-
-
-//递增的id
-let incrementId = 0;
-
-
-export class QueryLang {
-  _id: number;
-  _lang: Array<Object>;
-  _name: string|Array<Object>;
-
-
-  constructor(name: string|Array<Object>, lang: Array<Object>) {
-    this._id = ++incrementId;
-
-    //如果第一个参数为字符串，改字符串就代表了该QL的name
-    //该name就是为了更好的帮助我们debug调试问题
-    if (typeof(name) === 'string' || isStr(name)) {
-      this._name = name;
-      this._lang = lang;
-    } else {
-      this._name = '';
-      this._lang = name;
-    }
-  }
-
-
-  /**
-   * 判断当前是不是一个合法的query lang
-   * @returns {boolean}
-   */
-  isValidQuery() {
-    return isQuery(this._lang);
-  }
-
-
-  /**
-   * 当前的id
-   * @returns {number}
-   */
-  id() {
-    return this._id;
-  }
-
-
-  /**
-   * 当前的name
-   */
-  name() {
-    return this._name || this._id;
-  }
-
-
-  /**
-   * 当前的语法标记
-   * @returns {Array.<Object>}
-   */
-  lang() {
-    return this._lang;
-  }
-}
-
-
-//Factory Method
-export const QL = (name: string|Array<Object>, lang:Array<Object>) => new QueryLang(name, lang);
-
-```
-
 
 ## why?
 

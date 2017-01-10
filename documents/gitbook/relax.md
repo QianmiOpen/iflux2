@@ -7,7 +7,7 @@ import React, {Component} from 'react'
 import {Relax} from 'iflux2'
 
 @Relax
-class User {
+class User extends Component {
   /**
    *relax 会自动查询数据注入
    */
