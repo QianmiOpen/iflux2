@@ -39,7 +39,22 @@ export default function Relax(
   Component: ReactClass<{}>
 ): ReactClass<{}> {
    return class RelaxContainer extends React.Component {
+     //当前的状态
+     state: State;
+     //当前组件的挂载状态
+     _isMounted: boolean;
+     //当前的所有的子组件的props
+     _relaxProps: Object;
+     //debug状态
+     _debug: boolean;
+     //当前上下文的store
+     _store: Store;
 
+     //生命上下文类型
+     static contextTypes = {
+       store: React.PropTypes.object
+     };
+     //声明displayName
      static displayName = `Relax(${getDisplayName(Component)})`;
 
      constructor(props) {
@@ -51,21 +66,6 @@ export default function Relax(
          storeState: fromJS({})
        };
      }
-
-    //当前的状态
-    state: State;
-    //当前组件的挂载状态
-    _isMounted: boolean;
-    //当前的所有的子组件的props
-    _relaxProps: Object;
-    //debug状态
-    _debug: boolean;
-    //当前上下文的store
-    _store: Store;
-
-    static contextTypes = {
-      store: React.PropTypes.object
-    };
 
     componentWillMount() {
       //设置当前组件的状态

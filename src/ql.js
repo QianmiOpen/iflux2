@@ -10,7 +10,7 @@ import {isQuery, isStr} from './util';
 type Lang = Array<string|Array<string|number>|Function>;
 
 //递增的id
-let incrementId = 0;
+let _incrementId = 0;
 
 export class QueryLang {
   _id: number;
@@ -21,7 +21,7 @@ export class QueryLang {
    * init
    */
   constructor(name: string, lang: Lang) {
-    this._id = ++incrementId;
+    this._id = ++_incrementId;
     this._name = name;
     this._lang = lang;
   }
@@ -45,8 +45,8 @@ export class QueryLang {
   /**
    * 当前的name
    */
-  name(): string | number {
-    return this._name || this._id;
+  name(): string {
+    return this._name;
   }
 
   /**
@@ -58,7 +58,7 @@ export class QueryLang {
   }
 }
 
-//Factory Method
+//export factory method
 export const QL = (
   name: string,
   lang: Lang
