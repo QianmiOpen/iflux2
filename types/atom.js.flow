@@ -11,3 +11,5 @@ declare class Atom {
   subscribe(callback: Function): void;
   unsubscribe(callback: Function): void;
 }
+
+export default Atom;

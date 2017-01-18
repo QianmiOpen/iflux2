@@ -3,8 +3,8 @@ import {Map} from 'immutable'
 
 //store构造函数参数
 export type StoreOptions = {
-  debug: boolean;
-  ctxStoreName: string;
+  debug?: boolean;
+  ctxStoreName?: string;
 };
 
 //Immutable State

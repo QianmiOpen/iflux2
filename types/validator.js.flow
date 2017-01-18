@@ -42,3 +42,5 @@ declare class Validator {
   static forbbidenChar(value: string): boolean;
   static addValidator(name: string, callback: Function): void;
 }
+
+export default Validator;
