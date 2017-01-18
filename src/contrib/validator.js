@@ -94,7 +94,9 @@ export default class Validator {
 
             //如果validateMethod不存在，给出警告
             if (!validateMethod) {
-              console.warn && console.warn(`can not find '${rule}' rule in '${field}'`);
+              if (process.env.NODE_ENV != 'production') {
+                console.warn && console.warn(`can not find '${rule}' rule in '${field}'`);
+              }
               continue;
             }
 
@@ -156,7 +158,6 @@ export default class Validator {
    * @returns {boolean}
    */
   static email(value) {
-
     return /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(value);
   }
 

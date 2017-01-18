@@ -107,7 +107,7 @@ export default class Store {
    * @param opts
    */
   constructor(opts: StoreOptions) {
-    this._debug = opts.debug;
+    this._debug = opts.debug || false;
     this._cacheQL = {};
     this._callbacks = [];
     this._actors = {};
