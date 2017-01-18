@@ -11,7 +11,7 @@ exports[`test multiple store context multiple context 1`] = `
 <div>
   hello
   <div>
-    0
+    1
   </div>
 </div>
 `;

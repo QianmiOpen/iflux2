@@ -48,9 +48,7 @@ export const Action = (msg: string) => (
  * Usage
  * import React, {Component} from 'iflux2'
  *
- * @context({
-      [name]: React.PropTypes.object
-    })
+ * @CtxStoreName('_store')
  * class Hello extends Component {
  *   render() {
  *    return <div>hello world</div>
@@ -59,8 +57,10 @@ export const Action = (msg: string) => (
  * @param obj 绑定上下文
  * @returns {function(Object)}
  */
-export const Context = (obj: Object) => {
+export const CtxStoreName = (name: string) => {
   return (target: Object) => {
-    target.contextTypes = obj;
+    //动态的在组件的上下午绑定storeName
+    //通过该标记反向的告诉Relax获取正取的上下文store
+    target._ctxStoreName = name;
   };
 };

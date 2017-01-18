@@ -26,6 +26,8 @@ export default function connectToStore(
   opts: StoreOptions = {debug: false, ctxStoreName: 'store'}
 ): WrapperComponent {
   return function (Component: ReactClass<{}>) {
+    //获取上下午动态设置的store的名称
+    //避免Relax在获取context的时候就近原则的冲突
     const ctxStoreName = opts.ctxStoreName;
 
     //proxy Component componentDidMount

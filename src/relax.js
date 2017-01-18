@@ -38,6 +38,9 @@ type Store = {
 export default function Relax(
   Component: ReactClass<{}>
 ): ReactClass<{}> {
+  //获取组件中绑定的上下文storeName的参数
+  //默认是store
+  const ctxStoreName = Component._ctxStoreName || 'store';
   return class RelaxContainer extends React.Component {
      //当前的状态
      state: State;
@@ -51,8 +54,8 @@ export default function Relax(
      _store: Store;
 
      //声明上下文类型
-     static contextTypes = Component.contextTypes || {
-       store: React.PropTypes.object
+     static contextTypes = {
+       [ctxStoreName]: React.PropTypes.object
      };
 
      //声明displayName
@@ -71,7 +74,7 @@ export default function Relax(
     componentWillMount() {
       //设置当前组件的状态
       this._isMounted = false;
-      this._store = this.context.store;
+      this._store = this.context[ctxStoreName];
 
       //检查store是不是存在上下文
       //抛出异常方便定位问题

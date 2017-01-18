@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import renderer from 'react-test-renderer'
-import {Action, Actor, StoreProvider, Store, Relax, Context} from '../src'
+import {Action, Actor, StoreProvider, Store, Relax, CtxStoreName} from '../src'
 jest.mock('react-dom');
 
 //;;;;;;;;;;;;;;;;;;;Actor;;;;;;;;;;;;;;;;;;;;;
@@ -98,9 +98,7 @@ describe('test multiple store context', () => {
   it('multiple context', () => {
 
     @Relax
-    @Context({
-      _counterStore: React.PropTypes.object
-    })
+    @CtxStoreName('_counterStore')
     class Counter extends Component {
       static defaultProps = {
         counter: 0

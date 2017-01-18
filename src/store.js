@@ -106,7 +106,7 @@ export default class Store {
    * 初始化store
    * @param opts
    */
-  constructor(opts: StoreOptions = {debug: false}) {
+  constructor(opts: StoreOptions) {
     this._debug = opts.debug;
     this._cacheQL = {};
     this._callbacks = [];
