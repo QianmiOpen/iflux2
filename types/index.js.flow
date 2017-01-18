@@ -4,6 +4,7 @@ import {Map} from 'immutable'
 //store构造函数参数
 export type StoreOptions = {
   debug: boolean;
+  ctxStoreName: string;
 };
 
 //校验的规则参数
@@ -101,6 +102,8 @@ declare function DQL(
 
 declare function Action(name: string): Function;
 
+declare function CtxStoreName(name: string): Function;
+
 declare function StoreProvider(
   store: Store,
   opts: StoreOptions
@@ -123,6 +126,7 @@ export {
   Util,
   Actor,
   Action,
+  CtxStoreName,
   Atom,
   QL,
   DQL,
