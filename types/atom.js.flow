@@ -1,0 +1,13 @@
+//@flow
+
+import {Map} from 'immutable'
+
+//Immutable State
+export type IState = Map<string, any>;
+
+declare class Atom {
+  constructor(record: Object): void;
+  value(path: string|Array<String>): IState;
+  subscribe(callback: Function): void;
+  unsubscribe(callback: Function): void;
+}

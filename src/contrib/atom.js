@@ -9,7 +9,7 @@
 import {fromJS} from 'immutable';
 import Cursor from 'immutable/contrib/cursor';
 
-import {isArray, isStr, isFn} from './util';
+import {isArray, isStr, isFn} from '../util';
 
 export default class Atom {
   _atom: Object;

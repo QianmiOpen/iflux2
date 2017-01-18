@@ -1,5 +1,4 @@
-import Validator from '../src/Validator';
-
+import Validator from '../src/contrib/Validator';
 
 describe('validator rule', () => {
   it('it should be email', () => {

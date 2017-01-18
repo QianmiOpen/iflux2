@@ -1,4 +1,4 @@
-import Atom from '../src/atom';
+import Atom from '../src/contrib/atom';
 
 
 const appCache = new Atom({
@@ -8,7 +8,6 @@ const appCache = new Atom({
     g1102: 10
   }
 });
-
 
 describe('atom test suite', () => {
   it('value test', () => {

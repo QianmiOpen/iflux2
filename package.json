@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "jest --verbose",
-    "rebuild": "node_modules/.bin/babel src --out-dir dist "
+    "build:core": "node_modules/.bin/babel --ignore src/contrib src --out-dir dist",
+    "build:contrib": "node_modules/.bin/babel src/contrib --out-dir contrib",
+    "release": "npm run build:core && npm run build:contrib"
   },
   "jest": {
     "testPathIgnorePatterns": [
@@ -22,7 +24,8 @@
   },
   "files": [
     "README.md",
-    "dist"
+    "dist",
+    "contrib"
   ],
   "devDependencies": {
     "babel-cli": "6.18.0",
