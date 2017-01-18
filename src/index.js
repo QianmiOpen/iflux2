@@ -3,7 +3,7 @@ import Actor from './actor';
 import StoreProvider from './store-provider';
 import Relax from './relax';
 import Store from './store';
-import {Action} from './decorator';
+import {Action, Context} from './decorator';
 import Atom from './atom';
 import {QL} from './ql';
 import {DQL} from './dql';
@@ -16,6 +16,7 @@ export {
   msg,
   Atom,
   Action,
+  Context,
   Actor,
   Util,
   Relax,

@@ -38,7 +38,7 @@ type Store = {
 export default function Relax(
   Component: ReactClass<{}>
 ): ReactClass<{}> {
-   return class RelaxContainer extends React.Component {
+  return class RelaxContainer extends React.Component {
      //当前的状态
      state: State;
      //当前组件的挂载状态
@@ -50,10 +50,11 @@ export default function Relax(
      //当前上下文的store
      _store: Store;
 
-     //生命上下文类型
-     static contextTypes = {
+     //声明上下文类型
+     static contextTypes = Component.contextTypes || {
        store: React.PropTypes.object
      };
+
      //声明displayName
      static displayName = `Relax(${getDisplayName(Component)})`;
 
@@ -251,7 +252,7 @@ export default function Relax(
        this.setState({storeState: state});
      }
    };
-  }
+  };
 
   /**
    * displayName

@@ -6,6 +6,7 @@ import {Map} from 'immutable'
  */
 export type StoreOptions = {
   debug: boolean;
+  ctxStoreName: string;
 };
 
 //不可变的状态类型

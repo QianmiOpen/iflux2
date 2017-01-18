@@ -23,9 +23,11 @@ type WrapperComponent = (Cmp: ReactClass<{}>) => ReactClass<{}>;
  */
 export default function connectToStore(
   AppStore: (opts: StoreOptions) => Store,
-  opts: StoreOptions = {debug: false}
+  opts: StoreOptions = {debug: false, ctxStoreName: 'store'}
 ): WrapperComponent {
   return function (Component: ReactClass<{}>) {
+    const ctxStoreName = opts.ctxStoreName;
+
     //proxy Component componentDidMount
     const proxyDidMount = Component.prototype.componentDidMount || (() => {});
     //清空
@@ -39,15 +41,16 @@ export default function connectToStore(
       //获取当前的ref
       App: Object;
 
+
       static displayName = `StoreProvider(${getDisplayName(Component)})`;
 
       static childContextTypes = {
-        store: React.PropTypes.object
+        [ctxStoreName]: React.PropTypes.object
       };
 
       getChildContext: Function = (): Object => {
         return {
-          store: this._store
+          [ctxStoreName]: this._store
         };
       };
 
@@ -69,7 +72,6 @@ export default function connectToStore(
       }
 
       componentDidMount() {
-
         if (process.env.NODE_ENV != 'production') {
           if (opts.debug) {
             console.timeEnd('first-render-time');

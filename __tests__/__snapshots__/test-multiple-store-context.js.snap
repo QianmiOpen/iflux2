@@ -1,0 +1,29 @@
+exports[`test multiple store context binding context 1`] = `
+<div>
+  hello
+  <div>
+    0
+  </div>
+</div>
+`;
+
+exports[`test multiple store context multiple context 1`] = `
+<div>
+  hello
+  <div>
+    0
+  </div>
+</div>
+`;
+
+exports[`test multiple store context test CounterApp 1`] = `
+<div>
+  1
+</div>
+`;
+
+exports[`test multiple store context test HelloApp 1`] = `
+<div>
+  hello
+</div>
+`;
