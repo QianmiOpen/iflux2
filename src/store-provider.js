@@ -23,12 +23,12 @@ type WrapperComponent = (Cmp: ReactClass<{}>) => ReactClass<{}>;
  */
 export default function connectToStore(
   AppStore: (opts: StoreOptions) => Store,
-  opts: StoreOptions = {debug: false, ctxStoreName: 'store'}
+  opts: StoreOptions = {debug: false, ctxStoreName: '_iflux2$store'}
 ): WrapperComponent {
   return function (Component: ReactClass<{}>) {
     //获取上下午动态设置的store的名称
     //避免Relax在获取context的时候就近原则的冲突
-    const ctxStoreName = opts.ctxStoreName;
+    const ctxStoreName = opts.ctxStoreName || '_iflux2$store';
 
     //proxy Component componentDidMount
     const proxyDidMount = Component.prototype.componentDidMount || (() => {});

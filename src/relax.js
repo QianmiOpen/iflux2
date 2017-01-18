@@ -40,7 +40,7 @@ export default function Relax(
 ): ReactClass<{}> {
   //获取组件中绑定的上下文storeName的参数
   //默认是store
-  const ctxStoreName = Component._ctxStoreName || 'store';
+  const ctxStoreName = Component._ctxStoreName || '_iflux2$store';
   return class RelaxContainer extends React.Component {
      //当前的状态
      state: State;
