@@ -63,15 +63,6 @@ declare function Relax(
   Component: ReactClass<{}>
 ): ReactClass<{}>;
 
-declare var Util: {
-  isQuery(ql: any): boolean;
-  isArray(arr: any): boolean;
-  isFn(fn: any): boolean;
-  isStr(str: any): boolean;
-  isObject(str: any): boolean;
-  type(type: any): string;
-};
-
 export {
   Util,
   Actor,

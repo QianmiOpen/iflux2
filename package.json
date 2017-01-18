@@ -7,7 +7,8 @@
     "test": "jest --verbose",
     "build:core": "node_modules/.bin/babel --ignore src/contrib src --out-dir dist",
     "build:contrib": "node_modules/.bin/babel src/contrib --out-dir contrib",
-    "release": "npm run build:core && npm run build:contrib"
+    "flowtype": "cp types/index.js.flow dist && cp types/atom.js.flow contrib && cp types/validator.js.flow contrib && cp types/util.js.flow contrib",
+    "release": "npm run build:core && npm run build:contrib && npm run flowtype"
   },
   "jest": {
     "testPathIgnorePatterns": [

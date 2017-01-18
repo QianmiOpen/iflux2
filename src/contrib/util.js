@@ -1,7 +1,4 @@
 /**
- * 判断当前的参数是不是query-lang的合法形式
- * @param ql
- * @returns {boolean}
  * @flow
  */
 

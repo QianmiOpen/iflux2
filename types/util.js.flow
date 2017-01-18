@@ -1,0 +1,14 @@
+//@flow
+declare function isArray(arr: mixed): boolean;
+declare function isFn(fn: mixed): boolean;
+declare function isStr(str: mixed): boolean;
+declare function isObject(obj: mixed): boolean;
+declare function type(t: mixed): string;
+
+export {
+  isArray,
+  isFn,
+  isStr,
+  isObject,
+  type
+};
