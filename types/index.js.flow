@@ -64,7 +64,6 @@ declare function Relax(
 ): ReactClass<{}>;
 
 export {
-  Util,
   Actor,
   Action,
   CtxStoreName,

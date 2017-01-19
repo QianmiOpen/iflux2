@@ -3,12 +3,10 @@ import { Store } from 'iflux2'
 import UserActor from './actor/user-actor'
 import ValidateFieldActor from './actor/validate-field-actor'
 
-type Options = {
-  debug: boolean;
-}
+import type {StoreOptions} from 'iflux2'
 
 export default class AppStore extends Store {
-  constructor(props: Options) {
+  constructor(props: StoreOptions) {
     super(props)
     window.store = this
   }
