@@ -1337,9 +1337,9 @@ iconv-lite@0.4.13, iconv-lite@~0.4.13:
   version "0.4.13"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.13.tgz#1f88aba4ab0b1508e8312acc39345f36e992e2f2"
 
-iflux2@1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.3.0.tgz#cbf01e8aabfd38b827d976d22d6a3aee24213ca4"
+iflux2@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.4.0.tgz#a129311e72444fa10eb5dee0ec5823d93f60704d"
   dependencies:
     events "^1.1.0"
     immutable "^3.8.1"

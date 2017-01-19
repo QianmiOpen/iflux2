@@ -1,5 +1,6 @@
 //@flow
-import { QL, Validator } from 'iflux2'
+import { QL } from 'iflux2'
+import Validator from 'iflux2/contrib/validator'
 
 export const validatorQL = QL('validatorQL', [
   'fields',
