@@ -15,13 +15,13 @@
 'use strict';
 
 import React from 'react';
-import {fromJS} from 'immutable';
+import { fromJS } from 'immutable';
 import assign from 'object-assign';
 
-import {QueryLang} from './ql';
-import {DynamicQueryLang} from './dql';
+import { QueryLang } from './ql';
+import { DynamicQueryLang } from './dql';
 
-import type {IState} from './types'
+import type {IState } from './types'
 
 type State = {
   storeState: IState;
@@ -42,34 +42,36 @@ export default function Relax(
   //默认是store
   const ctxStoreName = Component._ctxStoreName || '_iflux2$store';
   return class RelaxContainer extends React.Component {
-     //当前的状态
-     state: State;
-     //当前组件的挂载状态
-     _isMounted: boolean;
-     //当前的所有的子组件的props
-     _relaxProps: Object;
-     //debug状态
-     _debug: boolean;
-     //当前上下文的store
-     _store: Store;
+    //当前的状态
+    state: State;
+    //当前组件的挂载状态
+    _isMounted: boolean;
+    //当前的所有的子组件的props
+    _relaxProps: Object;
+    //debug状态
+    _debug: boolean;
+    //当前上下文的store
+    _store: Store;
+    _dql2ql: Object;
 
-     //声明上下文类型
-     static contextTypes = {
-       [ctxStoreName]: React.PropTypes.object
-     };
+    //声明上下文类型
+    static contextTypes = {
+      [ctxStoreName]: React.PropTypes.object
+    };
 
-     //声明displayName
-     static displayName = `Relax(${getDisplayName(Component)})`;
+    //声明displayName
+    static displayName = `Relax(${getDisplayName(Component)})`;
 
-     constructor(props) {
-       super(props);
-       //当前组件的挂载状态
-       this._isMounted = false;
-       //当前组件的状态
-       this.state = {
-         storeState: fromJS({})
-       };
-     }
+    constructor(props) {
+      super(props);
+      //当前组件的挂载状态
+      this._isMounted = false;
+      this._dql2ql = {};
+      //当前组件的状态
+      this.state = {
+        storeState: fromJS({})
+      };
+    }
 
     componentWillMount() {
       //设置当前组件的状态
@@ -124,7 +126,7 @@ export default function Relax(
      * @param nextProps
      * @returns {boolean}
      */
-    shouldComponentUpdate(nextProps:Object) {
+    shouldComponentUpdate(nextProps: Object) {
       //will drop
       if (process.env.NODE_ENV != 'production') {
         if (this._store._debug) {
@@ -180,7 +182,7 @@ export default function Relax(
 
     render() {
       return (
-        <Component {... this._relaxProps}/>
+        <Component {... this._relaxProps} />
       );
     }
 
@@ -213,6 +215,15 @@ export default function Relax(
           //隔离出来DQL
           if (propValue instanceof DynamicQueryLang) {
             dql[propName] = propValue;
+
+            //如果不存在转换，创建一个QL与关联
+            if (!this._dql2ql[propName]) {
+              //这个lang实际上并不是QueryLang需要的
+              //这个lang会被后面真正被DynamicQueryLang计算过的lang取代
+              this._dql2ql[propName] = new QueryLang(propValue.name(), propValue.lang());
+            }
+
+            continue;
           }
 
           props[propName] = defaultProps[propName];
@@ -231,7 +242,11 @@ export default function Relax(
       //开始计算DQL
       for (let propName in dql) {
         if (dql.hasOwnProperty(propName)) {
-          props[propName] = store.bigQuery(dql[propName].context(props).ql());
+          //取出dynamicQL
+          const dqlObj = dql[propName];
+          const lang = dqlObj.context(props).analyserLang(dqlObj.lang())
+          const ql = this._dql2ql[propName].setLang(lang)
+          props[propName] = store.bigQuery(ql);
         }
       }
 
@@ -243,18 +258,18 @@ export default function Relax(
      * @param  {any} param
      */
     static _isNotUndefinedAndNull(param: any) {
-      return typeof(param) != 'undefined' && null != param;
+      return typeof (param) != 'undefined' && null != param;
     }
 
     /**
      * 订阅store的变化
      */
-   _subscribeStoreChange = (state: IState) => {
-     if (this._isMounted) {
-       //re-render
-       this.setState({storeState: state});
-     }
-   };
+    _subscribeStoreChange = (state: IState) => {
+      if (this._isMounted) {
+        //re-render
+        this.setState({ storeState: state });
+      }
+    };
   };
 
   /**

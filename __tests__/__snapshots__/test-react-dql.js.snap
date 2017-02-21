@@ -10,42 +10,42 @@ exports[`react-dql test suite initial dql 1`] = `
   </div>
   <div>
     <div>
-      1
+      2
     </div>
     <div>
-      p1
-    </div>
-  </div>
-  <div>
-    <div>
-      1
-    </div>
-    <div>
-      p1
+      p2
     </div>
   </div>
   <div>
     <div>
-      1
+      3
     </div>
     <div>
-      p1
-    </div>
-  </div>
-  <div>
-    <div>
-      1
-    </div>
-    <div>
-      p1
+      p3
     </div>
   </div>
   <div>
     <div>
-      1
+      4
     </div>
     <div>
-      p1
+      p4
+    </div>
+  </div>
+  <div>
+    <div>
+      5
+    </div>
+    <div>
+      p5
+    </div>
+  </div>
+  <div>
+    <div>
+      6
+    </div>
+    <div>
+      p6
     </div>
   </div>
 </div>

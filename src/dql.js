@@ -1,64 +1,67 @@
 //flow
-import {QL, QueryLang} from './ql';
-import {isArray, isStr, isQuery} from './util';
+import { QL, QueryLang } from './ql';
+import { isArray, isStr, isQuery } from './util';
 
 'use strict';
 
-type Lang = Array<string|number|Array<string|number>|Function>;
+type Lang = Array<string | number | Array<string | number> | Function>;
 
 /**
  * 动态的QueryLang
  */
 export class DynamicQueryLang {
   _ctx: Object;
-  _ql: Object;
+  _name: string;
+  _lang: Lang;
 
-  //init
   constructor(name: string, lang: Lang) {
     this._ctx = {};
-    this._ql = QL(name, lang);
+    this._name = name;
+    this._lang = lang;
+
+    if (process.env.NODE_ENV != 'production') {
+      if (!isQuery(this._lang)) {
+        throw new Error(`${this._name} syntax error`)
+      }
+    }
   }
 
   /**
    * 分析路径中的动态元素，然后根据上下文替换
    * @param ql
    */
-  analyserLang(ql: Object) {
-    //校验query的合法性
-    if (!ql.isValidQuery()) {
-      throw new Error(`DQL: syntax error`);
-    }
+  analyserLang(dLang: Lang) {
+    const lang = []
 
-    //获取语法结构
-    let lang = ql.lang();
-    for (let i = 0, len = lang.length - 1; i < len; i++) {
+    for (let i = 0, len = dLang.length; i < len; i++) {
       //获取当前的路径
-      let path = lang[i];
+      let path = dLang[i];
+
       if (isStr(path) && path[0] === '$') {
-        //重新赋值
-        lang[i] = this._ctx[path.substring(1)];
+        lang[i] = path[0] === '$' ? this._ctx[path.substring(1)] : path;
       } else if (isArray(path)) {
+        //init
+        lang[i] = []
         for (let j = 0, len = path.length; j < len; j++) {
-          let path = lang[i][j];
-          if (isStr(path) && path[0] === '$') {
-            //重新赋值
-            lang[i][j] = this._ctx[path.substring(1)];
-          }
+          let field = dLang[i][j];
+          lang[i][j] = isStr(field) && field[0] === '$' ? this._ctx[field.substring(1)] : field;
         }
       } else if (path instanceof DynamicQueryLang) {
-        //递归一次
-        this.analyserLang(path._ql);
-        lang[i] = path._ql;
+        lang[i] = new QueryLang(path._name + '2QL', this.analyserLang(path._lang));
+      } else {
+        //zero runtime cost
+        if (process.env.NODE_ENV != 'production') {
+          //如果path是QueryLang，校验querylang语法的合法性
+          if (path instanceof QueryLang && !path.isValidQuery()) {
+            throw new Error(`DQL: syntax error`);
+          }
+        }
+        lang[i] = path;
       }
     }
-  }
 
-  /**
-   * 返回可用的query lang
-   */
-  ql() {
-    this.analyserLang(this._ql);
-    return this._ql;
+
+    return lang;
   }
 
   /**
@@ -68,6 +71,14 @@ export class DynamicQueryLang {
   context(ctx: Object) {
     this._ctx = ctx;
     return this;
+  }
+
+  name() {
+    return this._name
+  }
+
+  lang() {
+    return this._lang
   }
 }
 

@@ -5,9 +5,9 @@
 
 'use strict';
 
-import {isQuery, isStr} from './util';
+import { isQuery, isStr } from './util';
 
-type Lang = Array<string|Array<string|number>|Function>;
+type Lang = Array<string | Array<string | number> | Function>;
 
 //递增的id
 let _incrementId = 0;
@@ -24,6 +24,12 @@ export class QueryLang {
     this._id = ++_incrementId;
     this._name = name;
     this._lang = lang;
+
+    if (process.env.NODE_ENV != 'production') {
+      if (!isQuery(this._lang)) {
+        throw new Error(`${this._name} is not invalid`)
+      }
+    }
   }
 
   /**
@@ -55,6 +61,11 @@ export class QueryLang {
    */
   lang() {
     return this._lang;
+  }
+
+  setLang(lang: Lang) {
+    this._lang = lang;
+    return this;
   }
 }
 

@@ -1,10 +1,10 @@
-import {fromJS} from 'immutable';
+import { fromJS } from 'immutable';
 
 import Store from '../src/store';
 import Actor from '../src/actor';
-import {QL} from '../src/ql';
-import {Action} from '../src/decorator';
-import {DQL} from '../src/dql';
+import { QL, QueryLang } from '../src/ql';
+import { Action } from '../src/decorator';
+import { DQL } from '../src/dql';
 
 
 
@@ -152,7 +152,9 @@ describe('app store test suite', () => {
 
 
   it('test dql', () => {
-    const todoQL = todoDQL.context({ index: 0 }).ql();
+    const lang = todoDQL.context({ index: 0 }).analyserLang(todoDQL.lang());
+    const todoQL = new QueryLang('todoQL', lang);
+
     expect({
       id: 1,
       todo: {
@@ -202,7 +204,7 @@ describe('app store test suite', () => {
       }
     }
 
-    new MyStore({debug: true})
+    new MyStore({ debug: true })
   });
 
   it('debug method', () => {
@@ -216,7 +218,7 @@ describe('app store test suite', () => {
     appStore.subscribeStoreProvider('hello');
     expect(null).toEqual(appStore._storeProviderSubscribe);
 
-    const cb= () => {};
+    const cb = () => { };
     appStore.subscribeStoreProvider(cb);
     expect(cb).toEqual(appStore._storeProviderSubscribe);
 
@@ -236,7 +238,7 @@ describe('app store test suite', () => {
 
       @Action('ADD_TO_DO')
       addTodo(state, {id, text, done}) {
-        expect({id, text, done}).toEqual({
+        expect({ id, text, done }).toEqual({
           id: 1,
           text: 'hello iflux2',
           done: false
@@ -253,7 +255,7 @@ describe('app store test suite', () => {
       }
     }
 
-    const store = new AppStore({debug: false});
+    const store = new AppStore({ debug: false });
 
     //如果参数不传递，直接报错
     try {
@@ -326,7 +328,7 @@ describe('app store test suite', () => {
           ['loading', true],
           ['loading', false],
           'change:state',
-          {type: 'redux:action', id: 1, name: 'redux action', done: true}
+          { type: 'redux:action', id: 1, name: 'redux action', done: true }
         ]);
 
         expect(this.state().toJS()).toEqual({
@@ -339,7 +341,7 @@ describe('app store test suite', () => {
       }
     }
 
-    const store = new BatchStore({debug: false});
+    const store = new BatchStore({ debug: false });
     store.batch();
   });
 });

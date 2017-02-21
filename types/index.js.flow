@@ -1,5 +1,5 @@
 //@flow
-import {Map} from 'immutable'
+import { Map } from 'immutable'
 
 //store构造函数参数
 export type StoreOptions = {
@@ -42,13 +42,20 @@ declare var msg: events$EventEmitter;
 
 declare function QL(
   name: string,
-  lang: Array<QueryLang|string|Array<string|number>|Function>|QueryLang
+  lang: Array<QueryLang | string | Array<string | number> | Function> | QueryLang
 ): QueryLang;
+
+declare type DynamicQueryLang = {
+  analyserLang(lang: Array<any>): Array<any>;
+  name(): string;
+  lang(): Array<any>;
+  context(ctx: Object): Object;
+};
 
 declare function DQL(
   name: string,
-  lang: Array<QueryLang|string|Array<string|number>|Function>|QueryLang
-): QueryLang;
+  lang: Array<QueryLang | string | Array<string | number> | Function> | QueryLang
+): DynamicQueryLang;
 
 declare function Action(name: string): Function;
 

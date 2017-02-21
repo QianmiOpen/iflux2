@@ -1,5 +1,6 @@
 [ignore]
 .*/examples/**
+.*/node_modules/fbjs/lib/partitionObjectByKey.js.flow
 
 [include]
 
