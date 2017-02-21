@@ -2155,13 +2155,13 @@ ieee754@^1.1.4:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
 
-iflux2@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.4.1.tgz#33f3ce08f5a532da672fe7aa75d337e8c2f118c8"
+iflux2@1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.4.2.tgz#04b9e861bfb705f3d52d497269c73054de6d744a"
   dependencies:
     events "^1.1.0"
     immutable "^3.8.1"
-    object-assign "^4.1.0"
+    object-assign "^4.1.1"
 
 immutable@^3.7.6, immutable@^3.8.1:
   version "3.8.1"
@@ -3194,6 +3194,10 @@ oauth-sign@~0.8.1:
 object-assign@^4.0.1, object-assign@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.0.tgz#7a3b3d0e98063d43f4c03f2e8ae6cd51a86883a0"
+
+object-assign@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
 
 object.omit@^2.0.0:
   version "2.0.0"
