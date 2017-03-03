@@ -2,16 +2,12 @@
  * Actor，致敬Erlang，Scala的akka的Actor model
  * Actor, 独立计算的执行单元
  * 我们不共享状态(share state), 只去transform state
- *
- * @flow
  */
+import { OrderedMap } from 'immutable'
 
-'use strict';
-
-import type {IState} from './types'
-
+type IMap = OrderedMap<string, any>;
 type Route = {
-  [name: string]: Function;
+  [name: string]: (state: IMap, params?: any) => IMap
 };
 
 export default class Actor {
@@ -33,13 +29,13 @@ export default class Actor {
    * @param param
    * @returns {Object}
    */
-  receive(msg: string, state: IState, param?: any) {
+  receive(msg: string, state: IMap, param?: any): IMap {
     //this._route是在@Action标记中初始化完成
     const route = this._route || {};
     //获取处理的函数
-    const handler = route[msg];
+    const fn = route[msg];
 
     //如果可以处理返回处理后的结果，否则直接返回state
-    return handler ? handler.call(this, state, param) : state;
+    return fn ? fn.call(this, state, param) : state;
   }
 }

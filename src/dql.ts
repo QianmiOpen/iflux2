@@ -1,10 +1,8 @@
-//flow
-import { QL, QueryLang } from './ql';
+
+import { QueryLang } from './ql';
 import { isArray, isStr, isQuery } from './util';
 
-'use strict';
-
-type Lang = Array<string | number | Array<string | number> | Function>;
+type Lang = Array<any>;
 
 /**
  * 动态的QueryLang

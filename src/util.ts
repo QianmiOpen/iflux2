@@ -2,13 +2,11 @@
  * 判断当前的参数是不是query-lang的合法形式
  * @param ql
  * @returns {boolean}
- * @flow
  */
-
-'use strict';
+import Actor from './actor'
 
 export function isQuery(ql: any): boolean {
-  return isArray(ql) && isFn(ql[ql.length -1]);
+  return isArray(ql) && isFn(ql[ql.length - 1]);
 }
 
 /**
@@ -56,7 +54,7 @@ export function type(type: any): string {
  * @returns Array
  */
 export function filterActorConflictKey(
-  actor: Array<Object> = []
+  actor: Array<Actor> = []
 ): Array<[string, string]> {
   //返回冲突的key的数组
   let conflictKeyList = [];

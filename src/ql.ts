@@ -5,12 +5,12 @@
 
 'use strict';
 
-import { isQuery, isStr } from './util';
+import { isQuery } from './util';
 
-type Lang = Array<string | Array<string | number> | Function>;
+type Lang = Array<any>;
 
 //递增的id
-let _incrementId = 0;
+let uuid = 0;
 
 export class QueryLang {
   _id: number;
@@ -21,7 +21,7 @@ export class QueryLang {
    * init
    */
   constructor(name: string, lang: Lang) {
-    this._id = ++_incrementId;
+    this._id = ++uuid;
     this._name = name;
     this._lang = lang;
 

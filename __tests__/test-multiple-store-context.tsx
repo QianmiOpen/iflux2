@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
-import renderer from 'react-test-renderer'
-import {Action, Actor, StoreProvider, Store, Relax, CtxStoreName} from '../src'
+import * as React from 'react'
+import * as renderer from 'react-test-renderer';
+import { Action, Actor, StoreProvider, Store, Relax, CtxStoreName } from '../src'
 jest.mock('react-dom');
 
 //;;;;;;;;;;;;;;;;;;;Actor;;;;;;;;;;;;;;;;;;;;;
@@ -39,7 +39,11 @@ class AppStore1 extends Store {
 
 //;;;;;;;;;;;;;;;;;;;HelloApp;;;;;;;;;;;;;;;;;;;;;
 @Relax
-class Text extends Component {
+class Text extends React.Component {
+  props: {
+    text: string;
+  };
+
   static defaultProps = {
     text: ''
   };
@@ -52,10 +56,10 @@ class Text extends Component {
 }
 
 @StoreProvider(AppStore)
-class HelloApp extends Component {
+class HelloApp extends React.Component {
   render() {
     return (
-      <Text/>
+      <Text />
     )
   }
 }
@@ -63,7 +67,11 @@ class HelloApp extends Component {
 
 //;;;;;;;;;;;;;;;;;CounterApp;;;;;;;;;;;;;;;;
 @Relax
-class Counter extends Component {
+class Counter extends React.Component {
+  props: {
+    counter: number;
+  };
+
   static defaultProps = {
     counter: 0
   };
@@ -77,21 +85,21 @@ class Counter extends Component {
 
 
 @StoreProvider(AppStore1)
-class CounterApp extends Component {
+class CounterApp extends React.Component {
   render() {
-    return (<Counter/>);
+    return (<Counter />);
   }
 }
 
 
 describe('test multiple store context', () => {
   it('test HelloApp', () => {
-    const tree = renderer.create(<HelloApp/>).toJSON();
+    const tree = renderer.create(<HelloApp />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 
   it('test CounterApp', () => {
-    const tree = renderer.create(<CounterApp/>).toJSON();
+    const tree = renderer.create(<CounterApp />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 
@@ -99,7 +107,11 @@ describe('test multiple store context', () => {
 
     @Relax
     @CtxStoreName('_counterStore')
-    class Counter extends Component {
+    class Counter extends React.Component {
+      props: {
+        counter: number;
+      };
+
       static defaultProps = {
         counter: 0
       };
@@ -110,7 +122,11 @@ describe('test multiple store context', () => {
     }
 
     @Relax
-    class Hello extends Component {
+    class Hello extends React.Component {
+      props: {
+        text: string;
+      };
+
       static defaultProps = {
         text: ''
       };
@@ -119,35 +135,39 @@ describe('test multiple store context', () => {
         return (
           <div>
             {this.props.text}
-            <Counter/>
+            <Counter />
           </div>
         )
       }
     }
 
     @StoreProvider(AppStore)
-    class HelloApp extends Component {
+    class HelloApp extends React.Component {
       render() {
-        return <Hello/>
+        return <Hello />
       }
     }
 
     @StoreProvider(AppStore1, {
       ctxStoreName: '_counterStore'
     })
-    class CounterApp extends Component {
+    class CounterApp extends React.Component {
       render() {
-        return <HelloApp/>
+        return <HelloApp />
       }
     }
 
-    const tree = renderer.create(<CounterApp/>).toJSON();
+    const tree = renderer.create(<CounterApp />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 
   it('binding context', () => {
     @Relax
-    class Counter extends Component {
+    class Counter extends React.Component {
+      props: {
+        counter: number;
+      };
+
       static defaultProps = {
         counter: 0
       };
@@ -158,7 +178,11 @@ describe('test multiple store context', () => {
     }
 
     @Relax
-    class Hello extends Component {
+    class Hello extends React.Component {
+      props: {
+        text: string;
+      };
+
       static defaultProps = {
         text: ''
       };
@@ -167,27 +191,27 @@ describe('test multiple store context', () => {
         return (
           <div>
             {this.props.text}
-            <Counter/>
+            <Counter />
           </div>
         )
       }
     }
 
     @StoreProvider(AppStore)
-    class HelloApp extends Component {
+    class HelloApp extends React.Component {
       render() {
-        return <Hello/>
+        return <Hello />
       }
     }
 
     @StoreProvider(AppStore1)
-    class CounterApp extends Component {
+    class CounterApp extends React.Component {
       render() {
-        return <HelloApp/>
+        return <HelloApp />
       }
     }
 
-    const tree = renderer.create(<CounterApp/>).toJSON();
+    const tree = renderer.create(<CounterApp />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

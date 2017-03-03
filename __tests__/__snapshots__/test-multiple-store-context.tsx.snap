@@ -1,3 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
 exports[`test multiple store context binding context 1`] = `
 <div>
   hello

@@ -1,12 +1,10 @@
-import Actor from '../src/actor';
-import {Action} from '../src/decorator';
-import {fromJS, is} from 'immutable';
+import { fromJS, is } from 'immutable';
+import { Actor, Action } from "../src/index";
 
-//;;;;;;;;;;;;;;;;;;default actor;;;;;;;;;;;;;
-const defaultActor = new Actor();
 describe('default actor', () => {
   it('defaultState is equal {}', () => {
-    expect({}).toEqual(defaultActor.defaultState());
+    const defaultActor = new Actor();
+    expect(defaultActor.defaultState()).toEqual({});
   });
 });
 
@@ -33,19 +31,19 @@ class UserActor extends Actor {
   }
 }
 
-//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+//;;;;;;;;;;;;;;;;;;init;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 const user = new UserActor();
-
 
 //;;;;;;;;;;;;;;;test;;;;;;;;;;;;;;;;;;;;;
 describe('actor test suite', () => {
   it('default state test', () => {
-    expect({
-      id: 1,
-      username: 'iflux2',
-      age: 1,
-      email: 'iflux@qianmi.com'
-    }).toEqual(user.defaultState());
+    expect(user.defaultState())
+      .toEqual({
+        id: 1,
+        username: 'iflux2',
+        age: 1,
+        email: 'iflux@qianmi.com'
+      })
   });
 
   it('decorator test', () => {
@@ -59,11 +57,11 @@ describe('actor test suite', () => {
       age: 1,
       email: 'iflux@qianmi.com'
     });
-    
+
     const newState = user.receive('init', state);
-    expect(true).toEqual(state === newState);
+    expect(state === newState).toEqual(true);
 
     //change age test
-    expect(10).toEqual(user.receive('_change:age', state, 10).get('age'));
+    expect(user.receive('_change:age', state, 10).get('age')).toEqual(10);
   });
 });
