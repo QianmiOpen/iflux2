@@ -1,6 +1,6 @@
 # DQL
 
-QL = Dynamic Query Lang
+DQL = Dynamic Query Lang
 
 自定义查询语法，数据的源头是store的state()返回的数据
 
@@ -38,7 +38,6 @@ const city = user.getIn(['address', 'city']) //path => ['address', 'city']
 fn: 可计算状态的回调函数，bigQuery会取得所有的所有的数组中的path对应的值，作为参数传递给fn,例如：
 
 
-```js
 
 假设我们的state:
 
