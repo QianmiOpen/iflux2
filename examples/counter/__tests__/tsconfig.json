@@ -5,12 +5,6 @@
         "experimentalDecorators": true,
         "jsx": "react",
         "noImplicitAny": false,
-        "sourceMap": false,
-        "rootDir": "src",
-        "outDir": "build"
-    },
-    "exclude": [
-        "node_modules",
-        "__tests__"
-    ]
+        "sourceMap": false
+    }
 }

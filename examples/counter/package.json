@@ -12,7 +12,16 @@
   "jest": {
     "globals": {
       "__DEV__": true
-    }
+    },
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
   },
   "dependencies": {
     "iflux2": "1.4.3",
@@ -49,6 +58,7 @@
     "react-addons-perf": "^15.4.2",
     "react-test-renderer": "^15.4.0",
     "style-loader": "^0.13.1",
+    "ts-jest": "^19.0.0",
     "ts-loader": "^2.0.1",
     "typescript": "^2.2.1",
     "webpack": "2.2.0",

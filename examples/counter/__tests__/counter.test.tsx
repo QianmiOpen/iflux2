@@ -1,11 +1,11 @@
+import * as React from 'react'
+import * as renderer from 'react-test-renderer'
 import Counter from '../src/component/counter'
-import renderer from 'react-test-renderer';
-import React from 'react'
 import Store from '../src/store'
-import {StoreProvider} from 'iflux2'
+import { StoreProvider } from 'iflux2'
 
 @StoreProvider(Store)
-class App extends Counter{
+class App extends Counter {
   render() {
     return super.render();
   }
@@ -13,12 +13,12 @@ class App extends Counter{
 
 describe('Relax Counter', () => {
   it('test counter', () => {
-    const component = renderer.create(<App/>);
+    const component = renderer.create(<App />);
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
 
     // tree.props.increment();
-    window.store.increment();
+    window['store'].increment();
     tree = component.toJSON();
     expect(tree).toMatchSnapshot();
   })

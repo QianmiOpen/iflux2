@@ -1,13 +1,11 @@
 import CounterActor from '../src/actor/counter-actor'
-import {fromJS} from 'immutable'
+import { fromJS } from 'immutable'
 
 describe('test counter actor', () => {
 
   it('test default value', () => {
     const counter = new CounterActor
-    expect({
-      count: 0
-    }).toEqual(counter.defaultState())
+    expect(counter.defaultState()).toEqual({ count: 0 })
   });
 
   it('test increment', () => {
@@ -15,9 +13,7 @@ describe('test counter actor', () => {
     const state = fromJS({
       count: 0
     });
-    expect({
-      count: 1
-    }).toEqual(counter.increment(state).toJS());
+    expect(counter.increment(state).toJS()).toEqual({ count: 1 })
   })
 
   it('test decrement', () => {
@@ -25,9 +21,7 @@ describe('test counter actor', () => {
     const state = fromJS({
       count: 0
     });
-    expect({
-      count: -1
-    }).toEqual(counter.decrement(state).toJS());
+    expect(counter.decrement(state).toJS()).toEqual({ count: -1 })
   })
 
 })
