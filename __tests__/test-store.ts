@@ -2,6 +2,10 @@ import { fromJS } from 'immutable';
 import { Actor, Action, Store, QL, DQL } from "../src/index";
 import { QueryLang } from "../src/ql";
 
+interface ReduxAction {
+  type: string;
+}
+
 //;;;;;;;;;;;;;;;;;;;;;;Actor;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 class LoadingActor extends Actor {
   defaultState() {
@@ -234,7 +238,7 @@ describe('app store test suite', () => {
       id: 1,
       text: 'hello iflux2',
       done: false
-    })
+    } as ReduxAction)
   });
 
   it('batch dispatch', () => {

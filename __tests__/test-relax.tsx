@@ -51,7 +51,7 @@ class Text extends React.Component {
 }
 
 //;;;;;;;;;;;;;;;;;;root;;;;;;;;;;;;;
-@StoreProvider(AppStore, { debug: true })
+@StoreProvider(AppStore)
 class HelloApp extends React.Component {
   props: {
     store: AppStore;

@@ -3,12 +3,16 @@
   "version": "1.4.2",
   "description": "Reactive state container (based on immutable) for React or ReactNative, inspired by mapreduce.",
   "main": "dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "jest",
-    "build:core": "node_modules/.bin/babel --ignore src/contrib src --out-dir dist",
-    "build:contrib": "node_modules/.bin/babel src/contrib --out-dir contrib",
-    "flowtype": "cp types/index.js.flow dist && cp types/atom.js.flow contrib && cp types/validator.js.flow contrib && cp types/util.js.flow contrib",
-    "release": "npm run build:core && npm run build:contrib && npm run flowtype"
+    "test": "./node_modules/.bin/jest --verbose",
+    "coverage": "./node_modules/.bin/jest --coverage",
+    "compile": "./node_modules/.bin/tsc",
+    "build:core": "node_modules/.bin/babel --ignore build/contrib build --out-dir dist",
+    "build:contrib": "node_modules/.bin/babel build/contrib --out-dir contrib",
+    "type": "./scripts/type.sh",
+    "clean": "rm -rf ./build && rm -rf contrib && rm -rf dist && rm -rf coverage",
+    "release": "npm run compile && npm run build:core && npm run build:contrib && npm run type"
   },
   "jest": {
     "testPathIgnorePatterns": [
