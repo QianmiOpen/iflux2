@@ -24,7 +24,7 @@ export const todoQL = QL('todoQL', [
     if (filterStatus === '') {
       return todo
     }
-    const done = filterStatus === 'completed' ? true : false
+    const done = filterStatus === 'completed'
     return todo.filter(v => v.get('done') === done)
   }
 ])

@@ -50,4 +50,4 @@ import React, {Component} from 'react';
    }
  }
 ```
-一个简单的debug标记，我们就可以跟踪每个dispath，每个Relax，每个bigQuery
+一个简单的debug标记，我们就可以跟踪每个dispatch，每个Relax，每个bigQuery
