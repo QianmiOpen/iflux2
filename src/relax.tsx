@@ -117,8 +117,8 @@ export default function Relax(Component: React.Component): React.Component {
         if (process.env.NODE_ENV != 'production') {
           if (this._debug) {
             console.groupCollapsed(`Relax(${Component.name}) will update 🚀`);
-            console.log('props|>', JSON.stringify(nextProps, null, 2));
-            console.log('relaxProps|>', JSON.stringify(this._relaxProps, null, 2));
+            console.log('props:|>', JSON.stringify(nextProps, null, 2));
+            console.log('relaxProps:|>', JSON.stringify(this._relaxProps, null, 2));
             console.groupEnd();
           }
         }

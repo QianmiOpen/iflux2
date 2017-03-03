@@ -58,8 +58,7 @@ export default function connectToStore(
         if (process.env.NODE_ENV != 'production') {
           //如果是debug状态
           if (opts.debug) {
-            console.group && console.group(`StoreProvider(${Component.name}) in debug mode.`);
-            console.time('first-render-time');
+            console.group && console.group(`StoreProvider(${Component.name}) in debug mode. 🔥`);
           }
         }
 
@@ -73,7 +72,6 @@ export default function connectToStore(
       componentDidMount() {
         if (process.env.NODE_ENV != 'production') {
           if (opts.debug) {
-            console.timeEnd('first-render-time');
             console.groupEnd && console.groupEnd();
           }
         }
@@ -91,8 +89,7 @@ export default function connectToStore(
 
         if (process.env.NODE_ENV != 'production') {
           if (opts.debug) {
-            console.group && console.group(`StoreProvider(${Component.name}) will update`);
-            console.time('update-render-time');
+            console.group && console.group(`StoreProvider(${Component.name}) will update 🚀`);
           }
         }
       }
@@ -102,7 +99,6 @@ export default function connectToStore(
 
         if (process.env.NODE_ENV != 'production') {
           if (opts.debug) {
-            console.timeEnd('update-render-time');
             console.groupEnd && console.groupEnd();
           }
         }
