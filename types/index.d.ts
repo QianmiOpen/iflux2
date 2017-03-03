@@ -27,7 +27,7 @@ declare namespace iflux2 {
     batchDispatch(actions: Array<[string, any] | ReduxAtion | string>): void;
     transaction(cb: () => void): void;
     bindActor(): Array<Actor>;
-    bigQuery(ql: QueryLang, params: { debug?: boolean }): any;
+    bigQuery(ql: QueryLang): any;
     state(): IMap;
     subscribe(cb: Handler): void;
     unsubscribe(cb: Handler): void;
@@ -38,6 +38,7 @@ declare namespace iflux2 {
     id(): number;
     name(): string;
     lang(): Array<any>;
+    isValidQuery(): boolean;
   }
 
   export function QL(
