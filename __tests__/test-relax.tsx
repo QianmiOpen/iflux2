@@ -1,10 +1,6 @@
-import React from 'react'
-import renderer from 'react-test-renderer';
-import Relax from '../src/relax'
-import StoreProvider from '../src/store-provider';
-import Store from '../src/store'
-import Actor from '../src/actor'
-import {Action} from '../src/decorator'
+import * as React from 'react'
+import * as renderer from 'react-test-renderer';
+import { Actor, Action, Store, Relax, StoreProvider } from "../src/index";
 jest.mock('react-dom');
 
 //;;;;;;;;;;Actor;;;;;;;;;;;;;;;;;;
@@ -23,7 +19,7 @@ class TestActor extends Actor {
 
 
 //;;;;;;;;;;;;;;;Store;;;;;;;;;;;;;;;
-class AppStore extends Store  {
+class AppStore extends Store {
   bindActor() {
     return [
       new TestActor()
@@ -38,11 +34,16 @@ class AppStore extends Store  {
 //;;;;;;;;;;;;;;;;Relax;;;;;;;;;;;;;;;
 @Relax
 class Text extends React.Component {
+  props: {
+    text: string;
+  };
+
   static defaultProps = {
     text: ''
   };
 
   render() {
+    expect(this.props.text).toEqual('hello iflux2');
     return (
       <div>{this.props.text}</div>
     )
@@ -52,19 +53,23 @@ class Text extends React.Component {
 //;;;;;;;;;;;;;;;;;;root;;;;;;;;;;;;;
 @StoreProvider(AppStore)
 class HelloApp extends React.Component {
+  props: {
+    store: AppStore;
+  };
+
   componentWillMount() {
     this.props.store.init();
   }
 
   render() {
     return (
-      <Text/>
+      <Text />
     )
   }
 }
 
 //;;;;;;;;;;;test;;;;;;;;;;;;;;;;;;;;;
 test('test store provider and relax', () => {
-  const tree = renderer.create(<HelloApp/>).toJSON();
+  const tree = renderer.create(<HelloApp />).toJSON();
   expect(tree).toMatchSnapshot();
 });

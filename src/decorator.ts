@@ -1,13 +1,4 @@
 /**
- *
- * @flow
- */
-
-'use strict';
-
-import React from 'react';
-
-/**
  * Action decorator
  *
  * 用于标记Actor中的实力方法，主要的作用是给Actor绑定当前的handler方法
@@ -35,7 +26,7 @@ import React from 'react';
 export const Action = (msg: string) => (
   target: any,
   props: any,
-  descriptor: Object
+  descriptor: TypedPropertyDescriptor<any>
 ) => {
   target._route = target._route || {};
   target._route[msg] = descriptor.value;
@@ -61,6 +52,6 @@ export const CtxStoreName = (name: string) => {
   return (target: Object) => {
     //动态的在组件的上下午绑定storeName
     //通过该标记反向的告诉Relax获取正取的上下文store
-    target._ctxStoreName = name;
+    target['_ctxStoreName'] = name;
   };
 };

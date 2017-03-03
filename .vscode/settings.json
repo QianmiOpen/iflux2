@@ -1,4 +1,11 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-  "javascript.validate.enable": false
+  "editor.tabCompletion": true,
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": true,
+  "editor.rulers": [
+    80
+  ]
 }

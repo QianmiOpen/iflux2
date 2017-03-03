@@ -1,34 +1,20 @@
 /**
  * iflux的状态容器中心(MapReduce)
  * 聚合actor, 分派action, 计算query-lang
- *
- * @flow
  */
+import { fromJS, OrderedMap } from 'immutable';
+import { unstable_batchedUpdates as batchedUpdates } from 'react-dom';
 
-'use strict';
+import Actor from './actor'
+import { QueryLang } from './ql';
+import { isArray, filterActorConflictKey, isFn, isStr, isObject } from './util';
 
-import {fromJS, OrderedMap} from 'immutable';
-import Cursor from 'immutable/contrib/cursor';
-import {unstable_batchedUpdates as batchedUpdates} from 'react-dom';
-
-import {isArray, filterActorConflictKey, isFn, isStr, isObject} from './util';
-import {QueryLang} from './ql';
-
-import type {StoreOptions, IState} from './types'
-
+type IState = OrderedMap<string, any>;
 type Callback = (state: IState) => void;
 
-type Actor = {
-  _route: Object;
-  defaultState: () => Object;
-  receive: (msg: string, state: IState, params?: any) => IState;
-};
-
-type QL = {
-  id: () => number;
-  name: () => string;
-  lang: () => Object;
-  isValidQuery(ql: QL): boolean;
+type StoreOptions = {
+  debug?: boolean;
+  ctxStoreName?: string;
 };
 
 type ArgResult = {
@@ -36,71 +22,26 @@ type ArgResult = {
   param?: any
 };
 
+interface ReduxAction {
+  type: string;
+}
+
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Store;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 export default class Store {
-  //storeprovider订阅者
-  _storeProviderSubscribe: ?Function;
   //状态变化的事件通知
   _callbacks: Array<Callback>;
   //当前的actor
-  _actors: {[name: string|number]: Actor};
+  _actors: Array<Actor>;
   //actor聚合的状态
-  _actorState: OrderedMap<string, any>;
+  _actorStateList: Array<IState>;
   //当前的对外暴露的状态
-  _state: IState & {[name: string]: any};
+  _state: IState;
   //当前的状态
   _debug: boolean;
   //缓存QL的计算结果
-  _cacheQL: Object;
-
-  /**
-   * map Actor
-   */
-  _mapActor(cursor: Object, msg: string, param: any): void {
-    if (process.env.NODE_ENV != 'production') {
-      //trace log
-      this.debug(() => {
-        console.groupCollapsed(
-          `store dispatch {msg =>${JSON.stringify(msg)}}}`
-        );
-        console.log('param ->');
-        console.log((param && param.toJS) ? param.toJS() : param);
-        console.time('dispatch');
-      });
-    }
-
-    //dispatch => every actor
-    for (let name in this._actors) {
-      if (this._actors.hasOwnProperty(name)) {
-        const actor = this._actors[name];
-        const state = this._actorState.get(name);
-
-        if (process.env.NODE_ENV != 'production') {
-          //trace log
-          this.debug(() => {
-            const _route = actor._route || {};
-            const handlerName = _route[msg] ? _route[msg].name : 'default handler(no match)';
-            console.log(`${name} handle => ${handlerName}`);
-            console.time(`${name}`);
-          });
-        }
-
-        const newState = actor.receive(msg, state, param);
-
-        if (process.env.NODE_ENV != 'production') {
-          this.debug(() => {
-            console.timeEnd(`${name}`);
-          });
-        }
-
-
-        // 更新变化的actor的状态
-        if (newState != state) {
-          cursor.set(name, newState);
-        }
-      }
-    }
-  }
+  _cacheQL: { [index: number]: { deps: any, result: any } };
+  //当前的dispatch是不是在事务中
+  _isTransaction: boolean;
 
   /**
    * 初始化store
@@ -108,50 +49,39 @@ export default class Store {
    */
   constructor(opts: StoreOptions) {
     this._debug = opts.debug || false;
+    this._isTransaction = false;
+
+    this._state = fromJS({});
     this._cacheQL = {};
     this._callbacks = [];
-    this._actors = {};
-    this._actorState = new OrderedMap();
-    this._storeProviderSubscribe = null;
+    this._actorStateList = [];
 
-    //聚合actor
-    this.reduceActor(this.bindActor());
-    //聚合状态
-    this._state = this.reduceState();
+    this._actors = this.bindActor();
+    this._reduceActorState()
   }
 
-  /**
-   * 绑定Actor
-   * @returns {Array}
-   */
   bindActor(): Array<Actor> {
     return [];
   }
 
+  _reduceActorState() {
+    this._state = this._state.withMutations(state => {
+      for (let actor of this._actors) {
+        let initState = fromJS(actor.defaultState());
+        this._actorStateList.push(initState);
+        state = state.merge(initState);
+      }
+      return state;
+    });
 
-  /**
-   * 聚合actor的defaultState到一个对象中去
-   * @params actorList
-   */
-  reduceActor(actorList: Array<Actor>) {
-    const state = {};
-
-    for (let i = 0, len = actorList.length; i < len; i++) {
-      const actor = actorList[i];
-      const key = this._debug ? actor.constructor.name : i;
-      this._actors[key] = actor;
-      state[key] = actor.defaultState();
-    }
-
-    this._actorState = fromJS(state);
-
+    //will drop on production environment    
     if (process.env.NODE_ENV != 'production') {
       //计算有没有冲突的key
       this.debug(() => {
-        const conflictList = filterActorConflictKey(actorList);
+        const conflictList = filterActorConflictKey(this._actors);
         conflictList.forEach(v => {
           console.warn(`actor:key ‘${v[0]}’ was conflicted among ‘${v[1]}’ `);
-        })
+        });
       });
     }
   }
@@ -161,29 +91,33 @@ export default class Store {
    * @param msg
    * @param param
    */
-  dispatch(action: string | {type: string}, extra?: any): void {
+  dispatch(action: string | ReduxAction, params?: any): void {
     //校验参数是否为空
     if (!action) {
-      throw new Error('😭 invalid dispatch without arguments');
+      throw new Error('😭 invalid dispatch without any arguments');
     }
-    const {msg, param} = _parseArgs(action, extra);
-    this.cursor().withMutations(cursor => {
-      this._mapActor(cursor, msg, param);
-    });
+
+    const { msg, param } = _parseArgs(action, params);
+    const newStoreState = this._mapActor(msg, param);
+
+    if (newStoreState != this._state) {
+      this._state = newStoreState;
+      //如果当前不是在事务中，通知页面更新
+      if (!this._isTransaction) {
+        this._notify();
+      }
+    }
 
     /**
      * 解析参数
      */
-    function _parseArgs(
-      action: any,
-      extra?: any
-    ): ArgResult {
+    function _parseArgs(action: any, extra?: any): ArgResult {
       //init
-      let res: ArgResult = {msg: '', param: null};
+      let res: ArgResult = { msg: '', param: null };
       //兼容Redux单值对象的数据格式
       //e.g: {type: 'ADD_TO_DO', id: 1, text: 'hello iflux2', done: false}
       if (isObject(action)) {
-        const {type, ...rest} = action;
+        const { type, ...rest } = action;
         if (!type) {
           throw new Error('😭 msg should include `type` field.');
         }
@@ -198,6 +132,90 @@ export default class Store {
     }
   }
 
+  transaction(fn: Function) {
+    if (process.env.NODE_ENV != 'production') {
+      if (this._debug) {
+        console.groupCollapsed && console.groupCollapsed('open a new transaction 🚀')
+      }
+    }
+
+    const currentStoreState = this._state
+    this._isTransaction = true;
+    fn();
+    if (currentStoreState != this._state) {
+      this._notify()
+    }
+    this._isTransaction = false;
+
+    if (process.env.NODE_ENV != 'production') {
+      if (this._debug) {
+        console.groupEnd && console.groupEnd();
+      }
+    }
+  }
+
+  _mapActor(msg: string, params: any) {
+    let _state = this._state;
+
+    if (process.env.NODE_ENV != 'production') {
+      //trace log
+      this.debug(() => {
+        console.groupCollapsed && console.groupCollapsed(
+          `store dispatch msg |> ${JSON.stringify(msg)}`
+        );
+        console.log(`params |> ${JSON.stringify(params || 'no params')}`)
+      });
+    }
+
+    for (let i = 0, len = this._actors.length; i < len; i++) {
+      const actor = this._actors[i]
+      const fn = (actor._route || {})[msg]
+
+      //如果actor没有能力处理该msg跳过
+      if (!fn) {
+        //log
+        if (process.env.NODE_ENV != 'production') {
+          if (this._debug) {
+            console.log(`${actor.constructor.name} receive '${msg}', but no handle 😭`)
+          }
+        }
+        continue;
+      }
+
+      //debug
+      if (process.env.NODE_ENV != 'production') {
+        if (this._debug) {
+          const actorName = actor.constructor.name
+          console.log(`${actorName} receive => '${msg}'`)
+        }
+      }
+
+      let preActorState = this._actorStateList[i];
+      const newActorState = actor.receive(msg, preActorState, params)
+      if (preActorState != newActorState) {
+        this._actorStateList[i] = newActorState;
+        _state = _state.merge(newActorState);
+      }
+    }
+
+    //debug
+    if (process.env.NODE_ENV != 'production') {
+      if (this._debug) {
+        console.groupEnd && console.groupEnd();
+      }
+    }
+
+    return _state
+  }
+
+
+  _notify() {
+    batchedUpdates(() => {
+      //通知ui去re-render
+      this._callbacks.forEach(cb => cb(this._state));
+    })
+  }
+
   /**
    * 批量dispatch，适用于合并一些小计算量的多个dispatch
    * e.g:
@@ -208,16 +226,16 @@ export default class Store {
    *  ]);
    *
    */
-  batchDispatch(actions: Array<[string, any] | {type: string}> = []): void {
+  batchDispatch(actions: Array<[string, any] | { type: string }> = []): void {
     //校验参数是否为空
     if (arguments.length == 0) {
       throw new Error('😭 invalid batch dispatch without arguments');
     }
 
-    this.cursor().withMutations(cursor => {
+    this.transaction(() => {
       for (let action of actions) {
-        const {msg, param} = _parseArgs(action);
-        this._mapActor(cursor, msg, param);
+        const { msg, param } = _parseArgs(action);
+        this.dispatch(msg, param)
       }
     });
 
@@ -226,7 +244,7 @@ export default class Store {
      * 不加具体参数，发现flow仅支持typeof的类型判断
      */
     function _parseArgs(action: any): ArgResult {
-      const res: ArgResult = {msg: '', param: null};
+      const res: ArgResult = { msg: '', param: null };
 
       if (isStr(action)) {
         res.msg = action;
@@ -234,7 +252,7 @@ export default class Store {
         res.msg = action[0];
         res.param = action[1];
       } else if (isObject(action)) {
-        const {type, ...rest} = action;
+        const { type, ...rest } = action;
         if (!type) {
           throw new Error('😭 msg should include `type` field.');
         }
@@ -247,66 +265,25 @@ export default class Store {
   }
 
   /**
-   * 获取当前的cursor
-   */
-  cursor(): Cursor {
-    return Cursor.from(this._actorState, (nextState, state) => {
-      //warning
-      if (state != this._actorState) {
-        throw new Error('attempted to alter expired state');
-      }
-
-      //如果没有数据状态的更新
-      if (nextState === state) {
-        return;
-      }
-
-      this._actorState = nextState;
-      //从新计算一次最新的state状态
-      this._state = this.reduceState();
-
-      batchedUpdates(() => {
-
-        //先通知storeProvider做刷新
-        this._storeProviderSubscribe && this._storeProviderSubscribe(
-          () => {
-            if (process.env.NODE_ENV != 'production') {
-              //end log
-              this.debug(() => {
-                console.timeEnd('dispatch');
-                console.groupEnd && console.groupEnd();
-              });
-            }
-        });
-
-        //通知relax
-        this._callbacks.forEach((callback) => {
-          callback(this._state);
-        });
-      });
-    });
-  }
-
-  /**
    * 计算query-lang的值
    * @param ql
    * @returns {*}
    */
-  bigQuery(ql: QL): any {
+  bigQuery(ql: QueryLang): any {
     //校验query-lang
-    if (!ql.isValidQuery(ql)) {
+    if (!ql.isValidQuery()) {
       throw new Error('Invalid query lang');
     }
 
     const id = ql.id();
     const name = ql.name();
-    let metaData = {};
+    let metaData = {} as { deps: any, result: any };
 
     if (process.env.NODE_ENV != 'production') {
       //trace log
       this.debug(() => {
         console.time(`${name}`);
-        console.groupCollapsed(`ql#${name} big query ==>`);
+        console.groupCollapsed && console.groupCollapsed(`ql#${name} big query ==>`);
       });
     }
 
@@ -365,7 +342,7 @@ export default class Store {
       //直接返回当前path下面的状态值
       //如果当前的参数是数组使用immutable的getIn
       //如果当前的参数是一个字符串使用get方式
-      const value = this._state[isArray(path) ? 'getIn' : 'get'](path);
+      const value = isArray(path) ? this._state.getIn(path) : this._state.get(path)
 
       //不匹配
       if (value != metaData.deps[key]) {
@@ -433,24 +410,11 @@ export default class Store {
   }
 
   /**
-   * 从actorState聚合出对外暴露的状态
-   */
-  reduceState() {
-    this._state = this._state || OrderedMap();
-
-    return this._state.update(value => {
-      return this._actorState.valueSeq().reduce((init, state) => {
-        return init.merge(state);
-      }, value);
-    });
-  }
-
-  /**
    * 订阅state的变化
    * @param callback
    * @param isStoreProvider
    */
-  subscribe(callback: Function) {
+  subscribe(callback: Callback) {
     if (!isFn(callback)) {
       return;
     }
@@ -464,7 +428,7 @@ export default class Store {
    * 取消订阅State的变化
    * @param callback
    */
-  unsubscribe(callback: Function) {
+  unsubscribe(callback: Callback) {
     if (!isFn(callback)) {
       return;
     }
@@ -475,31 +439,7 @@ export default class Store {
     }
   }
 
-  /**
-   * 订阅StoreProvider的回调
-   * @param cb
-   */
-  subscribeStoreProvider(cb: Function): void {
-    if (!isFn(cb)) {
-      return;
-    }
-
-    this._storeProviderSubscribe = cb;
-  }
-
-  /**
-   * 取消StoreProvider的订阅
-   * @param cb
-   */
-  unsubscribeStoreProvider(cb: Function) {
-    if (!isFn(cb)) {
-      return;
-    }
-
-    this._storeProviderSubscribe = null;
-  }
-
-  //;;;;;;;;;;;;;;;;;;;;;;help method;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  //;;;;;;;;;;;;;;;;;;;;;;helper method;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   /**
    * 替代if
    */
@@ -520,16 +460,7 @@ export default class Store {
    * 内部状态
    */
   pprintActor(): void {
-    Store.prettyPrint(this._actorState)
-  }
-
-  /**
-   * 格式化ql的查询结果
-   * @param ql
-   * @param opts
-   */
-  pprintBigQuery(ql: Object, opts: Object): void {
-    Store.prettyPrint(this.bigQuery(ql, opts));
+    Store.prettyPrint(this._actorStateList)
   }
 
   /**

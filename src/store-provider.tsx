@@ -2,18 +2,16 @@
  * StoreProvider
  * 主要的作用是在Store和React的App之间建立桥梁
  * 将Store初始化,切绑定到React顶层App的上下文
- * @flow
  */
 
-'use strict';
+import * as React from 'react';
+import Store from './store';
 
-import React from 'react';
-
-import type Store from './store'
-import type {StoreOptions} from './types'
-
-//高阶函数包装类型
-type WrapperComponent = (Cmp: ReactClass<{}>) => ReactClass<{}>;
+type TStore = typeof Store;
+type StoreOptions = {
+  debug?: boolean;
+  ctxStoreName?: string;
+};
 
 /**
  * WrapperComponent
@@ -22,27 +20,26 @@ type WrapperComponent = (Cmp: ReactClass<{}>) => ReactClass<{}>;
  * @returns {Function}
  */
 export default function connectToStore(
-  AppStore: (opts: StoreOptions) => Store,
-  opts: StoreOptions = {debug: false, ctxStoreName: '_iflux2$store'}
-): WrapperComponent {
-  return function (Component: ReactClass<{}>) {
+  AppStore: TStore,
+  opts: StoreOptions = { debug: false, ctxStoreName: '_iflux2$store' }
+): React.Component {
+  return function (Component: React.Component) {
     //获取上下午动态设置的store的名称
     //避免Relax在获取context的时候就近原则的冲突
     const ctxStoreName = opts.ctxStoreName || '_iflux2$store';
-
     //proxy Component componentDidMount
-    const proxyDidMount = Component.prototype.componentDidMount || (() => {});
+    const proxyDidMount = Component.prototype.componentDidMount || (() => { });
     //清空
-    Component.prototype.componentDidMount = () => {};
+    Component.prototype.componentDidMount = () => { };
 
     return class StoreContainer extends React.Component {
+      props: Object;
       //关联的store
       _store: Store;
       //当前的组件状态
       _isMounted: boolean;
       //获取当前的ref
       App: Object;
-
 
       static displayName = `StoreProvider(${getDisplayName(Component)})`;
 
@@ -58,11 +55,10 @@ export default function connectToStore(
 
       constructor(props: Object) {
         super(props);
-
         if (process.env.NODE_ENV != 'production') {
           //如果是debug状态
           if (opts.debug) {
-            console.group(`StoreProvider(${Component.name}) in debug mode.`);
+            console.group && console.group(`StoreProvider(${Component.name}) in debug mode.`);
             console.time('first-render-time');
           }
         }
@@ -71,18 +67,18 @@ export default function connectToStore(
         this._isMounted = false;
         //初始化Store
         this._store = new AppStore(opts);
+        this._store.subscribe(this._handleStoreChange);
       }
 
       componentDidMount() {
         if (process.env.NODE_ENV != 'production') {
           if (opts.debug) {
             console.timeEnd('first-render-time');
-            console.groupEnd();
+            console.groupEnd && console.groupEnd();
           }
         }
 
         this._isMounted = true;
-        this._store.subscribeStoreProvider(this._handleStoreChange);
 
         //代理的子componentDidMount执行一次
         if (this.App) {
@@ -95,7 +91,7 @@ export default function connectToStore(
 
         if (process.env.NODE_ENV != 'production') {
           if (opts.debug) {
-            console.group(`StoreProvider(${Component.name}) will update`);
+            console.group && console.group(`StoreProvider(${Component.name}) will update`);
             console.time('update-render-time');
           }
         }
@@ -107,13 +103,13 @@ export default function connectToStore(
         if (process.env.NODE_ENV != 'production') {
           if (opts.debug) {
             console.timeEnd('update-render-time');
-            console.groupEnd();
+            console.groupEnd && console.groupEnd();
           }
         }
       }
 
       componentWillUnmount() {
-        this._store.unsubscribeStoreProvider(this._handleStoreChange);
+        this._store.unsubscribe(this._handleStoreChange);
       }
 
       render() {
@@ -127,9 +123,9 @@ export default function connectToStore(
       }
 
 
-      _handleStoreChange = (cb: Function) => {
+      _handleStoreChange = () => {
         if (this._isMounted) {
-          this.forceUpdate(() => cb());
+          (this as any).forceUpdate();
         }
       };
     }

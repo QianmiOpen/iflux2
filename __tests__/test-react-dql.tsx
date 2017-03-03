@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import renderer from 'react-test-renderer'
+import * as React from 'react'
+import * as renderer from 'react-test-renderer'
+import { Map } from 'immutable'
 
 import {
   Actor,
@@ -10,6 +11,8 @@ import {
 } from '../src/index'
 
 jest.mock('react-dom')
+
+type IMap = Map<string, any>;
 
 class ProductActor extends Actor {
   defaultState() {
@@ -33,9 +36,14 @@ class Appstore extends Store {
 }
 
 @StoreProvider(Appstore)
-class ProductApp extends Component {
+class ProductApp extends React.Component {
+  props: {
+    store: Appstore;
+  };
+
   render() {
     const products = this.props.store.state().get('products')
+
     return (
       <div>
         {products.map((p, index) => <ProductItem index={index} key={p.get('id')} />)}
@@ -50,14 +58,18 @@ const productDQL = DQL('productDQL', [
 ])
 
 @Relax
-class ProductItem extends Component {
+class ProductItem extends React.Component {
+  props: {
+    product: IMap
+  };
+
   static defaultProps = {
     index: 0,
     product: productDQL
   };
 
   render() {
-    const {id, name} = this.props.product.toJS()
+    const { id, name } = this.props.product.toJS()
 
     return (
       <div>

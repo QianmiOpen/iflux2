@@ -1,12 +1,10 @@
 import { fromJS } from 'immutable';
+import { Actor, Action, Store, QL, DQL } from "../src/index";
+import { QueryLang } from "../src/ql";
 
-import Store from '../src/store';
-import Actor from '../src/actor';
-import { QL, QueryLang } from '../src/ql';
-import { Action } from '../src/decorator';
-import { DQL } from '../src/dql';
-
-
+interface ReduxAction {
+  type: string;
+}
 
 //;;;;;;;;;;;;;;;;;;;;;;Actor;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 class LoadingActor extends Actor {
@@ -28,7 +26,7 @@ class UserActor extends Actor {
 
 
   @Action('change:name')
-  changeName(state, {name}) {
+  changeName(state, { name }) {
     return state.set('name', name);
   }
 }
@@ -99,21 +97,15 @@ function mockSubscribeCallback() {
 //;;;;;;;;;;;;;;;;;;;;;;test suite;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 describe('app store test suite', () => {
   it('store subscribe', () => {
-    appStore.subscribe('');
-    expect(0).toEqual(appStore._callbacks.length);
     //重复添加
     appStore.subscribe(mockSubscribeCallback);
     appStore.subscribe(mockSubscribeCallback);
-
-    expect(1).toEqual(appStore._callbacks.length);
-
-    appStore.unsubscribe('');
-    expect(1).toEqual(appStore._callbacks.length);
+    expect(appStore._callbacks.length).toEqual(1);
   });
 
   it('store unsubscribe', () => {
     appStore.unsubscribe(mockSubscribeCallback);
-    expect(0).toEqual(appStore._callbacks.length);
+    expect(appStore._callbacks.length).toEqual(0);
   });
 
 
@@ -127,27 +119,27 @@ describe('app store test suite', () => {
   });
 
   it('bigquery should be equal', () => {
-    expect({
+    expect(appStore.bigQuery(userQL)).toEqual({
       loading: true,
       name: 'iflux'
-    }).toEqual(appStore.bigQuery(userQL));
+    });
 
-    expect(1).toEqual(appStore.bigQuery(idQL));
+    expect(appStore.bigQuery(idQL)).toEqual(1);
   });
 
   it('nested bigQuery test', () => {
-    expect({
+    expect(appStore.bigQuery(idUserQL)).toEqual({
       id: 1,
       user: { loading: true, name: 'iflux' }
-    }).toEqual(appStore.bigQuery(idUserQL));
+    })
   });
 
   it('dispatch', () => {
     appStore.dispatch('change:name', { name: 'iflux2' });
-    expect({
+    expect(appStore.bigQuery(userQL)).toEqual({
       loading: true,
       name: 'iflux2'
-    }).toEqual(appStore.bigQuery(userQL));
+    })
   });
 
 
@@ -155,14 +147,14 @@ describe('app store test suite', () => {
     const lang = todoDQL.context({ index: 0 }).analyserLang(todoDQL.lang());
     const todoQL = new QueryLang('todoQL', lang);
 
-    expect({
+    expect(appStore.bigQuery(todoQL).toJS()).toEqual({
       id: 1,
       todo: {
         id: 1,
         text: 'hello dql',
         done: false
       }
-    }).toEqual(appStore.bigQuery(todoQL).toJS());
+    });
   });
 
   it('conflict actor key', () => {
@@ -207,29 +199,6 @@ describe('app store test suite', () => {
     new MyStore({ debug: true })
   });
 
-  it('debug method', () => {
-    appStore.pprint();
-    appStore.pprintActor();
-    appStore.pprintBigQuery(userQL);
-    appStore
-  });
-
-  it('test StoreProvider subscribeStoreProvider', () => {
-    appStore.subscribeStoreProvider('hello');
-    expect(null).toEqual(appStore._storeProviderSubscribe);
-
-    const cb = () => { };
-    appStore.subscribeStoreProvider(cb);
-    expect(cb).toEqual(appStore._storeProviderSubscribe);
-
-    appStore.unsubscribeStoreProvider('');
-    expect(cb).toEqual(appStore._storeProviderSubscribe);
-
-    appStore.unsubscribeStoreProvider(cb);
-    expect(null).toEqual(appStore._storeProviderSubscribe);
-
-  });
-
   it('dispatch redux single object', () => {
     class HelloActor extends Actor {
       defaultState() {
@@ -237,7 +206,7 @@ describe('app store test suite', () => {
       }
 
       @Action('ADD_TO_DO')
-      addTodo(state, {id, text, done}) {
+      addTodo(state, { id, text, done }) {
         expect({ id, text, done }).toEqual({
           id: 1,
           text: 'hello iflux2',
@@ -261,7 +230,7 @@ describe('app store test suite', () => {
     try {
       store.dispatch();
     } catch (err) {
-      expect(err.message).toEqual('😭 invalid dispatch without arguments')
+      expect(err.message).toEqual('😭 invalid dispatch without any arguments')
     }
 
     store.dispatch({
@@ -269,7 +238,7 @@ describe('app store test suite', () => {
       id: 1,
       text: 'hello iflux2',
       done: false
-    })
+    } as ReduxAction)
   });
 
   it('batch dispatch', () => {
