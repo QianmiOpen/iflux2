@@ -28,19 +28,21 @@ export default function Relax(Component: React.Component): React.Component {
   return class RelaxContainer extends React.Component {
     //当前的状态
     state: State;
+    //当前的属性
     props: Object;
-    //当前组件的挂载状态
-    _isMounted: boolean;
-    //当前的所有的子组件的props
-    _relaxProps: Object;
+    //当前上下文的类型
+    context: RelaxContext;
+
     //debug状态
-    _debug: boolean;
+    _debug: boolean
+    //当前组件的挂载状态
+    _isMounted: boolean;;
     //当前上下文的store
     _store: Store;
     //缓存当前的dql2ql
     _dql2ql: Object;
-    //当前上下文的类型
-    context: RelaxContext;
+    //当前的所有的子组件的props
+    _relaxProps: Object;
 
     //声明上下文类型
     static contextTypes = {
@@ -52,11 +54,13 @@ export default function Relax(Component: React.Component): React.Component {
 
     constructor(props: Object, context: RelaxContext) {
       super(props);
+
+      this._dql2ql = {};
+      this._isMounted = false;
+
       this._store = context[ctxStoreName];
       this._debug = this._store._debug;
-      //当前组件的挂载状态
-      this._isMounted = false;
-      this._dql2ql = {};
+
       this._store.subscribe(this._subscribeStoreChange);
     }
 
@@ -146,7 +150,7 @@ export default function Relax(Component: React.Component): React.Component {
      * 6. 都不是就是默认值
      */
     computedRelaxProps(reactProps) {
-      const dql = {};
+      const dql = {} as { [name: string]: DynamicQueryLang };
       const relaxProps = {};
       const store = this._store;
       const defaultProps = Component.defaultProps || {};
@@ -173,6 +177,7 @@ export default function Relax(Component: React.Component): React.Component {
             //这个lang会被后面真正被DynamicQueryLang计算过的lang取代
             this._dql2ql[propName] = new QueryLang(propValue.name(), propValue.lang());
           }
+
           continue;
         }
 

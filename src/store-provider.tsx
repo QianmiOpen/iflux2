@@ -29,11 +29,12 @@ export default function connectToStore(
     const ctxStoreName = opts.ctxStoreName || '_iflux2$store';
     //proxy Component componentDidMount
     const proxyDidMount = Component.prototype.componentDidMount || (() => { });
-    //清空
+    //reset
     Component.prototype.componentDidMount = () => { };
 
     return class StoreContainer extends React.Component {
       props: Object;
+
       //关联的store
       _store: Store;
       //当前的组件状态
@@ -47,7 +48,7 @@ export default function connectToStore(
         [ctxStoreName]: React.PropTypes.object
       };
 
-      getChildContext: Function = (): Object => {
+      getChildContext() {
         return {
           [ctxStoreName]: this._store
         };
@@ -55,6 +56,7 @@ export default function connectToStore(
 
       constructor(props: Object) {
         super(props);
+
         if (process.env.NODE_ENV != 'production') {
           //如果是debug状态
           if (opts.debug) {

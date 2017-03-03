@@ -8,6 +8,7 @@
     "test": "./node_modules/.bin/jest --verbose",
     "coverage": "./node_modules/.bin/jest --coverage",
     "compile": "./node_modules/.bin/tsc",
+    "watch": "./node_modules/.bin/tsc -w",
     "build:core": "node_modules/.bin/babel --ignore build/contrib build --out-dir dist",
     "build:contrib": "node_modules/.bin/babel build/contrib --out-dir contrib",
     "type": "./scripts/type.sh",

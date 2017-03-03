@@ -10,11 +10,15 @@ import { DQL } from './dql';
 export {
   QL,
   DQL,
+
   msg,
+
   Action,
-  CtxStoreName,
   Actor,
+
+  CtxStoreName,
   Relax,
+
   Store,
   StoreProvider
 };

@@ -3,7 +3,7 @@
  * 聚合actor, 分派action, 计算query-lang
  */
 import { fromJS, OrderedMap } from 'immutable';
-import { unstable_batchedUpdates as batchedUpdates } from 'react-dom';
+import * as ReactDOM from 'react-dom'
 
 import Actor from './actor'
 import { QueryLang } from './ql';
@@ -25,6 +25,8 @@ type ArgResult = {
 interface ReduxAction {
   type: string;
 }
+
+const batchedUpdates = ReactDOM.unstable_batchedUpdates || function (cb) { cb() }
 
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Store;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 export default class Store {
@@ -139,13 +141,15 @@ export default class Store {
       }
     }
 
-    const currentStoreState = this._state
     this._isTransaction = true;
+    const currentStoreState = this._state
+
     fn();
+
+    this._isTransaction = false;
     if (currentStoreState != this._state) {
       this._notify()
     }
-    this._isTransaction = false;
 
     if (process.env.NODE_ENV != 'production') {
       if (this._debug) {
@@ -282,7 +286,7 @@ export default class Store {
     if (process.env.NODE_ENV != 'production') {
       //trace log
       this.debug(() => {
-        console.groupCollapsed && console.groupCollapsed(`ql#${name} big query ==>`);
+        console.groupCollapsed && console.groupCollapsed(`QL:|> ql#${name} big query ==> 🚀`);
         console.time(`${name}`);
       });
     }
@@ -293,7 +297,7 @@ export default class Store {
       if (process.env.NODE_ENV != 'production') {
         //trace log
         this.debug(() => {
-          console.log(`:( not exist in cache`);
+          console.log(`QL:|> ql#${name} was 1st query.`);
         });
       }
 
@@ -325,14 +329,14 @@ export default class Store {
           if (process.env.NODE_ENV != 'production') {
             //trace log
             this.debug(() => {
-              console.log(`:( deps:ql#${path.name()} data was expired.`);
+              console.log(`path:|> ql#${path.name()} was outdated. 🔥`);
             });
           }
         }
 
         if (process.env.NODE_ENV != 'production') {
           this.debug(() => {
-            console.log(`:) deps:ql#${path.name()} get result from cache`);
+            console.log(`path:|> ql#${path.name()} was cached. 👌`);
           });
         }
 
@@ -351,7 +355,7 @@ export default class Store {
 
         if (process.env.NODE_ENV != 'production') {
           this.debug(() => {
-            console.log(`:( deps: ${JSON.stringify(path)} data had expired.`);
+            console.log(`path:|> ${JSON.stringify(path)} was outdated. 🔥`);
           });
         }
       } else if (typeof (value) === 'undefined' && typeof (metaData.deps[key]) === 'undefined') {
@@ -359,7 +363,7 @@ export default class Store {
 
         if (process.env.NODE_ENV != 'production') {
           this.debug(() => {
-            console.log(`:( deps: ${JSON.stringify(path)} undefined. Be careful!`);
+            console.log(`path:|> ${JSON.stringify(path)} was 'undefined'. 小心!`);
           });
         }
       }
@@ -386,11 +390,6 @@ export default class Store {
     if (process.env.NODE_ENV != 'production') {
       //trace log
       this.debug(() => {
-        const result = (
-          (metaData.result && metaData.result.toJS)
-            ? metaData.result.toJS()
-            : metaData.result
-        );
         console.log('!!result => ' + JSON.stringify(result, null, 2));
         console.timeEnd(`${name}`);
         console.groupEnd && console.groupEnd();

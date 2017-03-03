@@ -1,4 +1,3 @@
-
 import { QueryLang } from './ql';
 import { isArray, isStr, isQuery } from './util';
 
@@ -47,6 +46,7 @@ export class DynamicQueryLang {
       } else if (path instanceof DynamicQueryLang) {
         lang[i] = new QueryLang(path._name + '2QL', this.analyserLang(path._lang));
       } else {
+
         //zero runtime cost
         if (process.env.NODE_ENV != 'production') {
           //如果path是QueryLang，校验querylang语法的合法性
@@ -54,6 +54,7 @@ export class DynamicQueryLang {
             throw new Error(`DQL: syntax error`);
           }
         }
+
         lang[i] = path;
       }
     }
