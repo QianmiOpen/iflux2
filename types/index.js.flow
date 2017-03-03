@@ -32,6 +32,7 @@ declare class Actor {
 declare class Store {
   constructor(opts: StoreOptions): void;
   bindActor(): Array<Actor>;
+  transaction(cb: Function): void;
   dispatch(msg: string | ReduxAction, param?: any): void;
   batchDispatch(actions: Array<string | [string, any] | ReduxAction>): void;
   bigQuery(ql: QueryLang): any;

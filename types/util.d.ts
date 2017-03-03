@@ -1,13 +1,10 @@
-declare function isArray(arr: any): boolean;
-declare function isFn(fn: any): boolean;
-declare function isStr(str: any): boolean;
-declare function isObject(obj: any): boolean;
-declare function type(t: any): string;
 
-export = {
-  isArray,
-  isFn,
-  isStr,
-  isObject,
-  type
-};
+export = Util;
+
+declare namespace Util {
+  function isArray(arr: any): boolean;
+  function isFn(fn: any): boolean;
+  function isStr(str: any): boolean;
+  function isObject(obj: any): boolean;
+  function type(t: any): string;
+}

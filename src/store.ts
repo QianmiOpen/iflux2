@@ -282,8 +282,8 @@ export default class Store {
     if (process.env.NODE_ENV != 'production') {
       //trace log
       this.debug(() => {
-        console.time(`${name}`);
         console.groupCollapsed && console.groupCollapsed(`ql#${name} big query ==>`);
+        console.time(`${name}`);
       });
     }
 
@@ -392,8 +392,8 @@ export default class Store {
             : metaData.result
         );
         console.log('!!result => ' + JSON.stringify(result, null, 2));
-        console.groupEnd && console.groupEnd();
         console.timeEnd(`${name}`);
+        console.groupEnd && console.groupEnd();
       });
     }
 
