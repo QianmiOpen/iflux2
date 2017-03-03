@@ -1,8 +1,6 @@
 import { Store, IOptions } from 'iflux2'
 import CounterActor from './actor/counter-actor'
 
-
-//State container
 export default class AppStore extends Store {
   bindActor() {
     return [
