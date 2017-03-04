@@ -1,14 +1,8 @@
-//@flow
-
-'use strict;'
-
-import { Store } from 'iflux2'
+import { Store, IOptions } from 'iflux2'
 import TimerActor from './actor/timer-actor'
 
-import type {StoreOptions} from 'iflux2'
-
 export default class AppStore extends Store {
-  timer: number;
+  timer: any;
 
   bindActor() {
     return [
@@ -16,15 +10,14 @@ export default class AppStore extends Store {
     ]
   }
 
-  constructor(props: StoreOptions) {
+  constructor(props: IOptions) {
     super(props)
     //debug,you can quickly test in chrome
     if (__DEV__) {
-      window.store = this
+      window['store'] = this
     }
   }
 
-  //;;;;;;;;;;;;;;;;;Action;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   start = () => {
     this.timer = setInterval(() => {
       this.dispatch('start')

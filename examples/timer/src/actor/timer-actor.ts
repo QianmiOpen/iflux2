@@ -1,14 +1,5 @@
-//@flow
+import { Actor, Action, IMap } from 'iflux2'
 
-'use strict;'
-
-import { Actor, Action } from 'iflux2'
-
-import type {ActorState} from 'iflux2'
-
-/**
- * TimerActor
- */
 export default class CounterActor extends Actor {
   defaultState() {
     return {
@@ -17,12 +8,12 @@ export default class CounterActor extends Actor {
   }
 
   @Action('start')
-  increment(state: ActorState) {
+  increment(state: IMap) {
     return state.update('time', time => time + 1)
   }
 
   @Action('reset')
-  reset(state: ActorState) {
+  reset(state: IMap) {
     return state.set('time', 0)
   }
 }

@@ -1,33 +1,27 @@
 import TimerActor from '../src/actor/timer-actor'
-import {fromJS} from 'immutable'
+import { fromJS } from 'immutable'
 
 describe('test timer actor', () => {
-  
+
   it('test default value', () => {
     const timer = new TimerActor
-    expect({
-      time: 0
-    }).toEqual(timer.defaultState())
+    expect(timer.defaultState()).toEqual({ time: 0 })
   });
 
   it('test start', () => {
-    const timer= new TimerActor
+    const timer = new TimerActor
     const state = fromJS({
       time: 0
     });
-    expect({
-      time: 1
-    }).toEqual(timer.increment(state).toJS());
+    expect(timer.increment(state).toJS()).toEqual({ time: 1 })
   })
 
   it('test decrement', () => {
     const timer = new TimerActor
     const state = fromJS({
-      time: 10 
+      time: 10
     });
-    expect({
-      time: 0 
-    }).toEqual(timer.reset(state).toJS());
+    expect(timer.reset(state).toJS()).toEqual({ time: 0 })
   })
 
 })

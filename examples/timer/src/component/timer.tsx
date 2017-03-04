@@ -1,23 +1,23 @@
-//@flow
-
-'use strict;'
-
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Relax } from 'iflux2'
-const noop = () => {}
-
+const noop = () => { }
 
 @Relax
-export default class Counter extends Component {
+export default class Counter extends React.Component<any, any> {
+  props: {
+    time?: number;
+    start?: () => void;
+    reset?: () => void;
+  };
+
   static defaultProps = {
     time: 0,
     start: noop,
     reset: noop,
   };
 
-
   render() {
-    const {time, start, reset} = this.props
+    const { time, start, reset } = this.props
 
     const style = {
       marginLeft: 10,
