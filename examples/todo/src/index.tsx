@@ -1,11 +1,7 @@
-//@flow
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 
-'use strict;'
-
-import React, {Component} from 'react'
-import {render} from 'react-dom'
-
-import {StoreProvider} from 'iflux2'
+import { StoreProvider } from 'iflux2'
 import AppStore from './store'
 
 import Header from './component/header'
@@ -16,17 +12,17 @@ import './css/base.css'
 import './css/index.css'
 
 //debug: true, it will show good logs
-@StoreProvider(AppStore, {debug: true})
-export default class TodoApp extends Component {
+@StoreProvider(AppStore, { debug: true })
+export default class TodoApp extends React.Component<any, any> {
   render() {
     return (
       <section className="todoapp">
-        <Header/>
-        <Main/>
-        <Footer/>
+        <Header />
+        <Main />
+        <Footer />
       </section>
     );
   }
 }
 
-render(<TodoApp/>, document.getElementById('app'));
+ReactDOM.render(<TodoApp />, document.getElementById('app'))

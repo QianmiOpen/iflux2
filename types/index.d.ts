@@ -46,6 +46,19 @@ declare namespace iflux2 {
     lang: Array<any>
   ): QueryLang;
 
+  export class DynamicQueryLang {
+    constructor(name: string, lang: Array<any>);
+    name(): string;
+    lang(): string;
+    context(props: Object): this;
+    analyserLang(lang: Array<any>): Array<any>;
+  }
+
+  export function DQL(
+    name: string,
+    lang: Array<any>
+  ): DynamicQueryLang;
+
   export const msg: EventEmitter;
 
   export function Action(msg: string): Function;

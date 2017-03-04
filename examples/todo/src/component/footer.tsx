@@ -1,22 +1,27 @@
-//@flow
-import React, {Component} from 'react';
-import {Relax} from 'iflux2'
-import {countQL} from '../ql'
-const noop = () => {}
+import * as React from 'react'
+import { Relax } from 'iflux2'
+import { countQL } from '../ql'
 
+const noop = () => { }
 
 @Relax
-export default class Footer extends Component {
-  static defaultProps = {
-    changeFilter: noop,
-    clearCompleted: noop,
-    filterStatus: '',
-    count: countQL
+export default class Footer extends React.Component<any, any> {
+  props: {
+    count?: number;
+    filterStatus?: string;
+    changeFilter?: (filter: string) => void;
+    clearCompleted?: () => void;
   };
 
+  static defaultProps = {
+    count: countQL,
+    filterStatus: '',
+    changeFilter: noop,
+    clearCompleted: noop,
+  };
 
   render() {
-    const {changeFilter, filterStatus, count, clearCompleted} = this.props
+    const { changeFilter, filterStatus, count, clearCompleted } = this.props
     let countText = ''
 
     if (count > 1) {
@@ -53,7 +58,9 @@ export default class Footer extends Component {
         </ul>
         <button
           className="clear-completed"
-          onClick={clearCompleted}>Clear completed</button>
+          onClick={clearCompleted}>
+          Clear completed
+        </button>
       </footer>
     );
   }
