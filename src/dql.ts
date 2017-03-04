@@ -35,7 +35,7 @@ export class DynamicQueryLang {
       let path = dLang[i];
 
       if (isStr(path) && path[0] === '$') {
-        lang[i] = path[0] === '$' ? this._ctx[path.substring(1)] : path;
+        lang[i] = this._ctx[path.substring(1)];
       } else if (isArray(path)) {
         //init
         lang[i] = []
