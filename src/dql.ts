@@ -34,8 +34,8 @@ export class DynamicQueryLang {
       //获取当前的路径
       let path = dLang[i];
 
-      if (isStr(path) && path[0] === '$') {
-        lang[i] = this._ctx[path.substring(1)];
+      if (isStr(path)) {
+        lang[i] = path[0] === '$' ? this._ctx[path.substring(1)] : path;
       } else if (isArray(path)) {
         //init
         lang[i] = []
