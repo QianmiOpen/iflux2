@@ -2282,9 +2282,9 @@ ieee754@^1.1.4:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
 
-iflux2@^1.4.3:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.4.3.tgz#2337877e9dc009012b140c48b14183fbdc63f5a7"
+iflux2@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.4.4.tgz#c2f220163fc8896ef6456b07672967581af90334"
   dependencies:
     "@types/jest" "^18.1.1"
     "@types/node" "^7.0.5"

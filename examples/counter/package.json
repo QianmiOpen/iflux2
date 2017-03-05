@@ -24,7 +24,7 @@
     ]
   },
   "dependencies": {
-    "iflux2": "1.4.3",
+    "iflux2": "1.4.4",
     "react": "15.4.2",
     "react-dom": "15.4.2"
   },

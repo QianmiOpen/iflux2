@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+"@types/jest@^18.1.1":
+  version "18.1.1"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-18.1.1.tgz#6f63488c64726900885ab9cd5697bb7fa1b416cc"
+
+"@types/node@^7.0.5":
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.5.tgz#96a0f0a618b7b606f1ec547403c00650210bfbb7"
+
 Base64@~0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/Base64/-/Base64-0.2.1.tgz#ba3a4230708e186705065e66babdd4c35cf60028"
@@ -1972,13 +1980,15 @@ ieee754@^1.1.4:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
 
-iflux2@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.4.1.tgz#33f3ce08f5a532da672fe7aa75d337e8c2f118c8"
+iflux2@1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.4.4.tgz#c2f220163fc8896ef6456b07672967581af90334"
   dependencies:
+    "@types/jest" "^18.1.1"
+    "@types/node" "^7.0.5"
     events "^1.1.0"
     immutable "^3.8.1"
-    object-assign "^4.1.0"
+    object-assign "^4.1.1"
 
 immutable@^3.7.6, immutable@^3.8.1:
   version "3.8.1"
@@ -2595,6 +2605,10 @@ oauth-sign@~0.8.1:
 object-assign@^4.0.1, object-assign@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.0.tgz#7a3b3d0e98063d43f4c03f2e8ae6cd51a86883a0"
+
+object-assign@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
 
 object.omit@^2.0.0:
   version "2.0.0"

@@ -27,7 +27,7 @@
     "@types/node": "^7.0.5",
     "@types/react": "^15.0.14",
     "@types/react-dom": "^0.14.23",
-    "iflux2": "1.4.3",
+    "iflux2": "1.4.4",
     "react": "15.4.2",
     "react-dom": "15.4.2"
   },

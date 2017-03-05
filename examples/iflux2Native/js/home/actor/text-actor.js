@@ -10,4 +10,9 @@ export default class TextActor extends Actor {
       text: 'Hello, ReactNative!!!'
     }
   }
+
+  @Action('change')
+  change(state, text) {
+    return state.set('text', text)
+  }
 }

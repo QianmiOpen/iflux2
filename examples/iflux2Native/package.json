@@ -7,7 +7,7 @@
     "postinstall": "npm install ./react-dom"
   },
   "dependencies": {
-    "iflux2": "1.4.2",
+    "iflux2": "1.4.4",
     "react": "15.4.2",
     "react-native": "0.39.2"
   },

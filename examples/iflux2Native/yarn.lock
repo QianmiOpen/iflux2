@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+"@types/jest@^18.1.1":
+  version "18.1.1"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-18.1.1.tgz#6f63488c64726900885ab9cd5697bb7fa1b416cc"
+
+"@types/node@^7.0.5":
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.5.tgz#96a0f0a618b7b606f1ec547403c00650210bfbb7"
+
 absolute-path@^0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/absolute-path/-/absolute-path-0.0.0.tgz#a78762fbdadfb5297be99b15d35a785b2f095bf7"
@@ -1337,13 +1345,15 @@ iconv-lite@0.4.13, iconv-lite@~0.4.13:
   version "0.4.13"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.13.tgz#1f88aba4ab0b1508e8312acc39345f36e992e2f2"
 
-iflux2@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.4.0.tgz#a129311e72444fa10eb5dee0ec5823d93f60704d"
+iflux2@1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/iflux2/-/iflux2-1.4.4.tgz#c2f220163fc8896ef6456b07672967581af90334"
   dependencies:
+    "@types/jest" "^18.1.1"
+    "@types/node" "^7.0.5"
     events "^1.1.0"
     immutable "^3.8.1"
-    object-assign "^4.1.0"
+    object-assign "^4.1.1"
 
 image-size@^0.3.5:
   version "0.3.5"
@@ -1860,6 +1870,10 @@ object-assign@^3.0.0:
 object-assign@^4.0.1, object-assign@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.0.tgz#7a3b3d0e98063d43f4c03f2e8ae6cd51a86883a0"
+
+object-assign@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
 
 on-finished@~2.3.0:
   version "2.3.0"
