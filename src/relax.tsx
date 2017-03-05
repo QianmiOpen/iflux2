@@ -27,7 +27,7 @@ export default function Relax(Component: React.Component): React.Component {
 
   return class RelaxContainer extends React.Component {
     //当前的状态
-    state: State;
+    state: Object;
     //当前的属性
     props: Object;
     //当前上下文的类型
@@ -57,7 +57,7 @@ export default function Relax(Component: React.Component): React.Component {
 
       this._dql2ql = {};
       this._isMounted = false;
-
+      this.state = { storeState: fromJS({}) }
       this._store = context[ctxStoreName];
       this._debug = this._store._debug;
 
@@ -218,9 +218,9 @@ export default function Relax(Component: React.Component): React.Component {
      */
     _subscribeStoreChange = (state: State) => {
       if (this._isMounted) {
-        (this as any).setState((preState) => {
-          return state;
-        });
+        (this as any).setState({
+          storeState: state
+        })
       }
     };
   };
