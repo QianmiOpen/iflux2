@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "noImplicitAny": false,
+        "sourceMap": false,
+        "jsx": "react-native",
+        "experimentalDecorators": true,
+        "outDir": "js",
+        "baseUrl": "."
+    },
+    "exclude": [
+        "node_modules",
+        "__tests__",
+        "js",
+        "android",
+        "ios",
+        "uikit"
+    ]
+}

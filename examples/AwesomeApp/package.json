@@ -1,0 +1,29 @@
+{
+	"name": "AwesomeApp",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node node_modules/react-native/local-cli/cli.js start",
+		"test": "jest",
+		"compile": "node_modules/.bin/tsc",
+		"wathc": "node_modules/.bin/tsc -w",
+		"postinstall": "npm install ./react-dom"
+	},
+	"dependencies": {
+		"@types/react": "^15.0.14",
+		"@types/react-native": "^0.37.13",
+		"iflux2": "^1.4.4",
+		"react": "~15.4.1",
+		"react-native": "0.42.0"
+	},
+	"devDependencies": {
+		"babel-jest": "19.0.0",
+		"babel-preset-react-native": "1.9.1",
+		"jest": "19.0.2",
+		"react-test-renderer": "~15.4.1",
+		"typescript": "^2.2.1"
+	},
+	"jest": {
+		"preset": "react-native"
+	}
+}
