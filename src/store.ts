@@ -144,7 +144,17 @@ export default class Store {
     this._isTransaction = true;
     const currentStoreState = this._state
 
-    fn();
+    try {
+      fn();
+    } catch (err) {
+      this._state = currentStoreState;
+      if (process.env.NODE_ENV != 'production') {
+        console.warn('😭, Some expection occur in transaction, the store state rollback.')
+        if (this._debug) {
+          console.trace(err)
+        }
+      }
+    }
 
     this._isTransaction = false;
     if (currentStoreState != this._state) {
