@@ -1,7 +1,7 @@
-//@flow
-import { Actor, Action } from 'iflux2'
+import { Actor, Action, IMap } from 'iflux2'
 import { fromJS } from 'immutable'
-import type { Map } from 'immutable'
+
+type Field = { name: string; value: string; }
 
 const init = {
   username: '',
@@ -11,20 +11,18 @@ const init = {
   qq: ''
 };
 
-type State = Map<string, Object>;
-
 export default class UserActor extends Actor {
   defaultState() {
     return init
   }
 
   @Action('changeValue')
-  changeValue(state: State, {name, value}: {name: string, value: string}) {
+  changeValue(state: IMap, { name, value }: Field) {
     return state.set(name, value)
   }
 
   @Action('reset')
-  reset(state: State) {
+  reset(state: IMap) {
     return state.merge(fromJS(init))
   }
 }

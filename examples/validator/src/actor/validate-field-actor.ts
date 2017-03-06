@@ -1,9 +1,5 @@
-//@flow
-import { Actor, Action } from 'iflux2'
+import { Actor, Action, IMap } from 'iflux2'
 import { OrderedSet, fromJS } from 'immutable'
-import type {Map} from 'immutable'
-
-type State = Map<string, Object>;
 
 export default class ValidateFieldActor extends Actor {
   defaultState() {
@@ -13,7 +9,7 @@ export default class ValidateFieldActor extends Actor {
   }
 
   @Action('validateField')
-  validateField(state: State, field: string) {
+  validateField(state: IMap, field: string) {
     //全部校验
     if (field === 'all') {
       return state.update('fields', (fields) => fields.merge(fromJS([
@@ -33,7 +29,7 @@ export default class ValidateFieldActor extends Actor {
 
 
   @Action('reset')
-  reset(state: State) {
+  reset(state: IMap) {
     return state.update('fields', (fields) => fields.clear());
   }
 }

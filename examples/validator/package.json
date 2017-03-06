@@ -9,6 +9,8 @@
     "start": "./node_modules/.bin/webpack-dev-server --port 3000 --config webpack.config.js"
   },
   "dependencies": {
+    "@types/react": "^15.0.14",
+    "@types/react-dom": "^0.14.23",
     "iflux2": "1.4.4",
     "react": "^15.1.0",
     "react-dom": "^15.1.0"
@@ -33,6 +35,8 @@
     "html-webpack-plugin": "^2.22.0",
     "react-addons-perf": "^15.3.0",
     "style-loader": "^0.13.1",
+    "ts-loader": "^2.0.1",
+    "typescript": "^2.2.1",
     "webpack": "^2.1.0-beta.15",
     "webpack-dev-server": "^1.14.1"
   }

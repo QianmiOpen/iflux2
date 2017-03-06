@@ -1,6 +1,6 @@
-//@flow
+
 import { QL } from 'iflux2'
-import Validator from 'iflux2/contrib/validator'
+import * as Validator from 'iflux2/contrib/validator'
 
 export const validatorQL = QL('validatorQL', [
   'fields',
@@ -12,7 +12,7 @@ export const validatorQL = QL('validatorQL', [
   (fields, username, password, confirm, email, qq) => {
     //初始状态不校验
     if (fields.isEmpty()) {
-      return {errors: {}}
+      return { errors: {} }
     }
 
     const form = {
@@ -30,8 +30,8 @@ export const validatorQL = QL('validatorQL', [
 
     const result = Validator.validate(form, {
       username: {
-       required: true,
-       maxLength: 10,
+        required: true,
+        maxLength: 10,
         message: {
           required: 'username is required',
           maxLength: 'username max length is 10'
@@ -52,8 +52,8 @@ export const validatorQL = QL('validatorQL', [
         }
       },
       email: {
-       required: true,
-       email: true,
+        required: true,
+        email: true,
         message: {
           required: 'email is required.',
           email: 'email is invalid'
@@ -67,7 +67,7 @@ export const validatorQL = QL('validatorQL', [
           qq: 'qq is invalid.'
         }
       }
-    }, {debug: true, validateFields: fields.toArray()});
+    }, { debug: true, validateFields: fields.toArray() });
 
     return result;
   }
