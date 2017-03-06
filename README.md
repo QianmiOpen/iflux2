@@ -1,5 +1,4 @@
-> New Idea, New the World.
-
+> New Idea, New the World. 🔥🔥🔥
 
 技术也是时尚驱动的，我们常常臣服于时尚，面对快速的变化常常让我们局促不安，
 开始焦虑，唯恐错过了些什么。怎么打破这种焦虑？需要在快速变化得世界里保持清醒，
@@ -7,7 +6,7 @@
 让我们回归到技术的本质, 因为解决了真实的问题，技术才变得有价值。
 **真正牛*的技术，都是静悄悄的跑在线上...**
 
-### iflux2
+### iflux2 🚀🚀🚀
 
 [![NPM](https://nodei.co/npm/iflux2.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/iflux2)
 
