@@ -1,10 +1,21 @@
 //@flow
-import React, { Component } from 'react'
-import { Relax} from 'iflux2'
-const noop = () => {}
+import * as React from 'react'
+import { Relax } from 'iflux2'
+
+type Handler = () => void
+
+const noop = () => { }
 
 @Relax
-export default class Edit extends Component {
+export default class Edit extends React.Component<any, any> {
+  props: {
+    title?: string;
+    content?: string;
+    submit?: Handler;
+    changeTitle?: (text: string) => void;
+    changeContent?: (text: string) => void;
+  };
+
   static defaultProps = {
     title: '',
     content: '',
@@ -14,11 +25,7 @@ export default class Edit extends Component {
   };
 
   render() {
-    const {
-      title,
-      content,
-      submit
-     } = this.props
+    const { title, content, submit } = this.props
 
     return (
       <form onSubmit={submit}>
@@ -30,25 +37,25 @@ export default class Edit extends Component {
             value={title}
             onChange={this._handleChangeTitle}
           />
-          <br/>
+          <br />
           content:
           <textarea
             value={content}
             onChange={this._handleContentChange}
           />
-          <br/>
-          <input type="submit" value="post"/>
+          <br />
+          <input type="submit" value="post" />
         </fieldset>
       </form>
     )
   }
 
-  _handleChangeTitle = (e: SyntheticInputEvent) => {
+  _handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.props.changeTitle(e.target.value)
   };
 
 
-  _handleContentChange = (e: SyntheticInputEvent) => {
+  _handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     this.props.changeContent(e.target.value)
   };
 }

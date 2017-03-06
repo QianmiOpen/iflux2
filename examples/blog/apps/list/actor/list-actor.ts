@@ -1,7 +1,4 @@
-//@flow
-import {Action, Actor} from 'iflux2'
-
-import type {ActorState} from 'iflux2'
+import { Action, Actor, IMap } from 'iflux2'
 
 export default class ListActor extends Actor {
   defaultState() {
@@ -11,7 +8,7 @@ export default class ListActor extends Actor {
   }
 
   @Action('init')
-  init(state: ActorState, blogs: Array<Object>) {
+  init(state: IMap, blogs: Array<Object>) {
     return state.set('blogs', blogs)
   }
 }

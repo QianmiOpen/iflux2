@@ -1,20 +1,17 @@
-//@flow
-import { Store } from 'iflux2'
+import { Store, IOptions } from 'iflux2'
 import BlogActor from './actor/blog-actor'
 
-import type {StoreOptions} from 'iflux2'
-
-export default class AppStore extends Store  {
+export default class AppStore extends Store {
   bindActor() {
     return [
       new BlogActor
     ]
   }
 
-  constructor(props: StoreOptions) {
+  constructor(props: IOptions) {
     super(props)
     if (__DEV__) {
-      window._store = this
+      window['_store'] = this
     }
   }
 

@@ -3,14 +3,17 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   devtool: 'cheap-module-source-map',
-  entry: './apps/index.js',
+  entry: './apps/index.tsx',
   output: {
     path: './build',
     filename: 'bundle.js'
   },
+  resolve: {
+    extensions: ['.web.js', '.js', '.json', '.ts', '.tsx'],
+  },
   module: {
     loaders: [
-      {test: /\.js/, exclude: /node_modules/, loader: 'babel-loader?cacheDirectory'}
+      { test: /\.tsx?$/, exclude: /node_modules/, loader: 'ts-loader' }
     ]
   },
   plugins: [

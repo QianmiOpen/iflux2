@@ -1,10 +1,8 @@
 //@flow
-import { Store } from 'iflux2'
+import { Store, IOptions } from 'iflux2'
 import LoadingActor from './actor/loading-actor'
 import DetailActor from './actor/detail-actor'
 import { fetchDetail } from './webapi'
-
-import type {StoreOptions} from 'iflux2'
 
 export default class AppStore extends Store {
   bindActor() {
@@ -14,11 +12,11 @@ export default class AppStore extends Store {
     ]
   }
 
-  constructor(props: StoreOptions) {
+  constructor(props: IOptions) {
     super(props)
     if (__DEV__) {
       //debug
-      window.store = this
+      window['store'] = this
     }
   }
 

@@ -1,7 +1,4 @@
-//@flow
-import { Actor, Action } from 'iflux2'
-
-import type {ActorState} from 'iflux2'
+import { Actor, Action, IMap } from 'iflux2'
 
 export default class BlogActor extends Actor {
   defaultState() {
@@ -14,17 +11,17 @@ export default class BlogActor extends Actor {
   }
 
   @Action('changeTitle')
-  changeTitle(state: ActorState, title: string) {
+  changeTitle(state: IMap, title: string) {
     return state.set('title', title)
   }
 
   @Action('changeContent')
-  changeContent(state: ActorState, content: string) {
+  changeContent(state: IMap, content: string) {
     return state.set('content', content)
   }
 
   @Action('submit')
-  submit(state: ActorState) {
+  submit(state: IMap) {
     const id = Date.now()
     const blog = (
       state

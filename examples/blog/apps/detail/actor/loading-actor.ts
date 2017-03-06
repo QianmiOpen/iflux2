@@ -1,6 +1,4 @@
-//@flow
-import { Actor, Action }  from 'iflux2'
-import type {ActorState} from 'iflux2'
+import { Actor, Action, IMap } from 'iflux2'
 
 export default class LoadingActor extends Actor {
   defaultState() {
@@ -10,7 +8,7 @@ export default class LoadingActor extends Actor {
   }
 
   @Action('loading')
-  loading(state: ActorState, status: boolean) {
+  loading(state: IMap, status: boolean) {
     return state.set('loading', status)
   }
 }

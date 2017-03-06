@@ -1,12 +1,13 @@
-//@flow
-import React, {Component} from 'react'
-import { Relax } from 'iflux2'
-import { fromJS } from 'immutable'
+import * as React from 'react'
+import { Relax, IMap } from 'iflux2'
+import { fromJS, List } from 'immutable'
 import { Link } from 'react-router'
 
-
 @Relax
-export default class BlogList extends Component {
+export default class BlogList extends React.Component<any, any> {
+  props: {
+    blogs?: List<IMap>
+  }
   static defaultProps = {
     blogs: fromJS([])
   };
@@ -18,7 +19,7 @@ export default class BlogList extends Component {
       return (
         <div>
           还木有blog
-          <Link to="/new">赶紧的....</Link>
+        <Link to="/new" > 赶紧的....</Link>
         </div>
       )
     }
@@ -26,7 +27,7 @@ export default class BlogList extends Component {
     return (
       <ul>
         {blogs.map((v, k) => (
-          <li key={k}>
+          <li key={k} >
             <Link key={k} to={`/detail/${v.get('id')}`}>
               {v.get('title')} - {v.get('createAt')}
             </Link>
