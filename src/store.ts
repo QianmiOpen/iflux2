@@ -9,6 +9,9 @@ import Actor from './actor'
 import { QueryLang } from './ql';
 import { isArray, filterActorConflictKey, isFn, isStr, isObject } from './util';
 
+type Dispatch = () => void;
+type RollBack = () => void;
+
 type IState = OrderedMap<string, any>;
 type Callback = (state: IState) => void;
 
@@ -134,7 +137,9 @@ export default class Store {
     }
   }
 
-  transaction(fn: Function) {
+  transaction(dispatch: Dispatch, rollBack: RollBack) {
+    let isRollBack = false;
+
     if (process.env.NODE_ENV != 'production') {
       if (this._debug) {
         console.groupCollapsed && console.groupCollapsed('open a new transaction 🚀')
@@ -145,9 +150,17 @@ export default class Store {
     const currentStoreState = this._state
 
     try {
-      fn();
+      dispatch()
     } catch (err) {
-      this._state = currentStoreState;
+      isRollBack = true
+      //如有自定义的事务回滚操作
+      //调用自定义的行为
+      if (rollBack) {
+        rollBack()
+      } else {
+        //默认事务回滚，状态回到上次的状态
+        this._state = currentStoreState
+      }
       if (process.env.NODE_ENV != 'production') {
         console.warn('😭, Some expection occur in transaction, the store state rollback.')
         if (this._debug) {
@@ -166,6 +179,8 @@ export default class Store {
         console.groupEnd && console.groupEnd();
       }
     }
+
+    return isRollBack
   }
 
   _mapActor(msg: string, params: any) {
