@@ -5,6 +5,9 @@ import * as React from 'react'
 export = iflux2
 
 declare namespace iflux2 {
+  type Dispatch = () => void;
+  type RollBack = () => void;
+
   export type IMap = Map<string, any>
   export type Handler = (state: IMap) => void;
 
@@ -25,7 +28,7 @@ declare namespace iflux2 {
     constructor(props?: IOptions);
     dispatch(msg: string | ReduxAtion, params?: any): void;
     batchDispatch(actions: Array<[string, any] | ReduxAtion | string>): void;
-    transaction(cb: () => void): void;
+    transaction(dispatch: Dispatch, rollBack: RollBack): boolean;
     bindActor(): Array<Actor>;
     bigQuery(ql: QueryLang): any;
     state(): IMap;
