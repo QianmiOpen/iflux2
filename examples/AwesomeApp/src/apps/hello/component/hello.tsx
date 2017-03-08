@@ -39,11 +39,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   } as React.ViewStyle,
   text: {
     fontSize: 16,
     fontWeight: 'bold',
     color: 'blue'
-  } as React.ViewStyle
+  } as React.TextStyle
 })

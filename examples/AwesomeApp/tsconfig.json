@@ -6,15 +6,15 @@
         "sourceMap": false,
         "jsx": "react-native",
         "experimentalDecorators": true,
-        "outDir": "js",
-        "baseUrl": "."
+        "baseUrl": "./src",
+        "rootDir": "./src",
+        "outDir": "js"
     },
     "exclude": [
         "node_modules",
         "__tests__",
         "js",
         "android",
-        "ios",
-        "uikit"
+        "ios"
     ]
 }
