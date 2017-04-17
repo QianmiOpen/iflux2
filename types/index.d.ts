@@ -28,7 +28,7 @@ declare namespace iflux2 {
     constructor(props?: IOptions);
     dispatch(msg: string | ReduxAtion, params?: any): void;
     batchDispatch(actions: Array<[string, any] | ReduxAtion | string>): void;
-    transaction(dispatch: Dispatch, rollBack: RollBack): boolean;
+    transaction(dispatch: Dispatch, rollBack?: RollBack): boolean;
     bindActor(): Array<Actor>;
     bigQuery(ql: QueryLang): any;
     state(): IMap;

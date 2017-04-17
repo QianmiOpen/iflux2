@@ -71,11 +71,11 @@ export default class Store {
 
   _reduceActorState() {
     this._state = this._state.withMutations(state => {
-      for (let actor of this._actors) {
-        let initState = fromJS(actor.defaultState());
-        this._actorStateList.push(initState);
-        state = state.merge(initState);
-      }
+      this._actors.forEach(actor => {
+        const initState = fromJS(actor.defaultState())
+        this._actorStateList.push(initState)
+        state = state.merge(initState)
+      })
       return state;
     });
 
@@ -137,7 +137,7 @@ export default class Store {
     }
   }
 
-  transaction(dispatch: Dispatch, rollBack: RollBack) {
+  transaction(dispatch: Dispatch, rollBack?: RollBack) {
     let isRollBack = false;
 
     if (process.env.NODE_ENV != 'production') {
@@ -256,16 +256,20 @@ export default class Store {
    *
    */
   batchDispatch(actions: Array<[string, any] | { type: string }> = []): void {
+    if (process.env.NODE_ENV != 'production') {
+      console.warn('😭 请直接使用transaction')
+    }
+
     //校验参数是否为空
     if (arguments.length == 0) {
       throw new Error('😭 invalid batch dispatch without arguments');
     }
 
     this.transaction(() => {
-      for (let action of actions) {
-        const { msg, param } = _parseArgs(action);
+      actions.forEach(actor => {
+        const { msg, param } = _parseArgs(actions)
         this.dispatch(msg, param)
-      }
+      })
     });
 
     /**
